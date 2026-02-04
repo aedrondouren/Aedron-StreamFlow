@@ -16,6 +16,8 @@
 	"devDependencies": {
 		"@eslint/compat": "^2.0.1",
 		"@eslint/js": "^9.39.2",
+		"@kvs/node-localstorage": "^2.2.2",
+		"@kvs/types": "^2.2.2",
 		"@sveltejs/adapter-node": "^5.5.2",
 		"@sveltejs/kit": "^2.50.1",
 		"@sveltejs/vite-plugin-svelte": "^6.2.4",
