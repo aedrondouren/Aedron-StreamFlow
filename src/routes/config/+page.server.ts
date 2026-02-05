@@ -1,33 +1,24 @@
-import { users } from '$lib/server/kv';
-import { getUserID } from '$lib/userID';
-import { redirect } from '@sveltejs/kit';
+import { getUser, saveUser } from '$lib/server/users';
+import { redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ cookies }) => {
-	const userID = getUserID(cookies);
+	const user = await getUser(cookies);
 
-	if (typeof userID === 'undefined') return redirect(303, '/');
+	if (user === null) return redirect(303, '/');
 
-	const userData = await users.get(userID);
-
-	if (typeof userData === 'undefined') return redirect(303, '/');
-
-	const connected = 'twitch_auth' in userData;
-
-	if (!connected) {
-		userData.lastState = crypto.randomUUID();
-		await users.set(userID, userData);
-	}
-
-	const twitch = connected
-		? ({
-				connected: true,
-				scope: userData.twitch_auth?.scope
-			} as const)
-		: ({
-				connected: false,
-				state: userData.lastState
-			} as const);
+	const twitch = typeof user.twitch === 'undefined' ? null : user.twitch.data;
 
 	return { twitch };
 }) satisfies PageServerLoad;
+
+export const actions = {
+	'twitch-logout': async ({ cookies }) => {
+		const user = await getUser(cookies);
+
+		if (user !== null) {
+			delete user.twitch;
+			saveUser(user);
+		}
+	}
+} satisfies Actions;

@@ -1,24 +1,28 @@
-import { users } from '$lib/server/kv';
-import { getUserID } from '$lib/userID';
+import { getAuthToken, getUserData } from '$lib/server/twitch';
+import { getUser, saveUser } from '$lib/server/users';
 import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url: { searchParams }, cookies }) => {
-	const userID = getUserID(cookies);
+	const user = await getUser(cookies);
+	const authCode = searchParams.get('code');
 
-	if (typeof userID === 'undefined') return redirect(303, '/');
+	if (user === null || authCode === null) return redirect(303, '/');
 
-	const userData = await users.get(userID);
+	const tokenData = await getAuthToken(authCode);
 
-	if (typeof userData === 'undefined') return redirect(303, '/');
+	if (tokenData === null) return redirect(303, '/');
 
-	const code = searchParams.get('code');
-	const state = searchParams.get('state');
+	const userData = await getUserData(tokenData.access_token);
 
-	if (code === null || state !== userData.lastState) return redirect(303, '/');
+	if (userData === null) return redirect(303, '/');
 
-	console.log('STATE: ', state);
-	console.log('CODE: ', code);
+	user.twitch = {
+		data: userData,
+		auth: tokenData
+	};
+
+	saveUser(user);
 
 	return redirect(303, '/config');
 };
