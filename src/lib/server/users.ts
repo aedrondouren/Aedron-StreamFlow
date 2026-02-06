@@ -18,7 +18,7 @@ export function getUserUUID(cookies: Cookies) {
 	return cookies.get('user-id') as UUID | undefined;
 }
 
-export function syncUser(cookies: Cookies) {
+export async function syncUser(cookies: Cookies) {
 	let uuid = getUserUUID(cookies);
 
 	if (typeof uuid === 'undefined') {
@@ -26,8 +26,8 @@ export function syncUser(cookies: Cookies) {
 		cookies.set('user-id', uuid, { path: '/' });
 	}
 
-	if (!users.has(uuid)) {
-		users.set(uuid, { uuid });
+	if (!(await users.has(uuid))) {
+		await users.set(uuid, { uuid });
 	}
 }
 

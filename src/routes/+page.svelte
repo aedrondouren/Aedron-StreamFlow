@@ -14,6 +14,7 @@
 				<input name="title" type="text" value={data.twitchTitle} />
 			</label>
 			<button>Update</button>
+			<button formaction="?/test-user">Test</button>
 		</form>
 	{/if}
 	<p class="text-4xl font-bold text-neutral-700">WIP</p>
