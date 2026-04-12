@@ -1,26 +1,42 @@
 {
 	"$schema": "https://opencode.ai/config.json",
-	"permission": "ask",
+	"permission": "allow",
 	"agent": {
 		"plan": {
 			"permission": {
-				"edit": "deny",
+				"*": "allow",
 				"write": "deny",
-				"bash": "allow",
-				"glob": "allow",
-				"grep": "allow",
-				"read": "allow"
+				"edit": "deny",
+				"bash": {
+					"*": "allow",
+					"rm *": "deny",
+					"rm -rf *": "deny",
+					"dd *": "deny",
+					"mkfs *": "deny",
+					"fdisk *": "deny",
+					"format *": "deny",
+					"*: > *": "deny",
+					"*: >> *": "deny",
+					"shred *": "deny",
+					"wipefs *": "deny",
+					"parted *": "deny",
+					"mv * /dev/null": "deny",
+					"git push *": "deny",
+					"git reset --hard *": "deny",
+					"git clean *": "deny",
+					"pnpm db:reset": "deny",
+					"npm * reset": "deny",
+					"dropdb *": "deny",
+					"docker * prune": "deny",
+					"docker * rm": "deny",
+					"kill *": "deny",
+					"pkill *": "deny",
+					"killall *": "deny"
+				}
 			}
 		},
 		"build": {
-			"permission": {
-				"edit": "allow",
-				"write": "allow",
-				"bash": "allow",
-				"glob": "allow",
-				"grep": "allow",
-				"read": "allow"
-			}
+			"permission": "allow"
 		}
 	},
 	"model": "opencode-go/kimi-k2.5",
