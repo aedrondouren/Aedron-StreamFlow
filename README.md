@@ -7,6 +7,7 @@ Unified Streaming and Social platform manager for content creator.
 - **Unified controls**: Information like Title, Descriptions and Tags can be synced accross platforms.
 - **Unified chat**: Creators can see all their chats in one place with a powerful unified chat. They can filter by platform and isolate specific users when interacting with their community.
 - **Configurable overlays**: Creators can now created unified overlays with configurable views. Chat and alerts elements will include all platforms by default, but following platforms' TOS, one can chose which platform should a view display in recording softwares. Common use case would be a Twitch inclusive view as they do not allow other platforms' content from being displayed.
+- **Live data updates**: Profile information syncs in real-time across all connected clients using Supabase Realtime
 
 ## Supported Platforms
 
@@ -85,6 +86,8 @@ pnpm db:push      # Push migrations to Supabase
 src/
 ├── lib/
 │   ├── platform/      # Platform OAuth and API utilities
+│   ├── realtime/      # Supabase Realtime utilities
+│   ├── stores/        # Reactive state stores
 │   └── supabase/      # Supabase types and helpers
 ├── routes/
 │   ├── (protected)/  # Auth-protected routes
@@ -94,6 +97,14 @@ src/
 ├── hooks.server.ts    # Auth guards and Supabase client
 └── app.css           # Tailwind imports
 ```
+
+## Architecture
+
+The app uses a server-first approach with client-side enhancements:
+
+- **SSR**: Pages load initial data server-side for fast first paint
+- **Realtime**: Client subscribes to database changes for live updates
+- **Hybrid updates**: User actions return data immediately; other clients receive updates via Realtime
 
 ## License
 

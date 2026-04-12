@@ -82,6 +82,31 @@ pnpm db:reset     # Reset hosted database (⚠️ destructive)
 4. App exchanges code for session via `exchangeCodeForSession(code)`
 5. Session cookies are set, user is authenticated
 
+### Realtime Data Pattern
+
+The app uses a hybrid SSR + Realtime approach:
+
+1. **Server Load**: Initial data fetched server-side for fast first paint
+2. **Client Subscription**: `$effect()` subscribes to Supabase Realtime on mount
+3. **Batched Updates**: Rapid changes batched (50ms window) before UI update
+4. **Retry Logic**: Exponential backoff [1s, 2s, 5s, 10s] with manual retry
+
+**Key Utilities:**
+
+- `src/lib/realtime/batcher.svelte.ts` - Batches rapid realtime events
+- `src/lib/realtime/subscription.svelte.ts` - Subscription manager with retry/auth recovery
+- `src/lib/stores/reactiveTable.svelte.ts` - Factory for reactive table stores
+
+**Usage Pattern:**
+
+```typescript
+const store = createReactiveTable(supabase, {
+	table: 'user_info',
+	filter: { column: 'user_id', value: userId }
+});
+// Call store.start() inside $effect after browser check
+```
+
 ## Gotchas
 
 - Tailwind v4 config lives in CSS (`@import "tailwindcss"`), not a JS config file
@@ -91,3 +116,9 @@ pnpm db:reset     # Reset hosted database (⚠️ destructive)
 - Supabase env vars prefixed `PUBLIC_` come from `$env/static/public`, `PRIVATE_` from `$env/static/private`
 - OAuth redirectTo must be in Supabase dashboard's redirect URL allow list
 - Use dynamic `${url.origin}/auth/confirm/supabase` for production-ready redirect URL
+- Route groups use `(folder)` syntax - parentheses don't affect URL (e.g., `(protected)/app` resolves to `/app`)
+- `pnpm format` runs prettier only (no eslint --fix); use `pnpm lint` to check both
+- `svelte-kit sync` runs automatically in `prepare` script (pnpm install), but `pnpm check` also triggers it
+- Server endpoints (e.g., `/auth/link`) need `data-sveltekit-reload` on links to force full navigation
+- `createReactiveTable()` returns a store that must be started manually (call `.start()` in `$effect`, not at module level)
+- Never call Supabase methods that trigger fetch during SSR - always guard with `browser` check or defer to `$effect`

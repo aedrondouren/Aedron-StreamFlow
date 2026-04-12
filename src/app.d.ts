@@ -1,5 +1,5 @@
-import type { JwtPayload, SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '$lib/supabase/database.types';
+import type { JwtPayload, SupabaseClient } from '@supabase/supabase-js';
 
 declare global {
 	namespace App {
@@ -14,4 +14,4 @@ declare global {
 	}
 }
 
-export type { Database } from '$lib/supabase/database.types';
+export {};
