@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import type { PageProps } from './$types';
 
 	let { params, form }: PageProps = $props();
@@ -10,7 +11,6 @@
 	const action = $derived(isSignIn ? '?/signIn' : '?/signUp');
 
 	const switchMessage = $derived(isSignIn ? "Don't have an account?" : 'Already have an account?');
-	const switchLink = $derived(`/auth/${isSignIn ? 'signup' : 'signin'}`);
 	const switchMethod = $derived(`Sign ${isSignIn ? 'Up' : 'In'}`);
 </script>
 
@@ -119,7 +119,10 @@
 
 		<p class="mt-6 text-center text-sm text-neutral-400">
 			{switchMessage}
-			<a href={switchLink} class="text-purple-400 hover:underline">{switchMethod}</a>
+			<a
+				href={resolve(isSignIn ? '/auth/signup' : '/auth/signin')}
+				class="text-purple-400 hover:underline">{switchMethod}</a
+			>
 		</p>
 	</div>
 </main>

@@ -1,5 +1,6 @@
 <script lang="ts" module>
 	import { invalidate } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import type { LayoutProps } from './$types';
 </script>
 
@@ -38,7 +39,7 @@
 
 		<nav class="flex-1 space-y-1 p-2">
 			<a
-				href="/app"
+				href={resolve('/app')}
 				class="flex items-center gap-3 rounded-md px-3 py-2 text-neutral-300 hover:bg-neutral-700"
 			>
 				<svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,7 +56,7 @@
 			</a>
 
 			<a
-				href="/app/platforms"
+				href={resolve('/app/platforms')}
 				class="flex items-center gap-3 rounded-md px-3 py-2 text-neutral-300 hover:bg-neutral-700"
 			>
 				<svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -136,9 +136,7 @@ const store = createReactiveTable(supabase, {
 ## Gotchas
 
 - Tailwind v4 config lives in CSS (`@import "tailwindcss"`), not a JS config file
-- ESLint disables `no-undef` (conflicts with TypeScript; types-eslint handles it instead)
 - `.cache/` and `supabase/volumes/` directories are gitignored
-- For SvelteKit href links, the `svelte/no-navigation-without-resolve` rule is disabled (use standard `<a>` tags)
 - Supabase env vars prefixed `PUBLIC_` come from `$env/static/public`, `PRIVATE_` from `$env/static/private`
 - OAuth redirectTo must be in Supabase dashboard's redirect URL allow list
 - Use dynamic `${url.origin}/auth/confirm/supabase` for production-ready redirect URL

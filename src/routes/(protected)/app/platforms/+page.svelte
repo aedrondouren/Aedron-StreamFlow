@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import { resolve } from '$app/paths';
 	import { page } from '$app/stores';
 	import { createReactiveTable } from '$lib/stores/reactiveTable.svelte';
 	import type { Tables } from '$lib/supabase/database.types';
@@ -152,7 +153,7 @@
 				</div>
 			{:else}
 				<a
-					href="/auth/link?platform=twitch&next=/app/platforms"
+					href={resolve('/auth/link?platform=twitch&next=/app/platforms')}
 					data-sveltekit-reload
 					class="block rounded-md bg-purple-600 px-4 py-2 text-center text-sm font-medium transition-colors hover:bg-purple-700"
 				>

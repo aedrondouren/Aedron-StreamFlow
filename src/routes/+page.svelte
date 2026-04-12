@@ -1,5 +1,5 @@
 <script lang="ts">
-	// Landing page
+	import { resolve } from '$app/paths';
 </script>
 
 <svelte:head>
@@ -13,13 +13,13 @@
 
 		<div class="flex gap-4">
 			<a
-				href="/auth/signin"
+				href={resolve('/auth/signin')}
 				class="rounded-lg bg-purple-600 px-6 py-3 font-semibold transition-colors hover:bg-purple-700"
 			>
 				Get Started
 			</a>
 			<a
-				href="/app"
+				href={resolve('/app')}
 				class="rounded-lg border border-neutral-600 px-6 py-3 font-semibold transition-colors hover:bg-neutral-700"
 			>
 				Dashboard
