@@ -24,3 +24,7 @@ vite.config.ts.timestamp-*
 
 # KV Data
 .cache
+
+# Supabase
+supabase/volumes/
+supabase/.temp/

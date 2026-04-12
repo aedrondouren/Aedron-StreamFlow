@@ -11,7 +11,10 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"db:generate": "supabase gen types --linked --lang=typescript > src/lib/supabase/database.types.ts",
+		"db:push": "supabase db push --linked",
+		"db:reset": "supabase db reset --linked"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.0.1",
@@ -30,11 +33,16 @@
 		"prettier": "^3.8.1",
 		"prettier-plugin-svelte": "^3.4.1",
 		"prettier-plugin-tailwindcss": "^0.7.2",
+		"supabase": "^2.89.1",
 		"svelte": "^5.48.2",
 		"svelte-check": "^4.3.5",
 		"tailwindcss": "^4.1.18",
 		"typescript": "^5.9.3",
 		"typescript-eslint": "^8.53.1",
 		"vite": "^7.3.1"
+	},
+	"dependencies": {
+		"@supabase/ssr": "^0.10.2",
+		"@supabase/supabase-js": "^2.103.0"
 	}
 }

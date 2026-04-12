@@ -1,13 +1,17 @@
-// See https://svelte.dev/docs/kit/types#app.d.ts
-// for information about these interfaces
+import type { JwtPayload, SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '$lib/supabase/database.types';
+
 declare global {
 	namespace App {
-		// interface Error {}
-		// interface Locals {}
-		// interface PageData {}
-		// interface PageState {}
-		// interface Platform {}
+		interface Locals {
+			supabase: SupabaseClient<Database>;
+			claims?: JwtPayload;
+		}
+		interface PageData {
+			supabase: SupabaseClient<Database>;
+			claims?: JwtPayload;
+		}
 	}
 }
 
-export {};
+export type { Database } from '$lib/supabase/database.types';
