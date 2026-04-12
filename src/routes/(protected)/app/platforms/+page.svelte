@@ -1,25 +1,25 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
-	import type { PageProps } from './$types';
-	import type { Tables } from '$lib/supabase/database.types';
+	import { page } from '$app/stores';
 	import { createReactiveTable } from '$lib/stores/reactiveTable.svelte';
+	import type { Tables } from '$lib/supabase/database.types';
+	import type { PageProps } from './$types';
 
 	let { data, form }: PageProps = $props();
 
 	// Track user info updates from realtime
 	let userInfoStore = $state<ReturnType<typeof createReactiveTable<'user_info'>> | null>(null);
 
-	// Get current user from parent layout data
-	let currentUser = $derived(data.platforms[0]?.user_id);
-
-	// Initialize reactive table on client
+	// Initialize reactive table on client only
 	$effect(() => {
-		if (!browser || !currentUser || !data.supabase) return;
+		if (!browser) return;
+
+		const userId = data.platforms[0]?.user_id;
+		if (!userId || !data.supabase) return;
 
 		const store = createReactiveTable(data.supabase, {
 			table: 'user_info',
-			filter: { column: 'user_id', value: currentUser },
+			filter: { column: 'user_id', value: userId },
 			initialData: data.platforms.map((p) => p.user_info).filter(Boolean) as Tables<'user_info'>[],
 			keyField: 'id'
 		});
@@ -33,8 +33,8 @@
 		};
 	});
 
-	// Merge server data with realtime updates
-	const platforms = $derived(() => {
+	// Merge server data with realtime updates - use $derived.by for function-based derivation
+	const platforms = $derived.by(() => {
 		const basePlatforms = data.platforms;
 		const realtimeInfos = userInfoStore?.data ?? [];
 
@@ -63,7 +63,7 @@
 		});
 	});
 
-	const linkedPlatforms = $derived(platforms().map((p) => p.platform));
+	const linkedPlatforms = $derived(platforms.map((p) => p.platform));
 	const isTwitchLinked = $derived(linkedPlatforms.includes('twitch'));
 
 	const infoMessage = $derived($page.url.searchParams.get('info'));
@@ -116,7 +116,7 @@
 			{/if}
 
 			{#if isTwitchLinked}
-				{@const twitch = platforms().find((p) => p.platform === 'twitch')}
+				{@const twitch = platforms.find((p) => p.platform === 'twitch')}
 				<div class="mb-3 flex items-center gap-3">
 					{#if twitch?.profile_image_url}
 						<img src={twitch.profile_image_url} alt="" class="h-10 w-10 rounded-full" />

@@ -1,5 +1,6 @@
 import { PUBLIC_TWITCH_CLIENT_ID } from '$env/static/public';
 import { PRIVATE_TWITCH_CLIENT_SECRET } from '$env/static/private';
+import { parseScopes } from './scopes';
 
 export interface TwitchOAuthToken {
 	access_token: string;
@@ -60,12 +61,11 @@ export async function exchangeCodeForToken(
 	}
 
 	const data = await response.json();
-	const scope = data.scope;
 	return {
 		access_token: data.access_token,
 		refresh_token: data.refresh_token,
 		expires_in: data.expires_in,
-		scope: typeof scope === 'string' ? scope.split(' ') : Array.isArray(scope) ? scope : []
+		scope: parseScopes(data.scope)
 	};
 }
 
@@ -86,12 +86,11 @@ export async function refreshToken(refreshToken: string): Promise<TwitchOAuthTok
 	}
 
 	const data = await response.json();
-	const scope = data.scope;
 	return {
 		access_token: data.access_token,
 		refresh_token: data.refresh_token,
 		expires_in: data.expires_in,
-		scope: typeof scope === 'string' ? scope.split(' ') : Array.isArray(scope) ? scope : []
+		scope: parseScopes(data.scope)
 	};
 }
 

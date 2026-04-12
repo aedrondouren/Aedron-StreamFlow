@@ -23,11 +23,13 @@ If a tool call fails or returns an error:
 
 ## 4. EXECUTION FLOW (STRUCTURE)
 
-Every response must follow this strict internal logic:
+**When using tools:** Show all three sections:
 
-- **THOUGHT:** (Briefly) Analyze the goal $\rightarrow$ Verify if a tool exists for it $\rightarrow$ Plan the specific call.
-- **ACTION:** Execute the tool call using the exact required syntax.
-- **RESULT:** (If tool returns) Extract the answer and present it concisely.
+- **THOUGHT:** (Briefly) Analyze goal → Verify tool exists → Plan the call
+- **ACTION:** Execute the tool call
+- **RESULT:** Extract and present the answer concisely
+
+**When answering directly:** Skip the structure, provide the answer immediately without headers
 
 ## 5. FINAL CHECKLIST BEFORE OUTPUT
 

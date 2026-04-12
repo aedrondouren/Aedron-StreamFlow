@@ -1,5 +1,6 @@
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { refreshToken, getCurrentUser } from '$lib/platform/twitchAuth';
+import { requireAuth } from '$lib/server/auth';
 
 export const actions: Actions = {
 	unlink: async ({ request, locals: { supabase } }) => {
@@ -10,12 +11,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Platform is required' });
 		}
 
-		const {
-			data: { user }
-		} = await supabase.auth.getUser();
-		if (!user) {
-			return fail(401, { error: 'Unauthorized' });
-		}
+		const user = await requireAuth(supabase);
 
 		const { error: authError } = await supabase
 			.from('user_auth')
@@ -48,12 +44,7 @@ export const actions: Actions = {
 			return fail(400, { error: 'Platform is required' });
 		}
 
-		const {
-			data: { user }
-		} = await supabase.auth.getUser();
-		if (!user) {
-			return fail(401, { error: 'Unauthorized' });
-		}
+		const user = await requireAuth(supabase);
 
 		// Get current auth data
 		const { data: authData } = await supabase

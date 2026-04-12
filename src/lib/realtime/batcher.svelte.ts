@@ -15,7 +15,6 @@ export function createBatcher<T extends Record<string, unknown>>(
 ) {
 	let queue: BatchedChange<T>[] = [];
 	let timeoutId: ReturnType<typeof setTimeout> | null = null;
-	let rafId: number | null = null;
 
 	function flush() {
 		if (queue.length === 0) return;
@@ -26,10 +25,6 @@ export function createBatcher<T extends Record<string, unknown>>(
 		if (timeoutId) {
 			clearTimeout(timeoutId);
 			timeoutId = null;
-		}
-		if (rafId) {
-			cancelAnimationFrame(rafId);
-			rafId = null;
 		}
 
 		flushCallback(changes);
@@ -42,11 +37,6 @@ export function createBatcher<T extends Record<string, unknown>>(
 			timeoutId = null;
 			flush();
 		}, BATCH_WINDOW_MS);
-
-		rafId = requestAnimationFrame(() => {
-			rafId = null;
-			flush();
-		});
 	}
 
 	function add(payload: RealtimePostgresChangesPayload<T>) {
@@ -64,7 +54,6 @@ export function createBatcher<T extends Record<string, unknown>>(
 
 	function destroy() {
 		if (timeoutId) clearTimeout(timeoutId);
-		if (rafId) cancelAnimationFrame(rafId);
 		flush();
 	}
 

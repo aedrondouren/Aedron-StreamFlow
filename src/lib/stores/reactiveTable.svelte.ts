@@ -2,6 +2,7 @@ import type { SupabaseClient, RealtimePostgresChangesPayload } from '@supabase/s
 import type { Database, Tables } from '$lib/supabase/database.types';
 import { createBatcher } from '$lib/realtime/batcher.svelte';
 import { createRealtimeSubscription, watchAuthState } from '$lib/realtime/subscription.svelte';
+import { mergeChanges } from '$lib/realtime/merge';
 
 type TableName = keyof Database['public']['Tables'];
 
@@ -21,42 +22,6 @@ type ReactiveTableOptions<T extends TableName> = {
 	initialData?: Tables<T>[];
 	keyField?: keyof Tables<T>;
 };
-
-function mergeChanges<T extends Record<string, unknown>>(
-	current: T[],
-	changes: RealtimePostgresChangesPayload<T>[],
-	keyField: keyof T
-): T[] {
-	let result = [...current];
-
-	for (const change of changes) {
-		const { eventType, new: newRecord, old: oldRecord } = change;
-
-		switch (eventType) {
-			case 'INSERT':
-				if (newRecord && !result.some((item) => item[keyField] === newRecord[keyField])) {
-					result = [...result, newRecord];
-				}
-				break;
-
-			case 'UPDATE':
-				if (newRecord) {
-					result = result.map((item) =>
-						item[keyField] === newRecord[keyField] ? { ...item, ...newRecord } : item
-					);
-				}
-				break;
-
-			case 'DELETE':
-				if (oldRecord) {
-					result = result.filter((item) => item[keyField] !== oldRecord[keyField]);
-				}
-				break;
-		}
-	}
-
-	return result;
-}
 
 export function createReactiveTable<T extends TableName>(
 	supabase: SupabaseClient<Database>,

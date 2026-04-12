@@ -3,17 +3,23 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '$lib/supabase/database.types';
 
 export const load: PageLoad = async ({ parent }) => {
-	const { supabase } = (await parent()) as { supabase: SupabaseClient<Database> };
-	const {
-		data: { user }
-	} = await supabase.auth.getUser();
-	if (!user) return { platforms: [], supabase };
+	const { supabase, claims } = (await parent()) as {
+		supabase: SupabaseClient<Database>;
+		claims: { sub: string } | undefined;
+	};
 
-	const { data: auths } = await supabase.from('user_auth').select().eq('user_id', user.id);
+	// Auth is validated in layout, but double-check here for type safety
+	if (!claims?.sub) return { platforms: [], supabase };
 
-	if (!auths) return { platforms: [], supabase };
+	const userId = claims.sub;
 
-	const { data: infos } = await supabase.from('user_info').select().eq('user_id', user.id);
+	// Fetch user auth and info data in parallel
+	const [{ data: auths }, { data: infos }] = await Promise.all([
+		supabase.from('user_auth').select().eq('user_id', userId),
+		supabase.from('user_info').select().eq('user_id', userId)
+	]);
+
+	if (!auths?.length) return { platforms: [], supabase };
 
 	const infoMap = new Map((infos ?? []).map((info) => [info.platform, info]));
 
