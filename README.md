@@ -39,6 +39,12 @@
 ## 📸 Screenshots
 
 <p align="center">
+  <img src=".repo/screenshots/landing-page.png" alt="Landing Page" width="600"/>
+  <br/>
+  <em>Professional landing page showcasing features and supported platforms</em>
+</p>
+
+<p align="center">
   <img src=".repo/screenshots/signin-page.png" alt="Sign In" width="600"/>
   <br/>
   <em>Secure authentication with email and OAuth</em>

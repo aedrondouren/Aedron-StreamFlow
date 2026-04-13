@@ -38,8 +38,9 @@
 		class="flex shrink-0 flex-col overflow-hidden border-r border-base-700 bg-base-800 transition-[width] duration-300 ease-in-out"
 	>
 		<!-- Logo Header - Grid layout with uniform icon sizing -->
-		<div
-			class="grid h-16 w-full shrink-0 grid-cols-[auto_auto] items-center border-b border-base-700 px-3"
+		<a
+			href={resolve('/')}
+			class="grid h-16 w-full shrink-0 grid-cols-[auto_auto] items-center border-b border-base-700 px-3 transition-colors hover:bg-base-700/50"
 		>
 			<!-- Icon - Auto-sized column, centered content -->
 			<div class="flex items-center justify-center">
@@ -51,7 +52,7 @@
 			>
 				<span class="pl-2 text-lg font-bold whitespace-nowrap text-primary-400">StreamFlow</span>
 			</div>
-		</div>
+		</a>
 
 		<!-- Navigation - Fixed icon columns, overflow text containers -->
 		<nav class="flex flex-1 flex-col gap-1 overflow-hidden p-2">
