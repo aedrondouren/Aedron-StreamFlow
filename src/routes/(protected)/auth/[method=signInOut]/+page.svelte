@@ -12,50 +12,93 @@
 
 	const switchMessage = $derived(isSignIn ? "Don't have an account?" : 'Already have an account?');
 	const switchMethod = $derived(`Sign ${isSignIn ? 'Up' : 'In'}`);
+
+	// Password confirmation state
+	let password = $state('');
+	let passwordConfirm = $state('');
+	let passwordError = $state('');
+
+	function validatePasswords() {
+		if (!isSignIn && password !== passwordConfirm) {
+			passwordError = 'Passwords do not match';
+			return false;
+		}
+		passwordError = '';
+		return true;
+	}
+
+	function handleSubmit(event: SubmitEvent) {
+		if (!isSignIn && !validatePasswords()) {
+			event.preventDefault();
+		}
+	}
 </script>
 
 <svelte:head><title>{method} - StreamFlow</title></svelte:head>
 
-<main class="flex min-h-screen items-center justify-center bg-neutral-900 p-4">
-	<div class="w-full max-w-md rounded-lg bg-neutral-800 p-8">
-		<h1 class="mb-6 text-center text-2xl font-bold">{header}</h1>
+<main class="flex min-h-screen items-center justify-center bg-base-900 p-4">
+	<div class="w-full max-w-md rounded-lg bg-base-800 p-8">
+		<h1 class="mb-6 text-center text-2xl font-bold text-base-50">{header}</h1>
 
 		{#if form?.error}
-			<div class="mb-4 rounded-md bg-red-500/20 p-3 text-sm text-red-400">
+			<div class="mb-4 rounded-md bg-error-500/20 p-3 text-sm text-error-400">
 				{form.error}
 			</div>
 		{/if}
 
-		<form method="POST" {action} class="space-y-4">
+		<form method="POST" {action} class="space-y-4" onsubmit={handleSubmit}>
 			<div>
-				<label for="email" class="mb-1 block text-sm font-medium">Email</label>
+				<label for="email" class="mb-1 block text-sm font-medium text-base-300">Email</label>
 				<input
 					type="email"
 					id="email"
 					name="email"
 					value={form?.email ?? ''}
 					required
-					class="w-full rounded-md border border-neutral-600 bg-neutral-700 px-4 py-2 text-white placeholder-neutral-400 focus:border-purple-500 focus:outline-none"
+					class="w-full rounded-md border border-base-600 bg-base-700 px-4 py-2 text-base-50 placeholder-base-400 focus:border-primary-500 focus:outline-none"
 					placeholder="you@example.com"
 				/>
 			</div>
 
 			<div>
-				<label for="password" class="mb-1 block text-sm font-medium">Password</label>
+				<label for="password" class="mb-1 block text-sm font-medium text-base-300">Password</label>
 				<input
 					type="password"
 					id="password"
 					name="password"
 					required
 					minlength="6"
-					class="w-full rounded-md border border-neutral-600 bg-neutral-700 px-4 py-2 text-white placeholder-neutral-400 focus:border-purple-500 focus:outline-none"
+					bind:value={password}
+					class="w-full rounded-md border border-base-600 bg-base-700 px-4 py-2 text-base-50 placeholder-base-400 focus:border-primary-500 focus:outline-none"
 					placeholder="••••••••"
 				/>
 			</div>
 
+			{#if !isSignIn}
+				<div>
+					<label for="passwordConfirm" class="mb-1 block text-sm font-medium text-base-300">
+						Confirm Password
+					</label>
+					<input
+						type="password"
+						id="passwordConfirm"
+						name="passwordConfirm"
+						required
+						minlength="6"
+						bind:value={passwordConfirm}
+						onblur={validatePasswords}
+						class="w-full rounded-md border border-base-600 bg-base-700 px-4 py-2 text-base-50 placeholder-base-400 focus:border-primary-500 focus:outline-none"
+						placeholder="••••••••"
+					/>
+					{#if passwordError}
+						<p class="mt-1 text-sm text-error-400">{passwordError}</p>
+					{/if}
+				</div>
+			{/if}
+
 			<button
 				type="submit"
-				class="w-full rounded-md bg-purple-600 py-2 font-semibold transition-colors hover:bg-purple-700"
+				class="w-full cursor-pointer rounded-md bg-primary-600 py-2 font-semibold text-base-50 transition-colors hover:bg-primary-700"
 			>
 				{method}
 			</button>
@@ -65,10 +108,10 @@
 			<div class="mt-6">
 				<div class="relative">
 					<div class="absolute inset-0 flex items-center">
-						<div class="w-full border-t border-neutral-600"></div>
+						<div class="w-full border-t border-base-600"></div>
 					</div>
 					<div class="relative flex justify-center text-sm">
-						<span class="bg-neutral-800 px-2 text-neutral-400">Or continue with</span>
+						<span class="bg-base-800 px-2 text-base-400">Or continue with</span>
 					</div>
 				</div>
 
@@ -76,7 +119,7 @@
 					<form method="POST" action="?/signinWithOAuth&provider=twitch" class="flex-1">
 						<button
 							type="submit"
-							class="flex w-full items-center justify-center gap-2 rounded-md border border-neutral-600 bg-neutral-700 py-2 font-semibold transition-colors hover:bg-neutral-600"
+							class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-base-600 bg-base-700 py-2 font-semibold text-base-50 transition-colors hover:bg-base-600"
 						>
 							<svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
 								<path
@@ -90,7 +133,7 @@
 					<form method="POST" action="?/signinWithOAuth&provider=google" class="flex-1">
 						<button
 							type="submit"
-							class="flex w-full items-center justify-center gap-2 rounded-md border border-neutral-600 bg-neutral-700 py-2 font-semibold transition-colors hover:bg-neutral-600"
+							class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-base-600 bg-base-700 py-2 font-semibold text-base-50 transition-colors hover:bg-base-600"
 						>
 							<svg class="h-5 w-5" viewBox="0 0 24 24">
 								<path
@@ -117,11 +160,11 @@
 			</div>
 		{/if}
 
-		<p class="mt-6 text-center text-sm text-neutral-400">
+		<p class="mt-6 text-center text-sm text-base-400">
 			{switchMessage}
 			<a
 				href={resolve(isSignIn ? '/auth/signup' : '/auth/signin')}
-				class="text-purple-400 hover:underline">{switchMethod}</a
+				class="cursor-pointer text-primary-400 hover:underline">{switchMethod}</a
 			>
 		</p>
 	</div>
