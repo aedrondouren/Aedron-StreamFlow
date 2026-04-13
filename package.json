@@ -14,7 +14,10 @@
 		"format": "prettier --write .",
 		"db:generate": "supabase gen types --linked --lang=typescript > src/lib/supabase/database.types.ts",
 		"db:push": "supabase db push --linked",
-		"db:reset": "supabase db reset --linked"
+		"db:reset": "supabase db reset --linked",
+		"test:user:setup": "node scripts/setup-test-user.js",
+		"test:spoof:twitch": "node scripts/spoof-platform-data.js",
+		"test:visual:setup": "pnpm test:user:setup && pnpm test:spoof:twitch"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.0.1",

@@ -40,7 +40,11 @@
 		}
 	},
 	"model": "opencode-go/kimi-k2.5",
-	"instructions": [".opencode/INSTRUCTIONS.md", "CONTRIBUTING.md"],
+	"instructions": [
+		".opencode/INSTRUCTIONS.md",
+		"CONTRIBUTING.md",
+		".opencode/playwright/README.md"
+	],
 	"plugin": ["@sveltejs/opencode"],
 	"mcp": {
 		"chrome-devtools": {

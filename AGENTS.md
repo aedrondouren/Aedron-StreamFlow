@@ -158,29 +158,77 @@ const store = createReactiveTable(supabase, {
 - `createReactiveTable()` returns a store that must be started manually (call `.start()` in `$effect`, not at module level)
 - Never call Supabase methods that trigger fetch during SSR - always guard with `browser` check or defer to `$effect`
 
+## Agent Collaboration
+
+When working on complex tasks, prefer using **sub-agents** to parallelize work:
+
+- **Use sub-agents when:** Tasks can be divided into independent chunks (e.g., "fix animation" + "investigate warning")
+- **Delegate via:** `task` tool with specific, isolated prompts
+- **Benefits:** Faster completion, parallel execution, specialized focus
+- **Example:** One agent fixes CSS layout while another investigates SSR warnings
+
 ## Visual Verification Workflow
 
 When making UI changes, you MUST verify the visual result using the Playwright MCP:
 
-1. **Ask the user about their viewport context** - "What viewport are you currently working in?" or check if they've mentioned mobile/desktop/tablet
-2. **Match the viewport** - Use `playwright_browser_resize` to match the user's working viewport:
+### Setup (run once per environment)
+
+```bash
+pnpm test:visual:setup    # Creates test user + mock Twitch data
+```
+
+This creates:
+
+- Test user: `test@email.test` (password saved in `.env`)
+- Mock Twitch connection: @TestUser (visual only, non-functional)
+
+### Test Credentials
+
+Stored in `.env` (gitignored, never committed):
+
+- `TEST_USER_EMAIL` - Email for login
+- `TEST_USER_PASSWORD` - Auto-generated secure password
+- `TEST_USER_ID` - Supabase user UUID
+
+### Verification Steps
+
+1. **Check dev server status** - First attempt to navigate to `http://localhost:5173` using Playwright. If the page loads successfully, proceed. If connection fails or times out, start the dev server with `pnpm dev` and wait for it to be ready.
+
+2. **For protected routes (/app)**:
+   - Navigate to `/auth/signin`
+   - Fill in test credentials from `TEST_USER_EMAIL` and `TEST_USER_PASSWORD` env vars
+   - Submit form to authenticate
+   - Wait for redirect to `/app`
+
+3. **Ask the user about their viewport context** - "What viewport are you currently working in?" or check if they've mentioned mobile/desktop/tablet
+
+4. **Match the viewport** - Use `playwright_browser_resize` to match the user's working viewport:
    - Mobile: ~375-414px width
    - Tablet: ~768px width
    - Desktop: ~1440px+ width (default if unspecified)
-3. **Navigate to the affected route** - Use `playwright_browser_navigate` to load the page at `http://localhost:5173`
-4. **Take screenshots** - Use `playwright_browser_take_screenshot` to capture the result
-5. **Iterate** - If the visual result doesn't match expectations, adjust and re-verify
+
+5. **Navigate to the affected route** - Use `playwright_browser_navigate` to load the page at `http://localhost:5173`
+
+6. **Take screenshots** - Use `playwright_browser_take_screenshot` with appropriate paths:
+   - **UI validation** (temporary): `.opencode/playwright/temp/component-state.png`
+   - **Documentation** (permanent): `.opencode/playwright/component-final.png`
+
+   See [`.opencode/playwright/README.md`](.opencode/playwright/README.md) for full guidelines
+
+7. **Iterate** - If the visual result doesn't match expectations, adjust and re-verify
 
 ### Example Workflow
 
 ```
 User: "Make this card component responsive for mobile"
 
-Agent: I'll update the card component for mobile. First, let me start the dev server
-and verify the current state at mobile viewport.
-[Start dev server with pnpm dev]
+Agent: I'll update the card component for mobile. First, let me verify
+at mobile viewport.
+[Check dev server status - attempt navigation to localhost:5173]
+[If not running: pnpm dev]
 [Resize browser to mobile viewport - 375px width]
-[Navigate to the route]
+[Navigate to /auth/signin and login with test credentials]
+[Navigate to /app]
 [Take screenshot to verify changes]
 ```
 
