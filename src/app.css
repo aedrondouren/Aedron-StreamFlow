@@ -1,1 +1,210 @@
 @import 'tailwindcss';
+
+/* Enable smooth animations to intrinsic sizing keywords (fit-content, auto, etc.) */
+:root {
+	interpolate-size: allow-keywords;
+}
+
+@variant sidebar-open {
+	html[data-sidebar-open='true'] & {
+		@slot;
+	}
+}
+
+@variant sidebar-closed {
+	html[data-sidebar-open='false'] & {
+		@slot;
+	}
+}
+
+@theme {
+	/* Disable all default Tailwind colors */
+	--color-*: initial;
+
+	/* Transparent */
+	--color-transparent: transparent;
+
+	/* ============================================
+	   BASE (Slate-like grays from #3e6eb2, ~10% saturation)
+	   Hue: 214°, Saturation: 10%
+	   ============================================ */
+	--color-base-50: hsl(214, 10%, 97%);
+	--color-base-100: hsl(214, 10%, 92%);
+	--color-base-200: hsl(214, 10%, 82%);
+	--color-base-300: hsl(214, 10%, 72%);
+	--color-base-400: hsl(214, 10%, 60%);
+	--color-base-500: hsl(214, 10%, 50%);
+	--color-base-600: hsl(214, 10%, 40%);
+	--color-base-700: hsl(214, 10%, 32%);
+	--color-base-800: hsl(214, 10%, 22%);
+	--color-base-900: hsl(214, 10%, 15%);
+	--color-base-950: hsl(214, 10%, 5%);
+
+	/* ============================================
+	   PRIMARY (Bright blue from #3e6eb2, 95% saturation)
+	   Hue: 214°, Saturation: 95%
+	   ============================================ */
+	--color-primary-50: hsl(214, 95%, 97%);
+	--color-primary-100: hsl(214, 95%, 90%);
+	--color-primary-200: hsl(214, 95%, 80%);
+	--color-primary-300: hsl(214, 95%, 70%);
+	--color-primary-400: hsl(214, 95%, 60%);
+	--color-primary-500: hsl(214, 95%, 50%);
+	--color-primary-600: hsl(214, 95%, 45%);
+	--color-primary-700: hsl(214, 95%, 38%);
+	--color-primary-800: hsl(214, 95%, 28%);
+	--color-primary-900: hsl(214, 95%, 18%);
+	--color-primary-950: hsl(214, 95%, 8%);
+
+	/* ============================================
+	   SECONDARY (Bright cyan from #2bf4f7, 95% saturation)
+	   Hue: 181°, Saturation: 95%
+	   ============================================ */
+	--color-secondary-50: hsl(181, 95%, 97%);
+	--color-secondary-100: hsl(181, 95%, 90%);
+	--color-secondary-200: hsl(181, 95%, 80%);
+	--color-secondary-300: hsl(181, 95%, 70%);
+	--color-secondary-400: hsl(181, 95%, 60%);
+	--color-secondary-500: hsl(181, 95%, 50%);
+	--color-secondary-600: hsl(181, 95%, 48%);
+	--color-secondary-700: hsl(181, 95%, 40%);
+	--color-secondary-800: hsl(181, 95%, 28%);
+	--color-secondary-900: hsl(181, 95%, 18%);
+	--color-secondary-950: hsl(181, 95%, 8%);
+
+	/* ============================================
+	   SEMANTIC COLORS
+	   ============================================ */
+
+	/* Success (Green) - Hue: 142° */
+	--color-success-50: hsl(142, 80%, 97%);
+	--color-success-100: hsl(142, 80%, 90%);
+	--color-success-200: hsl(142, 80%, 80%);
+	--color-success-300: hsl(142, 80%, 70%);
+	--color-success-400: hsl(142, 80%, 60%);
+	--color-success-500: hsl(142, 85%, 45%);
+	--color-success-600: hsl(142, 85%, 38%);
+	--color-success-700: hsl(142, 85%, 30%);
+	--color-success-800: hsl(142, 85%, 22%);
+	--color-success-900: hsl(142, 85%, 15%);
+	--color-success-950: hsl(142, 85%, 8%);
+
+	/* Warning (Amber/Orange) - Hue: 38° */
+	--color-warning-50: hsl(38, 90%, 97%);
+	--color-warning-100: hsl(38, 90%, 90%);
+	--color-warning-200: hsl(38, 90%, 80%);
+	--color-warning-300: hsl(38, 90%, 70%);
+	--color-warning-400: hsl(38, 95%, 60%);
+	--color-warning-500: hsl(38, 95%, 55%);
+	--color-warning-600: hsl(38, 95%, 48%);
+	--color-warning-700: hsl(38, 95%, 40%);
+	--color-warning-800: hsl(38, 95%, 28%);
+	--color-warning-900: hsl(38, 95%, 18%);
+	--color-warning-950: hsl(38, 95%, 8%);
+
+	/* Error (Red) - Hue: 0° */
+	--color-error-50: hsl(0, 80%, 97%);
+	--color-error-100: hsl(0, 80%, 90%);
+	--color-error-200: hsl(0, 80%, 80%);
+	--color-error-300: hsl(0, 80%, 70%);
+	--color-error-400: hsl(0, 85%, 65%);
+	--color-error-500: hsl(0, 85%, 55%);
+	--color-error-600: hsl(0, 85%, 48%);
+	--color-error-700: hsl(0, 85%, 40%);
+	--color-error-800: hsl(0, 85%, 28%);
+	--color-error-900: hsl(0, 85%, 18%);
+	--color-error-950: hsl(0, 85%, 8%);
+
+	/* ============================================
+	   TWITCH (Purple)
+	   Hue: 264° (from #9146FF)
+	   ============================================ */
+
+	/* Twitch Base (Slate-like, 10% saturation) */
+	--color-twitch-base-50: hsl(264, 10%, 97%);
+	--color-twitch-base-100: hsl(264, 10%, 92%);
+	--color-twitch-base-200: hsl(264, 10%, 82%);
+	--color-twitch-base-300: hsl(264, 10%, 72%);
+	--color-twitch-base-400: hsl(264, 10%, 60%);
+	--color-twitch-base-500: hsl(264, 10%, 50%);
+	--color-twitch-base-600: hsl(264, 10%, 40%);
+	--color-twitch-base-700: hsl(264, 10%, 32%);
+	--color-twitch-base-800: hsl(264, 10%, 22%);
+	--color-twitch-base-900: hsl(264, 10%, 15%);
+	--color-twitch-base-950: hsl(264, 10%, 5%);
+
+	/* Twitch Accent (Vibrant, 95% saturation) */
+	--color-twitch-50: hsl(264, 95%, 97%);
+	--color-twitch-100: hsl(264, 95%, 90%);
+	--color-twitch-200: hsl(264, 95%, 80%);
+	--color-twitch-300: hsl(264, 95%, 70%);
+	--color-twitch-400: hsl(264, 95%, 60%);
+	--color-twitch-500: hsl(264, 95%, 55%);
+	--color-twitch-600: hsl(264, 95%, 48%);
+	--color-twitch-700: hsl(264, 95%, 40%);
+	--color-twitch-800: hsl(264, 95%, 28%);
+	--color-twitch-900: hsl(264, 95%, 18%);
+	--color-twitch-950: hsl(264, 95%, 8%);
+
+	/* ============================================
+	   YOUTUBE (Red)
+	   Hue: 0° (from #FF0000)
+	   ============================================ */
+
+	/* YouTube Base (Slate-like, 10% saturation) */
+	--color-youtube-base-50: hsl(0, 10%, 97%);
+	--color-youtube-base-100: hsl(0, 10%, 92%);
+	--color-youtube-base-200: hsl(0, 10%, 82%);
+	--color-youtube-base-300: hsl(0, 10%, 72%);
+	--color-youtube-base-400: hsl(0, 10%, 60%);
+	--color-youtube-base-500: hsl(0, 10%, 50%);
+	--color-youtube-base-600: hsl(0, 10%, 40%);
+	--color-youtube-base-700: hsl(0, 10%, 32%);
+	--color-youtube-base-800: hsl(0, 10%, 22%);
+	--color-youtube-base-900: hsl(0, 10%, 15%);
+	--color-youtube-base-950: hsl(0, 10%, 5%);
+
+	/* YouTube Accent (Vibrant, 95% saturation) */
+	--color-youtube-50: hsl(0, 95%, 97%);
+	--color-youtube-100: hsl(0, 95%, 90%);
+	--color-youtube-200: hsl(0, 95%, 80%);
+	--color-youtube-300: hsl(0, 95%, 70%);
+	--color-youtube-400: hsl(0, 95%, 60%);
+	--color-youtube-500: hsl(0, 95%, 55%);
+	--color-youtube-600: hsl(0, 95%, 48%);
+	--color-youtube-700: hsl(0, 95%, 40%);
+	--color-youtube-800: hsl(0, 95%, 28%);
+	--color-youtube-900: hsl(0, 95%, 18%);
+	--color-youtube-950: hsl(0, 95%, 8%);
+
+	/* ============================================
+	   KICK (Green)
+	   Hue: 105° (from #53FC18)
+	   ============================================ */
+
+	/* Kick Base (Slate-like, 10% saturation) */
+	--color-kick-base-50: hsl(105, 10%, 97%);
+	--color-kick-base-100: hsl(105, 10%, 92%);
+	--color-kick-base-200: hsl(105, 10%, 82%);
+	--color-kick-base-300: hsl(105, 10%, 72%);
+	--color-kick-base-400: hsl(105, 10%, 60%);
+	--color-kick-base-500: hsl(105, 10%, 50%);
+	--color-kick-base-600: hsl(105, 10%, 40%);
+	--color-kick-base-700: hsl(105, 10%, 32%);
+	--color-kick-base-800: hsl(105, 10%, 22%);
+	--color-kick-base-900: hsl(105, 10%, 15%);
+	--color-kick-base-950: hsl(105, 10%, 5%);
+
+	/* Kick Accent (Vibrant, 95% saturation) */
+	--color-kick-50: hsl(105, 95%, 97%);
+	--color-kick-100: hsl(105, 95%, 90%);
+	--color-kick-200: hsl(105, 95%, 80%);
+	--color-kick-300: hsl(105, 95%, 70%);
+	--color-kick-400: hsl(105, 95%, 60%);
+	--color-kick-500: hsl(105, 95%, 54%);
+	--color-kick-600: hsl(105, 95%, 48%);
+	--color-kick-700: hsl(105, 95%, 40%);
+	--color-kick-800: hsl(105, 95%, 28%);
+	--color-kick-900: hsl(105, 95%, 18%);
+	--color-kick-950: hsl(105, 95%, 8%);
+}

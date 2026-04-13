@@ -1,0 +1,64 @@
+{
+	"$schema": "https://opencode.ai/config.json",
+	"permission": "allow",
+	"agent": {
+		"plan": {
+			"permission": {
+				"*": "allow",
+				"write": "deny",
+				"edit": "deny",
+				"skill": {
+					"update-docs": "deny"
+				},
+				"task": {
+					"*": "allow",
+					"svelte-file-editor": "deny"
+				},
+				"bash": {
+					"*": "allow",
+					"rm *": "deny",
+					"rm -rf *": "deny",
+					"dd *": "deny",
+					"mkfs *": "deny",
+					"fdisk *": "deny",
+					"format *": "deny",
+					"*: > *": "deny",
+					"*: >> *": "deny",
+					"shred *": "deny",
+					"wipefs *": "deny",
+					"parted *": "deny",
+					"mv * /dev/null": "deny",
+					"git push *": "deny",
+					"git reset --hard *": "deny",
+					"git clean *": "deny",
+					"pnpm db:reset": "deny",
+					"npm * reset": "deny",
+					"dropdb *": "deny",
+					"docker * prune": "deny",
+					"docker * rm": "deny",
+					"kill *": "deny",
+					"pkill *": "deny",
+					"killall *": "deny"
+				}
+			}
+		},
+		"build": {
+			"permission": {
+				"*": "allow",
+				"skill": {
+					"update-docs": "allow"
+				}
+			}
+		}
+	},
+	"model": "opencode-go/kimi-k2.5",
+	"instructions": [".opencode/INSTRUCTIONS.md", "CONTRIBUTING.md"],
+	"plugin": ["@sveltejs/opencode"],
+	"mcp": {
+		"chrome-devtools": {
+			"type": "local",
+			"command": ["npx", "-y", "chrome-devtools-mcp@latest", "--no-usage-statistics"],
+			"enabled": true
+		}
+	}
+}

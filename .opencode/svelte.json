@@ -1,0 +1,19 @@
+{
+	"$schema": "https://svelte.dev/opencode/schema.json",
+	"mcp": {
+		"type": "local",
+		"enabled": true
+	},
+	"subagent": {
+		"enabled": true,
+		"agents": {
+			"svelte-file-editor": {}
+		}
+	},
+	"skills": {
+		"enabled": ["svelte-code-writer", "svelte-core-bestpractices"]
+	},
+	"instructions": {
+		"enabled": true
+	}
+}
