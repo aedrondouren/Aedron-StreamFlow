@@ -62,6 +62,18 @@
   <em>Unified dashboard with real-time streaming stats</em>
 </p>
 
+<p align="center">
+  <img src=".repo/screenshots/platforms-page.png" alt="Platform Management - Connected" width="600"/>
+  <br/>
+  <em>Platform management with connected Twitch account</em>
+</p>
+
+<p align="center">
+  <img src=".repo/screenshots/platforms-page-disconnected.png" alt="Platform Management - Disconnected" width="600"/>
+  <br/>
+  <em>Platform management showing available platforms to connect</em>
+</p>
+
 ## 🎯 Supported Platforms
 
 | Platform     | Status         | Notes                             |
