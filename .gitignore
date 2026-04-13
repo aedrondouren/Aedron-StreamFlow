@@ -29,8 +29,5 @@ vite.config.ts.timestamp-*
 supabase/volumes/
 supabase/.temp/
 
-# Playwright MCP temporary files
-.playwright-mcp/
-
-# OpenCode Playwright temp files
-.opencode/playwright/temp/
+# OpenCode temp files
+.opencode/temp/

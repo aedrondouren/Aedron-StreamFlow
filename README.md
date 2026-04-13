@@ -39,19 +39,19 @@
 ## 📸 Screenshots
 
 <p align="center">
-  <img src=".opencode/playwright/signin-page.png" alt="Sign In" width="600"/>
+  <img src=".repo/screenshots/signin-page.png" alt="Sign In" width="600"/>
   <br/>
   <em>Secure authentication with email and OAuth</em>
 </p>
 
 <p align="center">
-  <img src=".opencode/playwright/signup-page.png" alt="Sign Up" width="600"/>
+  <img src=".repo/screenshots/signup-page.png" alt="Sign Up" width="600"/>
   <br/>
   <em>Simple account creation with password confirmation</em>
 </p>
 
 <p align="center">
-  <img src=".opencode/playwright/dashboard.png" alt="Dashboard" width="600"/>
+  <img src=".repo/screenshots/dashboard.png" alt="Dashboard" width="600"/>
   <br/>
   <em>Unified dashboard with real-time streaming stats</em>
 </p>

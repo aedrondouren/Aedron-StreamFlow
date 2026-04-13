@@ -62,7 +62,7 @@ pnpm test:visual:setup    # Combined: test user + mock data
 
 ## MCP Servers
 
-This project uses three MCP (Model Context Protocol) servers:
+This project uses two MCP (Model Context Protocol) servers:
 
 ### Svelte MCP (`@sveltejs/opencode`)
 
@@ -77,11 +77,15 @@ Svelte 5 and SvelteKit documentation, code analysis, and playground links.
 
 ### Chrome DevTools MCP (`chrome-devtools-mcp`)
 
-Browser debugging and performance profiling.
+Browser debugging, performance profiling, and visual verification.
 
-### Playwright MCP (`@playwright/mcp`)
+**Tools:**
 
-Browser automation, end-to-end testing, and visual verification.
+- `chrome-devtools_navigate_page` — Navigate to URLs or go back/forward/reload
+- `chrome-devtools_take_screenshot` — Capture screenshots for visual verification
+- `chrome-devtools_resize_page` — Set viewport dimensions for responsive testing
+- `chrome-devtools_evaluate_script` — Execute JavaScript (use for `window.getComputedStyle()` debugging)
+- `chrome-devtools_list_pages` — Manage browser tabs
 
 **Configuration:** OpenCode users have these auto-configured in `opencode.json`. VS Code users configure via IDE's MCP panel.
 
@@ -169,6 +173,7 @@ const store = createReactiveTable(supabase, {
 - Server endpoints need `data-sveltekit-reload` on links
 - `createReactiveTable()` store must be started manually (in `$effect`, not module level)
 - Never call Supabase fetch methods during SSR — guard with `browser` or defer to `$effect`
+- When debugging styling issues, use `chrome-devtools_evaluate_script` with `window.getComputedStyle(element)` to inspect actual computed styles
 
 ---
 
@@ -176,15 +181,30 @@ const store = createReactiveTable(supabase, {
 
 ### Sub-agent Collaboration
 
-Use **sub-agents** for parallel tasks:
+Use **sub-agents AGGRESSIVELY** for parallel tasks:
 
-- **When:** Tasks divide into independent chunks (e.g., "fix animation" + "investigate warning")
+- **When to use:**
+  - Independent file editing tasks (different files)
+  - Tasks that don't depend on each other's output
+  - Investigation tasks while making changes elsewhere
+  - Any opportunity for parallelization
+
 - **How:** `task` tool with specific, isolated prompts
+- **Don't wait** — delegate immediately when tasks are independent
 - **Benefits:** Faster completion, parallel execution, specialized focus
+
+### Dev Server Protocol
+
+**ALWAYS check if dev server is running before starting one:**
+
+1. Use `chrome-devtools_navigate_page` with `type: 'url'` to `http://localhost:5173`
+2. If navigation succeeds, server is running — proceed
+3. If navigation fails, run `pnpm dev` and wait for startup
+4. **Never start multiple server instances**
 
 ### Visual Verification
 
-When making UI changes, verify visually using Playwright MCP. See [Visual Verification Workflow](.opencode/playwright/README.md) for full details.
+When making UI changes, verify visually using Chrome DevTools MCP.
 
 **Quick Setup:**
 
@@ -192,6 +212,41 @@ When making UI changes, verify visually using Playwright MCP. See [Visual Verifi
 pnpm test:visual:setup  # Creates test user + mock data
 ```
 
-**Credentials** stored in `.env`:
+**Test Credentials** stored in `.env`:
 
-- `TEST_USER_EMAIL`, `TEST_USER_PASSWORD`, `TEST_USER_ID`
+- `TEST_USER_EMAIL` — Email for login
+- `TEST_USER_PASSWORD` — Auto-generated secure password
+- `TEST_USER_ID` — Supabase user UUID
+
+**Verification Steps:**
+
+1. **Check dev server status** — Navigate to `http://localhost:5173`. If it fails, run `pnpm dev` and wait.
+
+2. **For protected routes (/app)**:
+   - Navigate to `/auth/signin`
+   - Fill in credentials from `TEST_USER_EMAIL` and `TEST_USER_PASSWORD`
+   - Submit and wait for redirect to `/app`
+
+3. **Confirm viewport** — Ask the user or check context:
+   - Mobile: ~375-414px width
+   - Tablet: ~768px width
+   - Desktop: ~1440px+ width (default)
+
+4. **Match viewport** — Use `chrome-devtools_resize_page` to set dimensions
+
+5. **Navigate to route** — Use `chrome-devtools_navigate_page` to load the page
+
+6. **Take screenshots**:
+   - **UI validation** (temporary): `.opencode/temp/component-state.png`
+   - **Documentation** (permanent): `.repo/screenshots/component-final.png`
+
+7. **Iterate** — Adjust and re-verify if results don't match expectations
+
+**Screenshot Asset Management:**
+
+- **Temporary screenshots** (UI validation): `.opencode/temp/` — gitignored, clean periodically
+- **Permanent screenshots** (documentation): `.repo/screenshots/` — committed to repository
+
+**Debugging Styling Issues:**
+
+Use `chrome-devtools_evaluate_script` with `window.getComputedStyle(element)` to inspect actual computed styles when debugging CSS problems.
