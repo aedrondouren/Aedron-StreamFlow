@@ -1,7 +1,34 @@
 {
 	"name": "aedron-streamflow",
-	"private": true,
 	"version": "0.0.1",
+	"description": "Unified Streaming and Social platform manager for content creators",
+	"author": "Aedron <aedronvt@gmail.com>",
+	"license": "MIT",
+	"private": true,
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/aedrondouren/Aedron-StreamFlow.git"
+	},
+	"bugs": {
+		"url": "https://github.com/aedrondouren/Aedron-StreamFlow/issues"
+	},
+	"homepage": "https://github.com/aedrondouren/Aedron-StreamFlow#readme",
+	"keywords": [
+		"streaming",
+		"stream",
+		"twitch",
+		"youtube",
+		"kick",
+		"sveltekit",
+		"supabase",
+		"content-creator",
+		"live-streaming",
+		"unified-chat",
+		"obs-overlay"
+	],
+	"engines": {
+		"node": ">=20.0.0"
+	},
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",

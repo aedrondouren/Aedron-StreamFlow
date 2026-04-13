@@ -59,6 +59,14 @@ pnpm format       # Auto-format code
 pnpm build        # Production build test
 ```
 
+### Testing
+
+```bash
+pnpm test:visual:setup    # Setup test environment with mock data
+```
+
+This creates a test user (`test@email.test`) and mock Twitch connection for visual testing.
+
 ---
 
 ## Project Architecture

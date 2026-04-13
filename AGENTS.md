@@ -22,6 +22,11 @@ pnpm format       # Run prettier --write . && eslint --fix
 pnpm db:generate  # Generate TypeScript types from hosted DB
 pnpm db:push      # Push migrations to hosted database
 pnpm db:reset     # Reset hosted database (⚠️ destructive)
+
+# Testing
+pnpm test:user:setup      # Create test user in Supabase
+pnpm test:spoof:twitch    # Generate mock Twitch platform data
+pnpm test:visual:setup    # Combined: test user + mock data
 ```
 
 ### Stack
