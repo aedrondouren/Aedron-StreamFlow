@@ -64,11 +64,11 @@
 
 ## 🎯 Supported Platforms
 
-| Platform     | Status  | Notes                        |
-| ------------ | ------- | ---------------------------- |
-| Twitch       | ✅ Live | Full chat and stream control |
-| Kick         | ✅ Live | Growing platform support     |
-| YouTube Live | ✅ Live | Integrated with YT ecosystem |
+| Platform     | Status         | Notes                             |
+| ------------ | -------------- | --------------------------------- |
+| Twitch       | 🚧 In Progress | OAuth integration implemented     |
+| Kick         | 🚧 Planned     | OAuth and API integration planned |
+| YouTube Live | 🚧 Planned     | OAuth and API integration planned |
 
 **Coming Soon:** TikTok Live, Instagram Live, X (Twitter) Spaces, YouTube Video & Shorts
 
