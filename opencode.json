@@ -43,11 +43,6 @@
 	"instructions": [".opencode/INSTRUCTIONS.md", "CONTRIBUTING.md"],
 	"plugin": ["@sveltejs/opencode"],
 	"mcp": {
-		"github": {
-			"type": "remote",
-			"url": "https://api.githubcopilot.com/mcp/",
-			"enabled": true
-		},
 		"chrome-devtools": {
 			"type": "local",
 			"command": ["npx", "-y", "chrome-devtools-mcp@latest", "--no-usage-statistics"],

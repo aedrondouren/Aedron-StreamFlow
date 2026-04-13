@@ -27,9 +27,8 @@ After completing the code, ask the user if they want a playground link. Only cal
 This project has the following MCP (Model Context Protocol) servers configured:
 
 - **Svelte MCP** - Svelte 5 and SvelteKit documentation, code analysis, and playground links (via `@sveltejs/opencode`)
-- **GitHub MCP** - GitHub operations, PR management, and repository queries (via GitHub Copilot)
 - **Chrome DevTools MCP** - Browser debugging and performance profiling (`chrome-devtools-mcp`)
-- **Playwright MCP** - Browser automation and end-to-end testing (`@playwright/mcp`)
+- **Playwright MCP** - Browser automation, end-to-end testing, and visual verification (`@playwright/mcp`)
 
 For OpenCode users, all MCP servers are automatically configured in `opencode.json`.
 For VS Code users, configure MCP servers through your IDE's MCP panel.
@@ -158,3 +157,32 @@ const store = createReactiveTable(supabase, {
 - Server endpoints (e.g., `/auth/link`) need `data-sveltekit-reload` on links to force full navigation
 - `createReactiveTable()` returns a store that must be started manually (call `.start()` in `$effect`, not at module level)
 - Never call Supabase methods that trigger fetch during SSR - always guard with `browser` check or defer to `$effect`
+
+## Visual Verification Workflow
+
+When making UI changes, you MUST verify the visual result using the Playwright MCP:
+
+1. **Ask the user about their viewport context** - "What viewport are you currently working in?" or check if they've mentioned mobile/desktop/tablet
+2. **Match the viewport** - Use `playwright_browser_resize` to match the user's working viewport:
+   - Mobile: ~375-414px width
+   - Tablet: ~768px width
+   - Desktop: ~1440px+ width (default if unspecified)
+3. **Navigate to the affected route** - Use `playwright_browser_navigate` to load the page at `http://localhost:5173`
+4. **Take screenshots** - Use `playwright_browser_take_screenshot` to capture the result
+5. **Iterate** - If the visual result doesn't match expectations, adjust and re-verify
+
+### Example Workflow
+
+```
+User: "Make this card component responsive for mobile"
+
+Agent: I'll update the card component for mobile. First, let me start the dev server
+and verify the current state at mobile viewport.
+[Start dev server with pnpm dev]
+[Resize browser to mobile viewport - 375px width]
+[Navigate to the route]
+[Take screenshot to verify changes]
+```
+
+**Important**: Always confirm the viewport with the user if they haven't specified whether
+they're working on mobile, tablet, or desktop views.
