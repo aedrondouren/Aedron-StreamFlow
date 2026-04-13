@@ -1,5 +1,10 @@
 @import 'tailwindcss';
 
+/* Enable smooth animations to intrinsic sizing keywords (fit-content, auto, etc.) */
+:root {
+	interpolate-size: allow-keywords;
+}
+
 @variant sidebar-open {
 	html[data-sidebar-open='true'] & {
 		@slot;
