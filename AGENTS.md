@@ -1,43 +1,14 @@
-You are able to use the Svelte MCP server, where you have access to comprehensive Svelte 5 and SvelteKit documentation. Here's how to use the available tools effectively:
+# AGENTS.md
 
-## Available Svelte MCP Tools:
+Quick reference for AI agents working on this project.
 
-### 1. list-sections
-
-Use this FIRST to discover all available documentation sections. Returns a structured list with titles, use_cases, and paths.
-When asked about Svelte or SvelteKit topics, ALWAYS use this tool at the start of the chat to find relevant sections.
-
-### 2. get-documentation
-
-Retrieves full documentation content for specific sections. Accepts single or multiple sections.
-After calling the list-sections tool, you MUST analyze the returned documentation sections (especially the use_cases field) and then use the get-documentation tool to fetch ALL documentation sections that are relevant for the user's task.
-
-### 3. svelte-autofixer
-
-Analyzes Svelte code and returns issues and suggestions.
-You MUST use this tool whenever writing Svelte code before sending it to the user. Keep calling it until no issues or suggestions are returned.
-
-### 4. playground-link
-
-Generates a Svelte Playground link with the provided code.
-After completing the code, ask the user if they want a playground link. Only call this tool after user confirmation and NEVER if code was written to files in their project.
-
-## Available MCP Servers
-
-This project has the following MCP (Model Context Protocol) servers configured:
-
-- **Svelte MCP** - Svelte 5 and SvelteKit documentation, code analysis, and playground links (via `@sveltejs/opencode`)
-- **Chrome DevTools MCP** - Browser debugging and performance profiling (`chrome-devtools-mcp`)
-- **Playwright MCP** - Browser automation, end-to-end testing, and visual verification (`@playwright/mcp`)
-
-For OpenCode users, all MCP servers are automatically configured in `opencode.json`.
-For VS Code users, configure MCP servers through your IDE's MCP panel.
+> **Note:** For human contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
-# AGENTS.md
+## Quick Reference
 
-## Dev Commands
+### Dev Commands
 
 ```bash
 pnpm dev          # Start dev server (http://localhost:5173)
@@ -53,88 +24,122 @@ pnpm db:push      # Push migrations to hosted database
 pnpm db:reset     # Reset hosted database (⚠️ destructive)
 ```
 
-## Stack
+### Stack
 
-- **SvelteKit 2** with **Svelte 5 runes** (`compilerOptions.runes: true` in `svelte.config.js`)
+- **SvelteKit 2** with **Svelte 5 runes** (`compilerOptions.runes: true`)
 - **TypeScript** (strict mode, `moduleResolution: bundler`)
-- **Tailwind CSS v4** via `@tailwindcss/vite` plugin. `src/app.css` uses `@import 'tailwindcss'` (no `tailwind.config.js`). Prettier's Tailwind plugin sorts classes using `./src/app.css` as reference.
+- **Tailwind CSS v4** via `@tailwindcss/vite` plugin
 - **ESLint** + **typescript-eslint** + `eslint-plugin-svelte` + `eslint-config-prettier`
-- **Prettier** with `prettier-plugin-svelte` and `prettier-plugin-tailwindcss`; tabs, single quotes, 100 char width
-- **Supabase** for auth, database, and realtime (hosted project: tqrifgeqtxlwohdjafqn)
+- **Prettier** with `prettier-plugin-svelte` and `prettier-plugin-tailwindcss`
+- **Supabase** for auth, database, and realtime
 
-## Package Manager
+### Package Manager
 
-- **pnpm** (not npm/yarn). `engine-strict=true` in `.npmrc` enforces this.
-- Lockfile is `pnpm-lock.yaml`
+- **pnpm** (enforced by `engine-strict=true` in `.npmrc`)
+- Lockfile: `pnpm-lock.yaml`
 
-## Build & Output
+### Build & Output
 
-- **adapter-node** (`@sveltejs/adapter-node`): produces a Node.js server. Build output goes to `.output/`
-- Generated type files: `.svelte-kit/` (extend `tsconfig.json` from there)
+- **adapter-node** (`@sveltejs/adapter-node`): Node.js server → `.output/`
+- Generated types: `.svelte-kit/`
 
-## Environment Variables
+### Environment Variables
 
-- `.env` is gitignored; `.env.example` is the template
-- `PUBLIC_SUPABASE_URL` - Supabase project URL (e.g., https://tqrifgeqtxlwohdjafqn.supabase.co)
-- `PUBLIC_SUPABASE_PUBLISHABLE_KEY` - Supabase client publishable key
-- `PUBLIC_TWITCH_CLIENT_ID` - Twitch OAuth (public, safe to expose)
-- `PRIVATE_TWITCH_CLIENT_SECRET` - Twitch OAuth secret (server-side only)
-- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` - Google OAuth (optional)
+| Variable                                   | Source                | Purpose                       |
+| ------------------------------------------ | --------------------- | ----------------------------- |
+| `PUBLIC_SUPABASE_URL`                      | `$env/static/public`  | Supabase project URL          |
+| `PUBLIC_SUPABASE_PUBLISHABLE_KEY`          | `$env/static/public`  | Supabase anon key             |
+| `PUBLIC_TWITCH_CLIENT_ID`                  | `$env/static/public`  | Twitch OAuth (safe to expose) |
+| `PRIVATE_TWITCH_CLIENT_SECRET`             | `$env/static/private` | Twitch OAuth (server-only)    |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | `$env/static/private` | Google OAuth (optional)       |
+
+---
+
+## MCP Servers
+
+This project uses three MCP (Model Context Protocol) servers:
+
+### Svelte MCP (`@sveltejs/opencode`)
+
+Svelte 5 and SvelteKit documentation, code analysis, and playground links.
+
+**Tools:**
+
+- `list-sections` — Discover documentation sections (use FIRST)
+- `get-documentation` — Fetch full docs for specific sections
+- `svelte-autofixer` — Analyze and fix Svelte code issues (ALWAYS use before sending code)
+- `playground-link` — Generate Svelte Playground links (ask user first)
+
+### Chrome DevTools MCP (`chrome-devtools-mcp`)
+
+Browser debugging and performance profiling.
+
+### Playwright MCP (`@playwright/mcp`)
+
+Browser automation, end-to-end testing, and visual verification.
+
+**Configuration:** OpenCode users have these auto-configured in `opencode.json`. VS Code users configure via IDE's MCP panel.
+
+---
 
 ## Architecture
 
 ### Routing Strategy
 
-- `/` (landing): `prerender=true` - static HTML
-- `/app/*`: SSR with client-side realtime - initial server load, then client takes over
-- `/auth/signin`, `/auth/confirm/*`, `/auth/logout`: Auth routes
+| Route     | Strategy         | Notes                               |
+| --------- | ---------------- | ----------------------------------- |
+| `/`       | `prerender=true` | Static landing page                 |
+| `/app/*`  | SSR + Realtime   | Server load, then client takes over |
+| `/auth/*` | SSR              | Signin, confirm, logout flows       |
 
 ### Data Flow (Dashboard)
 
-1. Server load fetches initial data via Supabase (RLS-protected)
-2. Client hydrates and subscribes to Supabase Realtime channels
-3. Platform actions go through server routes → Platform API → Supabase → Realtime to client
+1. **Server Load**: Fetches initial data via Supabase (RLS-protected)
+2. **Client Hydration**: Subscribes to Supabase Realtime channels
+3. **Actions**: Server routes → Platform API → Supabase → Realtime → Clients
 
 ### Key Files
 
-- `src/hooks.server.ts` - Supabase server client + auth guards
-- `src/lib/supabase/database.types.ts` - Generated database types
-- `src/lib/supabase/validateClaims.ts` - JWT claims validation
-- `src/lib/platform/twitchAuth.ts` - Twitch OAuth utilities
-- `src/routes/(protected)/app/+layout.ts` - Browser client + realtime setup
-- `src/routes/(protected)/app/+layout.server.ts` - Session passed to client
+| File                                           | Purpose                              |
+| ---------------------------------------------- | ------------------------------------ |
+| `src/hooks.server.ts`                          | Supabase server client + auth guards |
+| `src/lib/supabase/database.types.ts`           | Generated database types             |
+| `src/lib/supabase/validateClaims.ts`           | JWT claims validation                |
+| `src/lib/platform/twitchAuth.ts`               | Twitch OAuth utilities               |
+| `src/routes/(protected)/app/+layout.ts`        | Browser client + realtime setup      |
+| `src/routes/(protected)/app/+layout.server.ts` | Session passed to client             |
 
 ### Supabase Hosted
 
-- **Project**: Linked to hosted Supabase project (ref: tqrifgeqtxlwohdjafqn)
-- **Database**: Managed via CLI with `pnpm db:push` and `pnpm db:reset`
-- **Auth**: Uses PKCE flow with callback at `/auth/confirm/supabase`
-- **OAuth**: Twitch and Google providers configured in Supabase dashboard
+- **Project**: `tqrifgeqtxlwohdjafqn`
+- **Database**: CLI-managed (`pnpm db:push`, `pnpm db:reset`)
+- **Auth**: PKCE flow with callback at `/auth/confirm/supabase`
+- **OAuth**: Twitch and Google configured in dashboard
 
 ### Auth Flow
 
-1. User initiates OAuth sign-in via `signInWithOAuth`
-2. OAuth provider redirects to Supabase Auth with authorization code
-3. Supabase redirects to app callback (`/auth/confirm/supabase`)
-4. App exchanges code for session via `exchangeCodeForSession(code)`
-5. Session cookies are set, user is authenticated
+1. User initiates OAuth via `signInWithOAuth`
+2. Provider redirects to Supabase with authorization code
+3. Supabase redirects to `/auth/confirm/supabase`
+4. App exchanges code via `exchangeCodeForSession(code)`
+5. Session cookies set, user authenticated
 
 ### Realtime Data Pattern
 
-The app uses a hybrid SSR + Realtime approach:
+Hybrid SSR + Realtime:
 
-1. **Server Load**: Initial data fetched server-side for fast first paint
-2. **Client Subscription**: `$effect()` subscribes to Supabase Realtime on mount
-3. **Batched Updates**: Rapid changes batched (50ms window) before UI update
+1. **Server Load**: Fast first paint with server-fetched data
+2. **Client Subscription**: `$effect()` subscribes to Realtime on mount
+3. **Batched Updates**: 50ms window for rapid changes
 4. **Retry Logic**: Exponential backoff [1s, 2s, 5s, 10s] with manual retry
 
 **Key Utilities:**
 
-- `src/lib/realtime/batcher.svelte.ts` - Batches rapid realtime events
-- `src/lib/realtime/subscription.svelte.ts` - Subscription manager with retry/auth recovery
-- `src/lib/stores/reactiveTable.svelte.ts` - Factory for reactive table stores
+- `src/lib/realtime/batcher.svelte.ts` — Batches rapid events
+- `src/lib/realtime/subscription.svelte.ts` — Subscription manager
+- `src/lib/stores/reactiveTable.svelte.ts` — Reactive table factory
 
-**Usage Pattern:**
+**Usage:**
 
 ```typescript
 const store = createReactiveTable(supabase, {
@@ -144,93 +149,44 @@ const store = createReactiveTable(supabase, {
 // Call store.start() inside $effect after browser check
 ```
 
+---
+
 ## Gotchas
 
-- Tailwind v4 config lives in CSS (`@import "tailwindcss"`), not a JS config file
-- `.cache/` and `supabase/volumes/` directories are gitignored
-- Supabase env vars prefixed `PUBLIC_` come from `$env/static/public`, `PRIVATE_` from `$env/static/private`
-- OAuth redirectTo must be in Supabase dashboard's redirect URL allow list
-- Use dynamic `${url.origin}/auth/confirm/supabase` for production-ready redirect URL
-- Route groups use `(folder)` syntax - parentheses don't affect URL (e.g., `(protected)/app` resolves to `/app`)
-- `pnpm format` runs prettier only (no eslint --fix); use `pnpm lint` to check both
-- `svelte-kit sync` runs automatically in `prepare` script (pnpm install), but `pnpm check` also triggers it
-- Server endpoints (e.g., `/auth/link`) need `data-sveltekit-reload` on links to force full navigation
-- `createReactiveTable()` returns a store that must be started manually (call `.start()` in `$effect`, not at module level)
-- Never call Supabase methods that trigger fetch during SSR - always guard with `browser` check or defer to `$effect`
+- Tailwind v4 config lives in CSS (`@import "tailwindcss"`), not JS
+- `.cache/` and `supabase/volumes/` are gitignored
+- `PUBLIC_*` env vars from `$env/static/public`, `PRIVATE_*` from `$env/static/private`
+- OAuth `redirectTo` must be in Supabase dashboard allow list
+- Use dynamic `${url.origin}/auth/confirm/supabase` for production
+- Route groups: `(folder)` syntax — parentheses don't affect URL
+- `pnpm format` = prettier only; `pnpm lint` checks both
+- `svelte-kit sync` runs in `prepare` script
+- Server endpoints need `data-sveltekit-reload` on links
+- `createReactiveTable()` store must be started manually (in `$effect`, not module level)
+- Never call Supabase fetch methods during SSR — guard with `browser` or defer to `$effect`
 
-## Agent Collaboration
+---
 
-When working on complex tasks, prefer using **sub-agents** to parallelize work:
+## Workflows
 
-- **Use sub-agents when:** Tasks can be divided into independent chunks (e.g., "fix animation" + "investigate warning")
-- **Delegate via:** `task` tool with specific, isolated prompts
+### Sub-agent Collaboration
+
+Use **sub-agents** for parallel tasks:
+
+- **When:** Tasks divide into independent chunks (e.g., "fix animation" + "investigate warning")
+- **How:** `task` tool with specific, isolated prompts
 - **Benefits:** Faster completion, parallel execution, specialized focus
-- **Example:** One agent fixes CSS layout while another investigates SSR warnings
 
-## Visual Verification Workflow
+### Visual Verification
 
-When making UI changes, you MUST verify the visual result using the Playwright MCP:
+When making UI changes, verify visually using Playwright MCP. See [Visual Verification Workflow](.opencode/playwright/README.md) for full details.
 
-### Setup (run once per environment)
+**Quick Setup:**
 
 ```bash
-pnpm test:visual:setup    # Creates test user + mock Twitch data
+pnpm test:visual:setup  # Creates test user + mock data
 ```
 
-This creates:
+**Credentials** stored in `.env`:
 
-- Test user: `test@email.test` (password saved in `.env`)
-- Mock Twitch connection: @TestUser (visual only, non-functional)
-
-### Test Credentials
-
-Stored in `.env` (gitignored, never committed):
-
-- `TEST_USER_EMAIL` - Email for login
-- `TEST_USER_PASSWORD` - Auto-generated secure password
-- `TEST_USER_ID` - Supabase user UUID
-
-### Verification Steps
-
-1. **Check dev server status** - First attempt to navigate to `http://localhost:5173` using Playwright. If the page loads successfully, proceed. If connection fails or times out, start the dev server with `pnpm dev` and wait for it to be ready.
-
-2. **For protected routes (/app)**:
-   - Navigate to `/auth/signin`
-   - Fill in test credentials from `TEST_USER_EMAIL` and `TEST_USER_PASSWORD` env vars
-   - Submit form to authenticate
-   - Wait for redirect to `/app`
-
-3. **Ask the user about their viewport context** - "What viewport are you currently working in?" or check if they've mentioned mobile/desktop/tablet
-
-4. **Match the viewport** - Use `playwright_browser_resize` to match the user's working viewport:
-   - Mobile: ~375-414px width
-   - Tablet: ~768px width
-   - Desktop: ~1440px+ width (default if unspecified)
-
-5. **Navigate to the affected route** - Use `playwright_browser_navigate` to load the page at `http://localhost:5173`
-
-6. **Take screenshots** - Use `playwright_browser_take_screenshot` with appropriate paths:
-   - **UI validation** (temporary): `.opencode/playwright/temp/component-state.png`
-   - **Documentation** (permanent): `.opencode/playwright/component-final.png`
-
-   See [`.opencode/playwright/README.md`](.opencode/playwright/README.md) for full guidelines
-
-7. **Iterate** - If the visual result doesn't match expectations, adjust and re-verify
-
-### Example Workflow
-
-```
-User: "Make this card component responsive for mobile"
-
-Agent: I'll update the card component for mobile. First, let me verify
-at mobile viewport.
-[Check dev server status - attempt navigation to localhost:5173]
-[If not running: pnpm dev]
-[Resize browser to mobile viewport - 375px width]
-[Navigate to /auth/signin and login with test credentials]
-[Navigate to /app]
-[Take screenshot to verify changes]
-```
-
-**Important**: Always confirm the viewport with the user if they haven't specified whether
-they're working on mobile, tablet, or desktop views.
+- `TEST_USER_EMAIL`, `TEST_USER_PASSWORD`, `TEST_USER_ID`

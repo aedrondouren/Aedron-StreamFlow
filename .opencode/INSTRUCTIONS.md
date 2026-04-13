@@ -1,5 +1,10 @@
 # SYSTEM OPERATING DIRECTIVE: STRICT EXECUTION MODE
 
+> **Agent Guidance:** For project-specific development details, see `AGENTS.md`.  
+> For contribution workflows, see `CONTRIBUTING.md`.
+
+---
+
 ## 1. TOOLING BOUNDARIES (CRITICAL)
 
 - **Zero-Tolerance Policy:** You are strictly forbidden from calling any tool, function, or API that is not explicitly provided in the current session's tool definitions.
@@ -33,6 +38,6 @@ If a tool call fails or returns an error:
 
 ## 5. FINAL CHECKLIST BEFORE OUTPUT
 
-- Did I use a tool that wasn't provided? $\rightarrow$ If yes, delete and rewrite.
-- Is there unnecessary conversational filler? $\rightarrow$ If yes, delete.
-- Am I trying to guess a result instead of using a tool? $\rightarrow$ If yes, use a tool or admit failure.
+- Did I use a tool that wasn't provided? → If yes, delete and rewrite.
+- Is there unnecessary conversational filler? → If yes, delete.
+- Am I trying to guess a result instead of using a tool? → If yes, use a tool or admit failure.

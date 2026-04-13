@@ -1,6 +1,6 @@
 # Contributing to Aedron StreamFlow
 
-Thank you for your interest in contributing! This document will guide you through the process.
+Thank you for your interest in contributing! This guide covers setup, development workflow, and best practices for both human contributors and AI assistants.
 
 ## Getting Started
 
@@ -29,37 +29,25 @@ cp .env.example .env
 
 When you open this project in VS Code, you'll be prompted to install recommended extensions:
 
-- **Svelte for VS Code** - Svelte syntax highlighting and IntelliSense
-- **Prettier** - Code formatting
-- **ESLint** - Linting for JavaScript/TypeScript/Svelte
-- **Tailwind CSS IntelliSense** - Autocomplete for Tailwind classes
-- **Supabase** - Database management
+- **Svelte for VS Code** — Svelte syntax highlighting and IntelliSense
+- **Prettier** — Code formatting
+- **ESLint** — Linting for JavaScript/TypeScript/Svelte
+- **Tailwind CSS IntelliSense** — Autocomplete for Tailwind classes
+- **Supabase** — Database management
 
 ### MCP Servers (Optional)
 
-This project includes MCP (Model Context Protocol) server configurations for enhanced AI assistance:
+This project includes MCP (Model Context Protocol) configurations for enhanced AI assistance. These are optional for human contributors but useful when working with AI agents:
 
-**For OpenCode users:**
-MCP servers are automatically configured in `opencode.json`:
+**For OpenCode users:** MCP servers auto-configure via `opencode.json`:
 
-- **GitHub MCP** - GitHub operations via GitHub Copilot
-- **Chrome DevTools MCP** - `chrome-devtools-mcp`
-- **Playwright MCP** - `@playwright/mcp`
+- GitHub MCP — GitHub operations
+- Chrome DevTools MCP — Browser debugging
+- Playwright MCP — Visual testing
 
-**For VS Code/Cursor users:**
-Configure MCP servers through your IDE's MCP panel:
+**For VS Code/Cursor users:** Configure via IDE's MCP panel using packages listed above.
 
-- **Chrome DevTools MCP**
-  - Package: `chrome-devtools-mcp`
-  - Args: `-y chrome-devtools-mcp@latest --no-usage-statistics`
-
-- **GitHub MCP** (via GitHub Copilot)
-  - Type: HTTP
-  - URL: `https://api.githubcopilot.com/mcp/`
-
-- **Playwright MCP**
-  - Package: `@playwright/mcp`
-  - Args: `-y @playwright/mcp@latest`
+---
 
 ## Development Workflow
 
@@ -71,21 +59,54 @@ pnpm format       # Auto-format code
 pnpm build        # Production build test
 ```
 
+---
+
+## Project Architecture
+
+This project uses a **server-first approach with client-side enhancements**:
+
+### Routing Strategy
+
+| Route     | Purpose                                          |
+| --------- | ------------------------------------------------ |
+| `/`       | Static landing page (prerendered)                |
+| `/app/*`  | Dashboard — SSR initial load, then Realtime sync |
+| `/auth/*` | Authentication flows (signin, callbacks, logout) |
+
+### Data Flow
+
+1. **Server Load** — Initial data fetched server-side for fast first paint
+2. **Client Hydration** — Browser subscribes to Supabase Realtime
+3. **Updates** — User actions update immediately; other clients sync via Realtime
+
+### Tech Stack Highlights
+
+- **SvelteKit 2** with **Svelte 5 runes** (`$state`, `$derived`, `$effect`)
+- **TypeScript** in strict mode
+- **Tailwind CSS v4** (config in CSS, not JS)
+- **Supabase** — Auth, database, and realtime subscriptions
+
+For detailed architecture docs, agent-specific patterns, and MCP usage, see [AGENTS.md](AGENTS.md).
+
+---
+
 ## Code Style
 
-We use automated tooling to maintain consistency:
+Automated tooling maintains consistency:
 
 - **Tabs** for indentation (not spaces)
 - **Single quotes** for strings
 - **100 character** line width
-- **Svelte 5 runes** required (`$state`, `$derived`, `$effect`, etc.)
-- **Strict TypeScript** mode enabled
+- **Svelte 5 runes** required
+- **Strict TypeScript** mode
 
-Run `pnpm format` before committing to auto-fix style issues.
+Run `pnpm format` before committing to auto-fix issues.
+
+---
 
 ## Pull Request Process
 
-1. **Create a branch** from `supabase` (our main development branch)
+1. **Create a branch** from `supabase` (main development branch):
 
    ```bash
    git checkout supabase
@@ -93,24 +114,26 @@ Run `pnpm format` before committing to auto-fix style issues.
    git checkout -b feature/your-feature-name
    ```
 
-2. **Make your changes** with clear, focused commits
+2. **Make changes** with clear, focused commits
 
-3. **Test your changes**
+3. **Test your changes**:
 
    ```bash
    pnpm check && pnpm lint && pnpm build
    ```
 
-4. **Push to your fork** and open a PR against the `supabase` branch
+4. **Push to your fork** and open a PR against `supabase`
 
 5. **PR Requirements:**
-   - All checks must pass
-   - Include description of what changed and why
-   - Reference any related issues
+   - All checks pass
+   - Clear description of changes
+   - Reference related issues
+
+---
 
 ## Commit Message Format
 
-We follow conventional commits:
+Conventional commits:
 
 ```
 feat: Add new feature
@@ -123,6 +146,8 @@ test: Adding or updating tests
 
 Example: `feat: add YouTube OAuth integration`
 
+---
+
 ## Code of Conduct
 
 ### Our Standards
@@ -131,23 +156,22 @@ We are committed to providing a welcoming and inspiring community for all.
 
 **Expected behavior:**
 
-- Be respectful and inclusive in all interactions
+- Be respectful and inclusive
 - Welcome newcomers and help them learn
 - Accept constructive criticism gracefully
-- Focus on what is best for the community and users
+- Focus on what's best for the community
 
 **Unacceptable behavior:**
 
-- Harassment, discrimination, or intimidation of any kind
-- Trolling, insulting/derogatory comments, or personal attacks
+- Harassment, discrimination, or intimidation
+- Trolling, insulting comments, or personal attacks
 - Publishing others' private information without permission
-- Other conduct that could reasonably be considered inappropriate
 
 ### Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by opening an issue or contacting the maintainers directly. All complaints will be reviewed and investigated promptly and fairly.
+Report issues by opening an issue or contacting maintainers directly. All complaints are reviewed promptly. Maintainers can remove, edit, or reject contributions not aligned with this Code of Conduct.
 
-Maintainers have the right and responsibility to remove, edit, or reject contributions that are not aligned with this Code of Conduct.
+---
 
 ## Security Policy
 
@@ -155,20 +179,20 @@ Maintainers have the right and responsibility to remove, edit, or reject contrib
 
 **DO NOT** open public issues for security vulnerabilities.
 
-Instead, please email: **aedronvt@gmail.com**
+Instead, email: **aedronvt@gmail.com**
 
 Include:
 
 - Description of the vulnerability
 - Steps to reproduce (if applicable)
 - Potential impact
-- Any suggested fixes (optional)
+- Suggested fixes (optional)
 
 ### Response Timeline
 
 - **Acknowledgment:** Within 48 hours
 - **Initial assessment:** Within 7 days
-- **Fix and disclosure:** Timeline depends on severity, but we prioritize security issues
+- **Fix and disclosure:** Timeline depends on severity
 
 ### Supported Versions
 
@@ -177,13 +201,15 @@ Include:
 | Latest `supabase` branch | ✅        |
 | Older commits            | ❌        |
 
-### Security Best Practices for Contributors
+### Security Best Practices
 
 - Never commit secrets, API keys, or credentials
-- Use environment variables for sensitive configuration
+- Use environment variables for sensitive config
 - Validate all user inputs on both client and server
 - Follow the principle of least privilege
 - Keep dependencies updated
+
+---
 
 ## Questions?
 

@@ -1,43 +1,79 @@
-# Aedron StreamFlow
+# 🌊 Aedron StreamFlow
 
-Unified Streaming and Social platform manager for content creator.
+<p align="center">
+  <em>One dashboard to rule all your streams</em>
+</p>
 
-## Key Features
+<p align="center">
+  <img src="https://img.shields.io/badge/SvelteKit-2.0-FF3E00?logo=svelte" alt="SvelteKit">
+  <img src="https://img.shields.io/badge/Svelte-5-FF3E00?logo=svelte" alt="Svelte 5">
+  <img src="https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss" alt="Tailwind">
+  <img src="https://img.shields.io/badge/Supabase-Realtime-3ECF8E?logo=supabase" alt="Supabase">
+  <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
+</p>
 
-- **Unified controls**: Information like Title, Descriptions and Tags can be synced accross platforms.
-- **Unified chat**: Creators can see all their chats in one place with a powerful unified chat. They can filter by platform and isolate specific users when interacting with their community.
-- **Configurable overlays**: Creators can now created unified overlays with configurable views. Chat and alerts elements will include all platforms by default, but following platforms' TOS, one can chose which platform should a view display in recording softwares. Common use case would be a Twitch inclusive view as they do not allow other platforms' content from being displayed.
-- **Live data updates**: Profile information syncs in real-time across all connected clients using Supabase Realtime
+---
 
-## Supported Platforms
+## ✨ Features
 
-- Twitch
-- Kick
-- YouTube Live
+<table>
+  <tr>
+    <td align="center" width="60">🎮</td>
+    <td><strong>Unified Controls</strong><br/>Sync titles, descriptions, and tags across all platforms instantly</td>
+  </tr>
+  <tr>
+    <td align="center">💬</td>
+    <td><strong>Unified Chat</strong><br/>View all platform chats in one place with smart filtering</td>
+  </tr>
+  <tr>
+    <td align="center">🎨</td>
+    <td><strong>Smart Overlays</strong><br/>Platform-specific views for recording software</td>
+  </tr>
+  <tr>
+    <td align="center">⚡</td>
+    <td><strong>Live Updates</strong><br/>Real-time sync across all your devices</td>
+  </tr>
+</table>
 
-### Future support
+## 📸 Screenshots
 
-- TikTok
-- Instagram
-- X
-- YouTube Video & Shorts
+<p align="center">
+  <img src=".opencode/playwright/signin-page.png" alt="Sign In" width="600"/>
+  <br/>
+  <em>Secure authentication with email and OAuth</em>
+</p>
 
-## Tech Stack
+<p align="center">
+  <img src=".opencode/playwright/signup-page.png" alt="Sign Up" width="600"/>
+  <br/>
+  <em>Simple account creation with password confirmation</em>
+</p>
 
-- **SvelteKit 2** with Svelte 5 runes
-- **TypeScript** (strict mode)
-- **Tailwind CSS v4**
-- **Supabase** (auth, database, realtime)
+<p align="center">
+  <img src=".opencode/playwright/dashboard.png" alt="Dashboard" width="600"/>
+  <br/>
+  <em>Unified dashboard with real-time streaming stats</em>
+</p>
 
-## Getting Started
+## 🎯 Supported Platforms
 
-### Prerequisites
+| Platform     | Status  | Notes                        |
+| ------------ | ------- | ---------------------------- |
+| Twitch       | ✅ Live | Full chat and stream control |
+| Kick         | ✅ Live | Growing platform support     |
+| YouTube Live | ✅ Live | Integrated with YT ecosystem |
 
-- Node.js 20+
-- pnpm (run `corepack enable` to enable)
-- Supabase project (or use the hosted one)
+**Coming Soon:** TikTok Live, Instagram Live, X (Twitter) Spaces, YouTube Video & Shorts
 
-### Installation
+## 💻 Tech Stack
+
+- **⚡ SvelteKit 2** — Modern web framework with Svelte 5 runes
+- **🔷 TypeScript** — Strict mode for type safety
+- **🎨 Tailwind CSS v4** — Utility-first styling
+- **🗄️ Supabase** — Auth, database, and realtime subscriptions
+
+## 🚀 Quick Start
 
 ```bash
 # Clone the repository
@@ -47,65 +83,77 @@ cd Aedron-StreamFlow
 # Install dependencies
 pnpm install
 
-# Copy environment template
+# Setup environment
 cp .env.example .env
+# Edit .env with your Supabase credentials
+
+# Start development server
+pnpm dev
 ```
 
-### Environment Variables
+Open [http://localhost:5173](http://localhost:5173) and you're ready to go!
 
-Edit `.env` with your credentials:
+## 📋 Prerequisites
 
-```env
-PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-anon-key
-PUBLIC_TWITCH_CLIENT_ID=your-twitch-client-id
-PRIVATE_TWITCH_CLIENT_SECRET=your-twitch-secret
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-secret
-```
+- **Node.js** 20+
+- **pnpm** (`corepack enable`)
+- **Supabase** project (local or hosted)
 
-### Development
+## 🔧 Development Commands
 
 ```bash
-pnpm dev          # Start dev server at http://localhost:5173
-pnpm check        # Type-check
+pnpm dev          # Start dev server with hot reload
+pnpm check        # TypeScript type checking
 pnpm lint         # Lint and format check
-pnpm format       # Format code
-```
+pnpm format       # Auto-format code
+pnpm build        # Production build
 
-### Database
-
-```bash
-pnpm db:generate  # Generate TypeScript types from Supabase
+# Database
+pnpm db:generate  # Generate TypeScript types
 pnpm db:push      # Push migrations to Supabase
 ```
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 src/
 ├── lib/
-│   ├── platform/      # Platform OAuth and API utilities
+│   ├── platform/      # Platform OAuth and API integration
 │   ├── realtime/      # Supabase Realtime utilities
-│   ├── stores/        # Reactive state stores
-│   └── supabase/      # Supabase types and helpers
+│   ├── stores/        # Reactive state management
+│   └── supabase/      # Types and database helpers
 ├── routes/
-│   ├── (protected)/  # Auth-protected routes
-│   │   ├── app/       # Dashboard and platforms
-│   │   └── auth/       # Auth flows and callbacks
+│   ├── (protected)/   # Auth-required routes
+│   │   ├── app/       # Dashboard and platform management
+│   │   └── auth/      # Authentication flows
 │   └── +page.svelte   # Landing page
-├── hooks.server.ts    # Auth guards and Supabase client
-└── app.css           # Tailwind imports
+├── hooks.server.ts    # Server-side auth guards
+└── app.css           # Tailwind configuration
 ```
 
-## Architecture
+## 🏗️ Architecture
 
-The app uses a server-first approach with client-side enhancements:
+**Server-first with client-side enhancements:**
 
-- **SSR**: Pages load initial data server-side for fast first paint
-- **Realtime**: Client subscribes to database changes for live updates
-- **Hybrid updates**: User actions return data immediately; other clients receive updates via Realtime
+1. **SSR** — Initial data loaded server-side for fast first paint
+2. **Realtime** — Client subscribes to database changes via Supabase
+3. **Hybrid** — Actions return immediately; other clients sync in real-time
 
-## License
+## 🤝 Contributing
 
-MIT
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
+
+- Setup instructions
+- Development workflow
+- Code style guidelines
+- Pull request process
+
+## 📜 License
+
+MIT © [Aedron](https://github.com/aedrondouren)
+
+---
+
+<p align="center">
+  <em>Built with ❤️ for content creators</em>
+</p>
