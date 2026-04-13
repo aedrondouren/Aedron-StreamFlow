@@ -62,6 +62,71 @@ Update when:
 - New environment file patterns are introduced
 - New build artifacts need exclusion
 
+## Screenshots
+
+### When to Update Screenshots
+
+Update screenshots in README.md when:
+
+- UI components or layouts change significantly
+- New features are added that have visual components
+- Design updates (colors, typography, spacing)
+- Adding new pages or routes
+- Authentication flows change
+
+### Capturing Screenshots with Chrome DevTools
+
+Use Chrome DevTools MCP tools to capture screenshots:
+
+1. **Navigate to the page:**
+
+   ```
+   chrome-devtools_navigate_page — Navigate to URLs or go back/forward/reload
+   ```
+
+2. **Set viewport for responsive testing:**
+
+   ```
+   chrome-devtools_resize_page — Set viewport dimensions
+   ```
+
+   - Mobile: 375-414px width
+   - Tablet: 768px width
+   - Desktop: 1440px+ width
+
+3. **Take the screenshot:**
+   ```
+   chrome-devtools_take_screenshot — Capture screenshots
+   ```
+
+### Screenshot Storage Locations
+
+- **Permanent screenshots** (for README.md): `.repo/screenshots/`
+  - Committed to repository
+  - Used in documentation
+  - Examples: `dashboard.png`, `signin-page.png`
+
+- **Temporary screenshots** (for validation): `.opencode/temp/`
+  - Gitignored, for iterative testing
+  - Deleted after verification
+  - Examples: `sidebar-mobile-test.png`
+
+### Naming Conventions
+
+- Use lowercase with hyphens
+- Include viewport if relevant: `component-mobile.png`, `component-desktop.png`
+- Be descriptive: `auth-flow-step2.png` not `screenshot2.png`
+
+### Updating README.md
+
+When adding new screenshots:
+
+1. Save to `.repo/screenshots/`
+2. Update image path in README.md:
+   ```markdown
+   <img src=".repo/screenshots/new-feature.png" alt="New Feature" width="600"/>
+   ```
+
 ## Examples
 
 ### Example 1: Adding a New Database Script

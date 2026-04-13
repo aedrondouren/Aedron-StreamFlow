@@ -250,3 +250,22 @@ pnpm test:visual:setup  # Creates test user + mock data
 **Debugging Styling Issues:**
 
 Use `chrome-devtools_evaluate_script` with `window.getComputedStyle(element)` to inspect actual computed styles when debugging CSS problems.
+
+### Agent Skills
+
+OpenCode loads reusable instructions from `.opencode/skills/*/SKILL.md`. Skills are discovered automatically and loaded on-demand via the native `skill` tool.
+
+**Available Skills:**
+
+- **update-docs** — Instructions for updating AGENTS.md, README.md, package.json, and .gitignore when code changes require documentation updates
+  - **Use when:** Adding features, changing workflows, modifying npm scripts, or updating screenshots
+  - **Location:** `.opencode/skills/update-docs/SKILL.md`
+
+**Skill Permissions:**
+
+Skills are restricted by agent mode for safety:
+
+- **Planning mode:** Skills that require file edits are **denied** (read-only analysis)
+- **Build mode:** All skills are **allowed** (full edit permissions)
+
+This prevents accidental modifications during analysis while enabling full documentation updates during implementation.

@@ -7,6 +7,9 @@
 				"*": "allow",
 				"write": "deny",
 				"edit": "deny",
+				"skill": {
+					"update-docs": "deny"
+				},
 				"task": {
 					"*": "allow",
 					"svelte-file-editor": "deny"
@@ -40,7 +43,12 @@
 			}
 		},
 		"build": {
-			"permission": "allow"
+			"permission": {
+				"*": "allow",
+				"skill": {
+					"update-docs": "allow"
+				}
+			}
 		}
 	},
 	"model": "opencode-go/kimi-k2.5",
