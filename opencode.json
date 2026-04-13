@@ -41,5 +41,22 @@
 	},
 	"model": "opencode-go/kimi-k2.5",
 	"instructions": [".opencode/INSTRUCTIONS.md", "CONTRIBUTING.md"],
-	"plugin": ["@sveltejs/opencode"]
+	"plugin": ["@sveltejs/opencode"],
+	"mcp": {
+		"github": {
+			"type": "remote",
+			"url": "https://api.githubcopilot.com/mcp/",
+			"enabled": true
+		},
+		"chrome-devtools": {
+			"type": "local",
+			"command": ["npx", "-y", "chrome-devtools-mcp@latest", "--no-usage-statistics"],
+			"enabled": true
+		},
+		"playwright": {
+			"type": "local",
+			"command": ["npx", "-y", "@playwright/mcp@latest"],
+			"enabled": true
+		}
+	}
 }

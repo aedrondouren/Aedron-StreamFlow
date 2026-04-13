@@ -22,6 +22,18 @@ You MUST use this tool whenever writing Svelte code before sending it to the use
 Generates a Svelte Playground link with the provided code.
 After completing the code, ask the user if they want a playground link. Only call this tool after user confirmation and NEVER if code was written to files in their project.
 
+## Available MCP Servers
+
+This project has the following MCP (Model Context Protocol) servers configured:
+
+- **Svelte MCP** - Svelte 5 and SvelteKit documentation, code analysis, and playground links (via `@sveltejs/opencode`)
+- **GitHub MCP** - GitHub operations, PR management, and repository queries (via GitHub Copilot)
+- **Chrome DevTools MCP** - Browser debugging and performance profiling (`chrome-devtools-mcp`)
+- **Playwright MCP** - Browser automation and end-to-end testing (`@playwright/mcp`)
+
+For OpenCode users, all MCP servers are automatically configured in `opencode.json`.
+For VS Code users, configure MCP servers through your IDE's MCP panel.
+
 ---
 
 # AGENTS.md

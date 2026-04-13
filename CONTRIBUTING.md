@@ -25,6 +25,42 @@ cp .env.example .env
 # Edit .env with your credentials
 ```
 
+### VS Code Extensions
+
+When you open this project in VS Code, you'll be prompted to install recommended extensions:
+
+- **Svelte for VS Code** - Svelte syntax highlighting and IntelliSense
+- **Prettier** - Code formatting
+- **ESLint** - Linting for JavaScript/TypeScript/Svelte
+- **Tailwind CSS IntelliSense** - Autocomplete for Tailwind classes
+- **Supabase** - Database management
+
+### MCP Servers (Optional)
+
+This project includes MCP (Model Context Protocol) server configurations for enhanced AI assistance:
+
+**For OpenCode users:**
+MCP servers are automatically configured in `opencode.json`:
+
+- **GitHub MCP** - GitHub operations via GitHub Copilot
+- **Chrome DevTools MCP** - `chrome-devtools-mcp`
+- **Playwright MCP** - `@playwright/mcp`
+
+**For VS Code/Cursor users:**
+Configure MCP servers through your IDE's MCP panel:
+
+- **Chrome DevTools MCP**
+  - Package: `chrome-devtools-mcp`
+  - Args: `-y chrome-devtools-mcp@latest --no-usage-statistics`
+
+- **GitHub MCP** (via GitHub Copilot)
+  - Type: HTTP
+  - URL: `https://api.githubcopilot.com/mcp/`
+
+- **Playwright MCP**
+  - Package: `@playwright/mcp`
+  - Args: `-y @playwright/mcp@latest`
+
 ## Development Workflow
 
 ```bash
