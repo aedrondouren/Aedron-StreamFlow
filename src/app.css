@@ -133,18 +133,18 @@
 	--color-twitch-base-900: hsl(264, 10%, 15%);
 	--color-twitch-base-950: hsl(264, 10%, 5%);
 
-	/* Twitch Accent (Vibrant, 95% saturation) */
-	--color-twitch-50: hsl(264, 95%, 97%);
-	--color-twitch-100: hsl(264, 95%, 90%);
-	--color-twitch-200: hsl(264, 95%, 80%);
-	--color-twitch-300: hsl(264, 95%, 70%);
-	--color-twitch-400: hsl(264, 95%, 60%);
-	--color-twitch-500: hsl(264, 95%, 55%);
-	--color-twitch-600: hsl(264, 95%, 48%);
-	--color-twitch-700: hsl(264, 95%, 40%);
-	--color-twitch-800: hsl(264, 95%, 28%);
-	--color-twitch-900: hsl(264, 95%, 18%);
-	--color-twitch-950: hsl(264, 95%, 8%);
+	/* Twitch Accent (Vibrant, 100% saturation for exact #9146FF) */
+	--color-twitch-50: hsl(264, 100%, 97%);
+	--color-twitch-100: hsl(264, 100%, 90%);
+	--color-twitch-200: hsl(264, 100%, 80%);
+	--color-twitch-300: hsl(264, 100%, 70%);
+	--color-twitch-400: hsl(264, 100%, 60%);
+	--color-twitch-500: hsl(264, 100%, 54%); /* #9146FF */
+	--color-twitch-600: hsl(264, 100%, 48%);
+	--color-twitch-700: hsl(264, 100%, 40%);
+	--color-twitch-800: hsl(264, 100%, 28%);
+	--color-twitch-900: hsl(264, 100%, 18%);
+	--color-twitch-950: hsl(264, 100%, 8%);
 
 	/* ============================================
 	   YOUTUBE (Red)

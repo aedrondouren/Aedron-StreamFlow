@@ -24,9 +24,11 @@ pnpm db:push      # Push migrations to hosted database
 pnpm db:reset     # Reset hosted database (⚠️ destructive)
 
 # Testing
-pnpm test:user:setup      # Create test user in Supabase
-pnpm test:spoof:twitch    # Generate mock Twitch platform data
-pnpm test:visual:setup    # Combined: test user + mock data
+pnpm test:user:setup         # Create test user in Supabase
+pnpm test:spoof:twitch       # Generate mock Twitch platform data (connected)
+pnpm test:spoof:youtube      # Generate mock YouTube platform data (connected)
+pnpm test:spoof:managed-basic # Generate Twitch in managed_basic state
+pnpm test:visual:setup       # Combined: test user + mock data
 ```
 
 ### Stack
@@ -34,6 +36,7 @@ pnpm test:visual:setup    # Combined: test user + mock data
 - **SvelteKit 2** with **Svelte 5 runes** (`compilerOptions.runes: true`)
 - **TypeScript** (strict mode, `moduleResolution: bundler`)
 - **Tailwind CSS v4** via `@tailwindcss/vite` plugin
+- **bits-ui** — Headless UI components (always preferred over vanilla HTML)
 - **ESLint** + **typescript-eslint** + `eslint-plugin-svelte` + `eslint-config-prettier`
 - **Prettier** with `prettier-plugin-svelte` and `prettier-plugin-tailwindcss`
 - **Supabase** for auth, database, and realtime
@@ -50,13 +53,16 @@ pnpm test:visual:setup    # Combined: test user + mock data
 
 ### Environment Variables
 
-| Variable                                   | Source                | Purpose                       |
-| ------------------------------------------ | --------------------- | ----------------------------- |
-| `PUBLIC_SUPABASE_URL`                      | `$env/static/public`  | Supabase project URL          |
-| `PUBLIC_SUPABASE_PUBLISHABLE_KEY`          | `$env/static/public`  | Supabase anon key             |
-| `PUBLIC_TWITCH_CLIENT_ID`                  | `$env/static/public`  | Twitch OAuth (safe to expose) |
-| `PRIVATE_TWITCH_CLIENT_SECRET`             | `$env/static/private` | Twitch OAuth (server-only)    |
-| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | `$env/static/private` | Google OAuth (optional)       |
+| Variable                          | Source                | Purpose                                |
+| --------------------------------- | --------------------- | -------------------------------------- |
+| `PUBLIC_SUPABASE_URL`             | `$env/static/public`  | Supabase project URL                   |
+| `PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `$env/static/public`  | Supabase anon key                      |
+| `PUBLIC_TWITCH_CLIENT_ID`         | `$env/static/public`  | Twitch OAuth (safe to expose)          |
+| `PRIVATE_TWITCH_CLIENT_SECRET`    | `$env/static/private` | Twitch OAuth (server-only)             |
+| `GOOGLE_CLIENT_ID`                | `$env/static/private` | YouTube OAuth via Google (server-only) |
+| `GOOGLE_CLIENT_SECRET`            | `$env/static/private` | YouTube OAuth via Google (server-only) |
+| `PUBLIC_KICK_CLIENT_ID`           | `$env/static/public`  | Kick OAuth (safe to expose)            |
+| `PRIVATE_KICK_CLIENT_SECRET`      | `$env/static/private` | Kick OAuth (server-only)               |
 
 ---
 
@@ -88,6 +94,47 @@ Browser debugging, performance profiling, and visual verification.
 - `chrome-devtools_list_pages` — Manage browser tabs
 
 **Configuration:** OpenCode users have these auto-configured in `opencode.json`. VS Code users configure via IDE's MCP panel.
+
+### Bits UI
+
+Headless UI components for Svelte 5. Uses the [llms.txt standard](https://bits-ui.com/docs/llms) for LLM-friendly documentation.
+
+**LLM Documentation:**
+
+- Root index: https://bits-ui.com/llms.txt
+- Full docs: https://bits-ui.com/docs/llms.txt
+- Per-component: Append `/llms.txt` to any component URL (e.g., `/docs/components/tooltip/llms.txt`)
+
+**Key Components:**
+
+- `Button.Root` — Replace vanilla `<button>`, use `href` prop to render as `<a>`
+- `Tooltip` — Hover information on UI elements
+- `Avatar` — Platform profile images
+- `Dialog` — Modals and overlays
+- `Separator` — Visual dividers
+
+**Usage Pattern:**
+
+```svelte
+<script>
+	import { Button, Tooltip } from 'bits-ui';
+</script>
+
+<!-- Button as link -->
+<Button.Root href="/app/platforms" variant="default">Go to Platforms</Button.Root>
+
+<!-- Tooltip -->
+<Tooltip.Provider>
+	<Tooltip.Root>
+		<Tooltip.Trigger>
+			<Button.Root>Hover me</Button.Root>
+		</Tooltip.Trigger>
+		<Tooltip.Content>
+			<p>Tooltip text</p>
+		</Tooltip.Content>
+	</Tooltip.Root>
+</Tooltip.Provider>
+```
 
 ---
 
@@ -133,6 +180,25 @@ Browser debugging, performance profiling, and visual verification.
 4. App exchanges code via `exchangeCodeForSession(code)`
 5. Session cookies set, user authenticated
 
+### Platform Linking States
+
+Four states for platform authentication:
+
+| State            | Description                       | UI Behavior                        |
+| ---------------- | --------------------------------- | ---------------------------------- |
+| `unlinked`       | No platform connection            | Show "Connect [Platform]" button   |
+| `managed_basic`  | OAuth signup, minimal permissions | Show ⚠️ warning + "Complete Setup" |
+| `managed_linked` | Full OAuth with all permissions   | Show profile + "Disconnect"        |
+| `manual_linked`  | Manually entered tokens/API keys  | Show profile + "Disconnect"        |
+
+### OAuth Prompt Flows
+
+Three flow types in `/auth/oauth-prompt`:
+
+- **`signup`** — Initial signup, offers "Continue without linking"
+- **`connect`** — Explicit connection, shows OAuth vs Manual comparison
+- **`upgrade`** — Upgrading from `managed_basic` to `managed_linked`
+
 ### Realtime Data Pattern
 
 Hybrid SSR + Realtime:
@@ -174,6 +240,8 @@ const store = createReactiveTable(supabase, {
 - `createReactiveTable()` store must be started manually (in `$effect`, not module level)
 - Never call Supabase fetch methods during SSR — guard with `browser` or defer to `$effect`
 - When debugging styling issues, use `chrome-devtools_evaluate_script` with `window.getComputedStyle(element)` to inspect actual computed styles
+- **Never cast types needlessly** — ensure data shapes match instead of using `as Type`
+- **Use `resolve()` from `$app/paths`** for all internal navigation hrefs (type-safe routing)
 
 ---
 

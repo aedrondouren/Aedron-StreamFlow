@@ -25,14 +25,26 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	locals.claims = await validateClaims(locals.supabase);
 
-	// If user is authenticated and tries to access auth routes (except logout, link, and oauth callbacks), redirect to /app
-	if (
-		locals.claims &&
-		url.pathname.startsWith('/auth') &&
-		!url.pathname.startsWith('/auth/logout') &&
-		!url.pathname.startsWith('/auth/link') &&
-		!url.pathname.startsWith('/auth/confirm/twitch')
-	) {
+	// Check if this is an allowed auth route for authenticated users
+	// Allow: /auth/logout, /auth/link, /auth/confirm/*, /auth/oauth-prompt
+	// Also allow form actions (URLs starting with ?/ like ?/initiateOAuth)
+	let isFormAction = false;
+	try {
+		// Accessing url.search can fail during prerendering
+		isFormAction = url.search.startsWith('?/');
+	} catch {
+		// During prerendering, url.search is not available
+		isFormAction = false;
+	}
+
+	const isAllowedAuthRoute =
+		// Regex matches: /auth/logout, /auth/link, /auth/confirm/<any>, /auth/oauth-prompt (with optional query params)
+		/^\/auth\/(logout|link|confirm\/\w+|oauth-prompt)(\?.*)?$/.test(url.pathname) ||
+		// Form actions use ?/ prefix (e.g., ?/initiateOAuth)
+		isFormAction;
+
+	// Redirect authenticated users away from auth pages (except allowed routes)
+	if (locals.claims && url.pathname.startsWith('/auth') && !isAllowedAuthRoute) {
 		redirect(303, '/app');
 	}
 

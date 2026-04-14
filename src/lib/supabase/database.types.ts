@@ -35,41 +35,50 @@ export type Database = {
 		Tables: {
 			user_auth: {
 				Row: {
-					access_token: string;
+					access_token: string | null;
+					auth_source: string;
 					created_at: string | null;
 					expires_at: number | null;
 					expires_in: number | null;
 					id: string;
+					is_linked: boolean;
 					platform: string;
 					platform_user_id: string | null;
 					refresh_token: string | null;
 					scope: string | null;
+					scope_granted: string[] | null;
 					updated_at: string | null;
 					user_id: string;
 				};
 				Insert: {
-					access_token: string;
+					access_token?: string | null;
+					auth_source?: string;
 					created_at?: string | null;
 					expires_at?: number | null;
 					expires_in?: number | null;
 					id?: string;
+					is_linked?: boolean;
 					platform: string;
 					platform_user_id?: string | null;
 					refresh_token?: string | null;
 					scope?: string | null;
+					scope_granted?: string[] | null;
 					updated_at?: string | null;
 					user_id: string;
 				};
 				Update: {
-					access_token?: string;
+					access_token?: string | null;
+					auth_source?: string;
 					created_at?: string | null;
 					expires_at?: number | null;
 					expires_in?: number | null;
 					id?: string;
+					is_linked?: boolean;
 					platform?: string;
 					platform_user_id?: string | null;
 					refresh_token?: string | null;
 					scope?: string | null;
+					scope_granted?: string[] | null;
 					updated_at?: string | null;
 					user_id?: string;
 				};

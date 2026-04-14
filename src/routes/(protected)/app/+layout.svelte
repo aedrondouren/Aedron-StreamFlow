@@ -58,7 +58,7 @@
 		<nav class="flex flex-1 flex-col gap-1 overflow-hidden p-2">
 			<a
 				href={resolve('/app')}
-				class="grid w-full cursor-pointer grid-cols-[auto_auto] items-center rounded-md px-3 py-2 text-base-300 transition-colors hover:bg-base-700"
+				class="grid w-full cursor-pointer grid-cols-[auto_auto] items-center rounded-md px-3 py-2 text-base-200 transition-colors hover:bg-base-700"
 			>
 				<!-- Icon - Auto-sized column, centered content -->
 				<div class="flex items-center justify-center">
@@ -81,7 +81,7 @@
 
 			<a
 				href={resolve('/app/platforms')}
-				class="grid w-full cursor-pointer grid-cols-[auto_auto] items-center rounded-md px-3 py-2 text-base-300 transition-colors hover:bg-base-700"
+				class="grid w-full cursor-pointer grid-cols-[auto_auto] items-center rounded-md px-3 py-2 text-base-200 transition-colors hover:bg-base-700"
 			>
 				<!-- Icon - Auto-sized column, centered content -->
 				<div class="flex items-center justify-center">
@@ -107,7 +107,7 @@
 		<div class="shrink-0 border-t border-base-700 p-2">
 			<button
 				onclick={toggleSidebar}
-				class="grid w-full cursor-pointer grid-cols-[auto_auto] items-center rounded-md px-3 py-2 text-base-300 transition-colors hover:bg-base-700"
+				class="grid w-full cursor-pointer grid-cols-[auto_auto] items-center rounded-md px-3 py-2 text-base-200 transition-colors hover:bg-base-700"
 			>
 				<!-- Icon - Auto-sized column, centered content -->
 				<div class="flex items-center justify-center">
@@ -145,7 +145,7 @@
 				<form method="POST" action="/auth/logout">
 					<button
 						type="submit"
-						class="cursor-pointer rounded-md bg-base-700 px-4 py-2 text-sm font-medium text-base-300 transition-colors hover:bg-base-600"
+						class="cursor-pointer rounded-md bg-base-700 px-4 py-2 text-sm font-medium text-base-200 transition-colors hover:bg-base-600"
 					>
 						Sign Out
 					</button>

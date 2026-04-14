@@ -50,7 +50,7 @@
 				<h1 class="text-4xl font-bold tracking-tight text-base-50 sm:text-6xl">
 					One dashboard to rule<br />all your streams
 				</h1>
-				<p class="mx-auto mt-6 max-w-2xl text-lg text-base-400">
+				<p class="mx-auto mt-6 max-w-2xl text-lg text-base-300">
 					Manage all your streaming platforms from a single place. Sync your titles, chat with your
 					viewers, and control your stream — all at once.
 				</p>
@@ -69,7 +69,7 @@
 			<div class="mx-auto max-w-7xl">
 				<div class="text-center">
 					<h2 class="text-3xl font-bold text-base-50">Everything you need to stream</h2>
-					<p class="mt-4 text-base-400">Powerful features designed for multi-platform streamers</p>
+					<p class="mt-4 text-base-300">Powerful features designed for multi-platform streamers</p>
 				</div>
 				<div class="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
 					<div class="rounded-xl border border-base-700 bg-base-800 p-6">
@@ -89,7 +89,7 @@
 							</svg>
 						</div>
 						<h3 class="mt-4 text-lg font-semibold text-base-50">Sync Everything</h3>
-						<p class="mt-2 text-sm text-base-400">
+						<p class="mt-2 text-sm text-base-300">
 							Update your stream title, description, and tags across all platforms at once.
 						</p>
 					</div>
@@ -110,7 +110,7 @@
 							</svg>
 						</div>
 						<h3 class="mt-4 text-lg font-semibold text-base-50">One Chat</h3>
-						<p class="mt-2 text-sm text-base-400">
+						<p class="mt-2 text-sm text-base-300">
 							View and respond to all your platform chats from a single window.
 						</p>
 					</div>
@@ -131,7 +131,7 @@
 							</svg>
 						</div>
 						<h3 class="mt-4 text-lg font-semibold text-base-50">Stream Overlays</h3>
-						<p class="mt-2 text-sm text-base-400">
+						<p class="mt-2 text-sm text-base-300">
 							Platform-specific overlays that work with your streaming software.
 						</p>
 					</div>
@@ -152,7 +152,7 @@
 							</svg>
 						</div>
 						<h3 class="mt-4 text-lg font-semibold text-base-50">Always Synced</h3>
-						<p class="mt-2 text-sm text-base-400">
+						<p class="mt-2 text-sm text-base-300">
 							Changes sync instantly across all your devices in real-time.
 						</p>
 					</div>
@@ -164,7 +164,7 @@
 			<div class="mx-auto max-w-7xl">
 				<div class="text-center">
 					<h2 class="text-3xl font-bold text-base-50">Works with your favorite platforms</h2>
-					<p class="mt-4 text-base-400">Connect and manage multiple streaming services</p>
+					<p class="mt-4 text-base-300">Connect and manage multiple streaming services</p>
 				</div>
 				<div class="mt-12 flex flex-wrap items-center justify-center gap-6">
 					<a
@@ -207,7 +207,7 @@
 						<span class="font-medium text-base-50">YouTube Live</span>
 					</a>
 				</div>
-				<p class="mt-8 text-center text-sm text-base-500">More platforms coming soon</p>
+				<p class="mt-8 text-center text-sm text-base-400">More platforms coming soon</p>
 			</div>
 		</section>
 
@@ -215,7 +215,7 @@
 			<div class="mx-auto max-w-4xl">
 				<div class="text-center">
 					<h2 class="text-3xl font-bold text-base-50">How it works</h2>
-					<p class="mt-4 text-base-400">Get started in three simple steps</p>
+					<p class="mt-4 text-base-300">Get started in three simple steps</p>
 				</div>
 				<div class="mt-16 grid gap-8 sm:grid-cols-3">
 					<div class="relative text-center">
@@ -238,7 +238,7 @@
 						</div>
 						<div class="mt-4 text-2xl font-bold text-primary-400">1</div>
 						<h3 class="mt-2 text-lg font-semibold text-base-50">Connect Accounts</h3>
-						<p class="mt-2 text-sm text-base-400">Link your streaming platforms securely</p>
+						<p class="mt-2 text-sm text-base-300">Link your streaming platforms securely</p>
 					</div>
 					<div class="relative text-center">
 						<div
@@ -260,7 +260,7 @@
 						</div>
 						<div class="mt-4 text-2xl font-bold text-primary-400">2</div>
 						<h3 class="mt-2 text-lg font-semibold text-base-50">Manage Streams</h3>
-						<p class="mt-2 text-sm text-base-400">Control everything from one dashboard</p>
+						<p class="mt-2 text-sm text-base-300">Control everything from one dashboard</p>
 					</div>
 					<div class="relative text-center">
 						<div
@@ -282,7 +282,7 @@
 						</div>
 						<div class="mt-4 text-2xl font-bold text-primary-400">3</div>
 						<h3 class="mt-2 text-lg font-semibold text-base-50">Go Live</h3>
-						<p class="mt-2 text-sm text-base-400">Stream to all platforms simultaneously</p>
+						<p class="mt-2 text-sm text-base-300">Stream to all platforms simultaneously</p>
 					</div>
 				</div>
 			</div>
@@ -291,7 +291,7 @@
 		<section class="px-6 py-24">
 			<div class="mx-auto max-w-4xl text-center">
 				<h2 class="text-3xl font-bold text-base-50">Ready to simplify your streams?</h2>
-				<p class="mt-4 text-base-400">
+				<p class="mt-4 text-base-300">
 					Join streamers who manage their content smarter, not harder.
 				</p>
 				<div class="mt-10">
@@ -309,12 +309,12 @@
 	<footer class="border-t border-base-800 bg-base-800/50 px-6 py-8">
 		<div class="mx-auto max-w-7xl">
 			<div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
-				<p class="text-sm text-base-500">© 2025 Aedron</p>
+				<p class="text-sm text-base-400">© 2025 Aedron</p>
 				<a
 					href="https://github.com/aedrondouren"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="flex items-center gap-2 text-sm text-base-500 transition-colors hover:text-base-300"
+					class="flex items-center gap-2 text-sm text-base-400 transition-colors hover:text-base-300"
 				>
 					<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 						<path

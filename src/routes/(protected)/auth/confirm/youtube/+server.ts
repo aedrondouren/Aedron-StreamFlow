@@ -1,4 +1,4 @@
-import { exchangeCodeForToken, getCurrentUser } from '$lib/platform/twitchAuth';
+import { exchangeCodeForToken, getCurrentChannel } from '$lib/platform/youtubeAuth';
 import type { Database } from '$lib/supabase/database.types';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { redirect } from '@sveltejs/kit';
@@ -22,27 +22,27 @@ export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
 
 	if (error || !code) {
 		if (dev) {
-			console.error('[Twitch OAuth Error] Callback failed:', { error });
+			console.error('[YouTube OAuth Error] Callback failed:', { error });
 		}
-		return redirect(303, `/auth/signin?error=twitch_auth_failed`);
+		return redirect(303, `/auth/signin?error=youtube_auth_failed`);
 	}
 
-	const redirectUri = `${url.origin}/auth/confirm/twitch`;
+	const redirectUri = `${url.origin}/auth/confirm/youtube`;
 	const token = await exchangeCodeForToken(code, redirectUri);
 
 	if (!token) {
 		if (dev) {
-			console.error('[Twitch OAuth Error] Token exchange failed');
+			console.error('[YouTube OAuth Error] Token exchange failed');
 		}
-		return redirect(303, `/auth/signin?error=twitch_token_exchange_failed`);
+		return redirect(303, `/auth/signin?error=youtube_token_exchange_failed`);
 	}
 
-	const userInfo = await getCurrentUser(token.access_token);
-	if (!userInfo) {
+	const channelInfo = await getCurrentChannel(token.access_token);
+	if (!channelInfo) {
 		if (dev) {
-			console.error('[Twitch OAuth Error] User fetch failed');
+			console.error('[YouTube OAuth Error] Channel fetch failed');
 		}
-		return redirect(303, `/auth/signin?error=twitch_user_fetch_failed`);
+		return redirect(303, `/auth/signin?error=youtube_channel_fetch_failed`);
 	}
 
 	const expiresAt = Math.floor(Date.now() / 1000) + token.expires_in;
@@ -59,8 +59,8 @@ export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
 	const [authResult, infoResult] = await Promise.all([
 		client.from('user_auth').upsert({
 			user_id: user.id,
-			platform: 'twitch',
-			platform_user_id: userInfo.id,
+			platform: 'youtube',
+			platform_user_id: channelInfo.id,
 			access_token: token.access_token,
 			refresh_token: token.refresh_token,
 			expires_in: token.expires_in,
@@ -69,20 +69,20 @@ export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
 		}),
 		client.from('user_info').upsert({
 			user_id: user.id,
-			platform: 'twitch',
-			platform_user_id: userInfo.id,
-			login: userInfo.login,
-			display_name: userInfo.display_name,
-			profile_image_url: userInfo.profile_image_url,
-			broadcaster_type: userInfo.broadcaster_type
+			platform: 'youtube',
+			platform_user_id: channelInfo.id,
+			login: channelInfo.customUrl,
+			display_name: channelInfo.title,
+			profile_image_url: channelInfo.thumbnailUrl,
+			broadcaster_type: ''
 		})
 	]);
 
 	if (authResult.error || infoResult.error) {
 		if (dev) {
-			console.error('[Twitch OAuth Error] Failed to save auth data');
+			console.error('[YouTube OAuth Error] Failed to save auth data');
 		}
-		return redirect(303, `/auth/signin?error=twitch_auth_save_failed`);
+		return redirect(303, `/auth/signin?error=youtube_auth_save_failed`);
 	}
 
 	return redirect(303, next);

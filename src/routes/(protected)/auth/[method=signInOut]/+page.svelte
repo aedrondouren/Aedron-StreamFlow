@@ -1,8 +1,29 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { page } from '$app/stores';
+	import { validatePasswordMatch } from '$lib/validation/auth';
 	import type { PageProps } from './$types';
 
 	let { params, form }: PageProps = $props();
+
+	// Error message mapping for query parameter errors
+	const errorMessages: Record<string, string> = {
+		oauth_provider_failed:
+			'OAuth provider configuration failed. Please use manual linking or try again later.',
+		auth_callback_failed: 'Authentication failed. Please try again.',
+		invalid_credentials: 'Invalid email or password.',
+		email_not_confirmed: 'Please confirm your email before signing in.',
+		user_not_found: 'No account found with this email.',
+		invalid_grant: 'Invalid or expired login link.',
+		auth_required: 'Please sign in to continue.',
+		session_expired: 'Your session has expired. Please sign in again.'
+	};
+
+	// Get error from query params or form
+	const queryError = $derived($page.url.searchParams.get('error'));
+	const displayError = $derived(
+		form?.error || (queryError ? errorMessages[queryError] || queryError : null)
+	);
 
 	const isSignIn = $derived(params.method === 'signin');
 
@@ -19,9 +40,12 @@
 	let passwordError = $state('');
 
 	function validatePasswords() {
-		if (!isSignIn && password !== passwordConfirm) {
-			passwordError = 'Passwords do not match';
-			return false;
+		if (!isSignIn) {
+			const error = validatePasswordMatch(password, passwordConfirm);
+			if (error) {
+				passwordError = error;
+				return false;
+			}
 		}
 		passwordError = '';
 		return true;
@@ -40,9 +64,9 @@
 	<div class="w-full max-w-md rounded-lg bg-base-800 p-8">
 		<h1 class="mb-6 text-center text-2xl font-bold text-base-50">{header}</h1>
 
-		{#if form?.error}
-			<div class="mb-4 rounded-md bg-error-500/20 p-3 text-sm text-error-400">
-				{form.error}
+		{#if displayError}
+			<div class="mb-4 rounded-md bg-error-500/20 p-3 text-sm text-error-300">
+				{displayError}
 			</div>
 		{/if}
 
@@ -91,7 +115,7 @@
 						placeholder="••••••••"
 					/>
 					{#if passwordError}
-						<p class="mt-1 text-sm text-error-400">{passwordError}</p>
+						<p class="mt-1 text-sm text-error-300">{passwordError}</p>
 					{/if}
 				</div>
 			{/if}
@@ -111,17 +135,19 @@
 						<div class="w-full border-t border-base-600"></div>
 					</div>
 					<div class="relative flex justify-center text-sm">
-						<span class="bg-base-800 px-2 text-base-400">Or continue with</span>
+						<span class="bg-base-800 px-2 text-base-300">Or continue with</span>
 					</div>
 				</div>
 
-				<div class="mt-4 flex gap-2">
-					<form method="POST" action="?/signinWithOAuth&provider=twitch" class="flex-1">
+				<div class="mt-4 grid grid-cols-3 gap-2">
+					<!-- Twitch OAuth -->
+					<form method="POST" action="?/signinWithOAuth&provider=twitch" class="contents">
+						<input type="hidden" name="flowType" value="signup" />
 						<button
 							type="submit"
-							class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-base-600 bg-base-700 py-2 font-semibold text-base-50 transition-colors hover:bg-base-600"
+							class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-md border border-base-600 bg-base-700 py-2 font-semibold text-base-50 transition-colors hover:bg-base-600"
 						>
-							<svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+							<svg class="h-5 w-5 text-twitch-500" viewBox="0 0 24 24" fill="currentColor">
 								<path
 									d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"
 								/>
@@ -130,37 +156,43 @@
 						</button>
 					</form>
 
-					<form method="POST" action="?/signinWithOAuth&provider=google" class="flex-1">
+					<!-- YouTube OAuth -->
+					<form method="POST" action="?/signinWithOAuth&provider=google" class="contents">
+						<input type="hidden" name="flowType" value="signup" />
+						<input type="hidden" name="scope" value="openid profile email" />
 						<button
 							type="submit"
-							class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-base-600 bg-base-700 py-2 font-semibold text-base-50 transition-colors hover:bg-base-600"
+							class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-md border border-base-600 bg-base-700 py-2 font-semibold text-base-50 transition-colors hover:bg-base-600"
 						>
-							<svg class="h-5 w-5" viewBox="0 0 24 24">
+							<svg class="h-5 w-5 text-youtube-500" viewBox="0 0 24 24" fill="currentColor">
 								<path
-									fill="currentColor"
-									d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-								/>
-								<path
-									fill="currentColor"
-									d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-								/>
-								<path
-									fill="currentColor"
-									d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-								/>
-								<path
-									fill="currentColor"
-									d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+									d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
 								/>
 							</svg>
-							Google
+							YouTube
+						</button>
+					</form>
+
+					<!-- Kick OAuth -->
+					<form method="POST" action="?/signinWithOAuth&provider=kick" class="contents">
+						<input type="hidden" name="flowType" value="signup" />
+						<button
+							type="submit"
+							class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-md border border-base-600 bg-base-700 py-2 font-semibold text-base-50 transition-colors hover:bg-base-600"
+						>
+							<svg class="h-5 w-5 text-kick-500" viewBox="0 0 24 24" fill="currentColor">
+								<path
+									d="M3.98 3h6.01v4h2V5h2V3H20v6.01h-2v2h-2v2h2v2h2v6.01h-6.01v-2h-2v-2h-2v4H3.98z"
+								/>
+							</svg>
+							Kick
 						</button>
 					</form>
 				</div>
 			</div>
 		{/if}
 
-		<p class="mt-6 text-center text-sm text-base-400">
+		<p class="mt-6 text-center text-sm text-base-300">
 			{switchMessage}
 			<a
 				href={resolve(isSignIn ? '/auth/signup' : '/auth/signin')}

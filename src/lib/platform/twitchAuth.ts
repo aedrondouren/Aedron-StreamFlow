@@ -1,13 +1,10 @@
 import { PUBLIC_TWITCH_CLIENT_ID } from '$env/static/public';
 import { PRIVATE_TWITCH_CLIENT_SECRET } from '$env/static/private';
 import { parseScopes } from './scopes';
+import { dev } from '$app/environment';
+import type { PlatformOAuthToken } from './types';
 
-export interface TwitchOAuthToken {
-	access_token: string;
-	refresh_token: string;
-	expires_in: number;
-	scope: string[];
-}
+export type TwitchOAuthToken = PlatformOAuthToken;
 
 export interface TwitchUser {
 	id: string;
@@ -57,6 +54,9 @@ export async function exchangeCodeForToken(
 	});
 
 	if (!response.ok) {
+		if (dev) {
+			console.error('[Twitch Token Error]', { status: response.status });
+		}
 		return null;
 	}
 
@@ -82,6 +82,9 @@ export async function refreshToken(refreshToken: string): Promise<TwitchOAuthTok
 	});
 
 	if (!response.ok) {
+		if (dev) {
+			console.error('[Twitch Refresh Error]', { status: response.status });
+		}
 		return null;
 	}
 
@@ -103,12 +106,18 @@ export async function getCurrentUser(accessToken: string): Promise<TwitchUser | 
 	});
 
 	if (!response.ok) {
+		if (dev) {
+			console.error('[Twitch User Error]', { status: response.status });
+		}
 		return null;
 	}
 
 	const data = await response.json();
 	const user = data.data?.[0];
 	if (!user) {
+		if (dev) {
+			console.error('[Twitch User Error] No user data returned');
+		}
 		return null;
 	}
 

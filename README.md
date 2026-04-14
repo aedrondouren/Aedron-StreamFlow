@@ -74,13 +74,37 @@
   <em>Platform management showing available platforms to connect</em>
 </p>
 
+<p align="center">
+  <img src=".repo/screenshots/platforms-multi-connected.png" alt="Platform Management - Multiple Connected" width="600"/>
+  <br/>
+  <em>Multiple platforms connected with profile information</em>
+</p>
+
+<p align="center">
+  <img src=".repo/screenshots/oauth-prompt-twitch-signup.png" alt="OAuth Prompt - Signup Flow" width="600"/>
+  <br/>
+  <em>Initial OAuth prompt during signup with optional linking</em>
+</p>
+
+<p align="center">
+  <img src=".repo/screenshots/oauth-prompt-twitch-connect.png" alt="OAuth Prompt - Connect Flow" width="600"/>
+  <br/>
+  <em>Platform connection with OAuth vs Manual linking comparison</em>
+</p>
+
+<p align="center">
+  <img src=".repo/screenshots/oauth-prompt-twitch-upgrade.png" alt="OAuth Prompt - Upgrade Flow" width="600"/>
+  <br/>
+  <em>Upgrading from basic authentication to full platform access</em>
+</p>
+
 ## 🎯 Supported Platforms
 
-| Platform     | Status         | Notes                             |
-| ------------ | -------------- | --------------------------------- |
-| Twitch       | 🚧 In Progress | OAuth integration implemented     |
-| Kick         | 🚧 Planned     | OAuth and API integration planned |
-| YouTube Live | 🚧 Planned     | OAuth and API integration planned |
+| Platform | Status   | Notes                                              |
+| -------- | -------- | -------------------------------------------------- |
+| Twitch   | ✅ Full  | Complete OAuth with managed & manual linking       |
+| YouTube  | ⚡ OAuth | Google OAuth complete, API integration in progress |
+| Kick     | 🚧 WIP   | OAuth structure ready, awaiting API finalization   |
 
 **Coming Soon:** TikTok Live, Instagram Live, X (Twitter) Spaces, YouTube Video & Shorts
 
