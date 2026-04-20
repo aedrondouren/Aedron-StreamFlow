@@ -7,25 +7,25 @@
 <p align="center">
   <a href="https://kit.svelte.dev" target="_blank">
     <img src="https://img.shields.io/badge/SvelteKit-v2-FF3E00?logo=svelte" alt="SvelteKit">
-  </a>
-  <a href="https://svelte.dev" target="_blank">
+  </a><!--
+  --><a href="https://svelte.dev" target="_blank">
     <img src="https://img.shields.io/badge/Svelte-v5-FF3E00?logo=svelte" alt="Svelte 5">
-  </a>
-  <a href="https://www.typescriptlang.org" target="_blank">
+  </a><!--
+  --><a href="https://www.typescriptlang.org" target="_blank">
     <img src="https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript" alt="TypeScript">
-  </a>
-  <a href="https://tailwindcss.com" target="_blank">
+  </a><!--
+  --><a href="https://tailwindcss.com" target="_blank">
     <img src="https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss" alt="Tailwind">
   </a>
 </p>
 <p align="center">
   <a href="https://supabase.com" target="_blank">
     <img src="https://img.shields.io/badge/Supabase-v2-3ECF8E?logo=supabase" alt="Supabase">
-  </a>
-  <a href="https://bits-ui.com" target="_blank">
+  </a><!--
+  --><a href="https://bits-ui.com" target="_blank">
     <img src="https://img.shields.io/badge/Bits_UI-v2-171717?logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iMTEiIHZpZXdCb3g9IjAgMCAxMSAxMSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1LjkzNTU1IiBjeT0iNS45ODczIiByPSI1IiB0cmFuc2Zvcm09InJvdGF0ZSg5MCA1LjkzNTU1IDUuOTg3MykiIGZpbGw9IiNGRkZGRkYiLz48L3N2Zz4=" alt="Bits UI">
-  </a>
-  <a href="https://github.com/aedrondouren/Aedron-StreamFlow/blob/supabase/LICENSE" target="_blank">
+  </a><!--
+  --><a href="https://github.com/aedrondouren/Aedron-StreamFlow/blob/supabase/LICENSE" target="_blank">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
   </a>
 </p>
