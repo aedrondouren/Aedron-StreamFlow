@@ -12,11 +12,27 @@
 				} catch (e) {
 					document.documentElement.dataset.sidebarOpen = 'true';
 				}
+
+				try {
+					const theme = localStorage.getItem('streamflow:theme') || 'system';
+					document.documentElement.dataset.theme = theme;
+
+					// Set data-system-theme when theme=system
+					if (theme === 'system') {
+						const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+						document.documentElement.dataset.systemTheme = systemPrefersDark ? 'dark' : 'light';
+					}
+				} catch (e) {
+					document.documentElement.dataset.theme = 'system';
+				}
 			})();
 		</script>
 		%sveltekit.head%
 	</head>
-	<body class="bg-neutral-800 text-neutral-50" data-sveltekit-preload-data="hover">
+	<body
+		class="bg-base-50 text-base-900 dark:bg-base-900 dark:text-base-50"
+		data-sveltekit-preload-data="hover"
+	>
 		<div class="contents">%sveltekit.body%</div>
 	</body>
 </html>

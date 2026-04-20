@@ -5,6 +5,9 @@
 	interpolate-size: allow-keywords;
 }
 
+/* Tailwind dark mode variant using data-theme attribute */
+@custom-variant dark (&:where(:root[data-theme=dark], :root[data-theme=dark] *, :root[data-theme=system][data-system-theme=dark], :root[data-theme=system][data-system-theme=dark] *));
+
 @variant sidebar-open {
 	html[data-sidebar-open='true'] & {
 		@slot;
@@ -13,6 +16,24 @@
 
 @variant sidebar-closed {
 	html[data-sidebar-open='false'] & {
+		@slot;
+	}
+}
+
+@variant theme-light {
+	html[data-theme='light'] & {
+		@slot;
+	}
+}
+
+@variant theme-dark {
+	html[data-theme='dark'] & {
+		@slot;
+	}
+}
+
+@variant theme-system {
+	html[data-theme='system'] & {
 		@slot;
 	}
 }

@@ -9,6 +9,9 @@
 	let { children }: LayoutProps = $props();
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+	<link rel="icon" href={favicon} />
+	<title>StreamFlow</title>
+</svelte:head>
 
 {@render children()}
