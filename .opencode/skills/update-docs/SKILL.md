@@ -1,6 +1,6 @@
 ---
 name: update-docs
-description: Instructions for updating AGENTS.md, README.md, package.json, and .gitignore when code changes require documentation updates
+description: Quick documentation updates based on recent commit changes
 metadata:
   audience: agents
   workflow: documentation
@@ -8,160 +8,155 @@ metadata:
 
 ## Purpose
 
-This skill instructs agents to keep project documentation synchronized with codebase changes.
+This skill provides **fast, shallow documentation updates** by analyzing only the changes since the last commit. Use for incremental updates during active development.
 
 ## When to Use
 
-Apply this skill when:
+Apply this skill for **quick updates** before committing:
 
-- Adding new features or architectural patterns
-- Changing project structure or workflows
-- Adding/modifying npm scripts or dependencies
-- Creating new file patterns that should be ignored
-- Updating visual assets (screenshots, diagrams)
+- **Before git commit** — Ensure docs match staged changes
+- Adding new features or fixes
+- Adding/modifying npm scripts
+- Changing file structure
+- Updating screenshots or visual assets
+
+**Trigger:** Run automatically before commits or manually when staging changes.
+
+## Workflow
+
+### Step 1: Analyze Changes Since Last Commit
+
+```bash
+# Get all changes (staged + unstaged) since last commit
+git diff --name-only HEAD
+
+# Get detailed diff for context
+git diff HEAD
+```
+
+**Note:** This compares current working state (including unstaged changes) against the last commit, ensuring documentation captures ALL pending changes before you commit.
+
+### Step 2: Update Documentation Based on Changes
+
+**If `package.json` changed:**
+- Check `scripts` object → Update README.md and AGENTS.md command tables
+- Check `dependencies`/`devDependencies` → Update stack sections
+- Check `version` → Update version references if needed
+
+**If new files/directories added:**
+- New `src/lib/` utilities → Add to AGENTS.md Key Files table
+- New routes → Update routing strategy sections
+- New config files → Update prerequisites or setup sections
+
+**If files deleted:**
+- Remove references from documentation
+
+**If `.gitignore` patterns added:**
+- Document new ignored patterns if relevant
+
+### Step 3: Verify Consistency
+
+- Ensure command examples match `package.json` scripts
+- Verify file paths exist
+- Check screenshot references match `.repo/screenshots/` contents
 
 ## Files to Update
 
-### AGENTS.md
+### AGENTS.md (Quick Updates)
 
-Update when adding:
+Update only the sections affected by recent changes:
 
-- New workflows or patterns
-- Architectural changes
-- Gotchas or edge cases discovered
-- MCP server configurations
-- Environment variable changes
-- Routing or data flow modifications
+- **Dev Commands** — If `package.json` scripts changed
+- **Key Files** — If new utility files added
+- **Gotchas** — If new edge cases discovered
 
-### README.md
+### README.md (Quick Updates)
 
-Update when adding:
+Update only affected sections:
 
-- New features to the feature matrix
-- New supported platforms
-- Screenshots showing new UI
-- Changes to project structure
-- New prerequisites or setup steps
-- Changes to development commands
+- **Development Commands** — If scripts changed
+- **Project Structure** — If directory structure changed
+- **Features** — If new features added
 
 ### package.json (if required)
 
 Update when:
 
-- Adding new npm scripts (build, test, dev, etc.)
+- Adding new npm scripts
 - Adding/removing dependencies
-- Changing project metadata (version, description, keywords)
-- Adding new engine requirements
+- Changing project metadata
 
 ### .gitignore (if required)
 
-Update when:
+Update when new ignore patterns are needed.
 
-- New cache or output directories are created
-- New tooling generates temporary files
-- New environment file patterns are introduced
-- New build artifacts need exclusion
+## Screenshots (Quick Update)
 
-## Screenshots
+If new screenshots added since last commit:
 
-### When to Update Screenshots
-
-Update screenshots in README.md when:
-
-- UI components or layouts change significantly
-- New features are added that have visual components
-- Design updates (colors, typography, spacing)
-- Adding new pages or routes
-- Authentication flows change
-
-### Capturing Screenshots with Chrome DevTools
-
-Use Chrome DevTools MCP tools to capture screenshots:
-
-1. **Navigate to the page:**
-
-   ```
-   chrome-devtools_navigate_page — Navigate to URLs or go back/forward/reload
-   ```
-
-2. **Set viewport for responsive testing:**
-
-   ```
-   chrome-devtools_resize_page — Set viewport dimensions
-   ```
-
-   - Mobile: 375-414px width
-   - Tablet: 768px width
-   - Desktop: 1440px+ width
-
-3. **Take the screenshot:**
-   ```
-   chrome-devtools_take_screenshot — Capture screenshots
-   ```
-
-### Screenshot Storage Locations
-
-- **Permanent screenshots** (for README.md): `.repo/screenshots/`
-  - Committed to repository
-  - Used in documentation
-  - Examples: `dashboard.png`, `signin-page.png`
-
-- **Temporary screenshots** (for validation): `.opencode/temp/`
-  - Gitignored, for iterative testing
-  - Deleted after verification
-  - Examples: `sidebar-mobile-test.png`
-
-### Naming Conventions
-
-- Use lowercase with hyphens
-- Include viewport if relevant: `component-mobile.png`, `component-desktop.png`
-- Be descriptive: `auth-flow-step2.png` not `screenshot2.png`
-
-### Updating README.md
-
-When adding new screenshots:
-
-1. Save to `.repo/screenshots/`
-2. Update image path in README.md:
-   ```markdown
-   <img src=".repo/screenshots/new-feature.png" alt="New Feature" width="600"/>
-   ```
+1. Verify files exist in `.repo/screenshots/`
+2. Add to README.md screenshot gallery
+3. Update captions as needed
 
 ## Examples
 
-### Example 1: Adding a New Database Script
+### Example 1: Just Committed New Test Scripts
 
-**Change:** Adding `db:migrate` script
+**Git diff shows:** `package.json` added `test:spoof:kick` script
 
-**Files to update:**
+**Update:**
+1. README.md — Add to Development Commands section
+2. AGENTS.md — Add to Testing section
 
-1. `AGENTS.md` — Add new script to Dev Commands section
-2. `package.json` — Add script to `scripts` object
-3. `README.md` — Document the new command in Quick Start
+### Example 2: Just Added New Utility File
 
-### Example 2: Adding New Visual Assets
+**Git diff shows:** New file `src/lib/platform/newAuth.ts`
 
-**Change:** Taking screenshots for documentation
+**Update:**
+1. AGENTS.md — Add to Key Files table
+2. No README change needed (internal utility)
 
-**Files to update:**
+### Example 3: Just Added Screenshot
 
-1. `README.md` — Update image paths to point to `.repo/screenshots/`
-2. No changes to `package.json` or `.gitignore` (paths already configured)
+**Git diff shows:** New file `.repo/screenshots/new-feature.png`
 
-### Example 3: Changing Build Output Directory
-
-**Change:** SvelteKit adapter output changed from `.output/` to `dist/`
-
-**Files to update:**
-
-1. `AGENTS.md` — Update Build & Output section
-2. `.gitignore` — Change `.output` to `dist`
-3. `package.json` — No changes needed (build command unchanged)
+**Update:**
+1. README.md — Add screenshot to gallery with caption
 
 ## Guidelines
 
-- Only update files if they actually require changes
-- Don't modify files "just in case" — verify necessity first
-- Follow existing formatting and style conventions
-- Update all relevant sections within a file (e.g., both Quick Reference and Workflows in AGENTS.md)
-- Keep documentation concise but complete
+- **FAST**: Only analyze `git diff HEAD` (current state vs last commit)
+- **SHALLOW**: Update only obviously affected sections
+- **INCREMENTAL**: Trust that previous docs were correct
+- **MINIMAL**: Don't refactor or reorganize, just add/update changed items
+- **PRE-COMMIT**: Run before committing to keep docs in sync with code
+
+## Limitations
+
+This skill does **NOT**:
+- Deep analysis of codebase structure
+- Comprehensive documentation audits
+- Major reorganizations or refactoring
+
+For deep analysis, use `deep-update-docs` skill instead.
+
+## Pre-Commit Integration
+
+**Recommended workflow:**
+
+```bash
+# Make code changes
+# ...
+
+# Update documentation based on changes
+# (use update-docs skill)
+
+# Verify changes
+git status
+
+# Commit code + docs together
+git add .
+git commit -m "feat: add new feature"
+```
+
+This ensures documentation and code are always committed together, preventing drift.
