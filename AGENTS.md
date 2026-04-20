@@ -68,32 +68,20 @@ pnpm test:visual:setup       # Combined: test user + mock data
 
 ## MCP Servers
 
-This project uses two MCP (Model Context Protocol) servers:
+This project uses MCP (Model Context Protocol) servers for enhanced capabilities:
 
-### Svelte MCP (`@sveltejs/opencode`)
-
-Svelte 5 and SvelteKit documentation, code analysis, and playground links.
-
-**Tools:**
-
+**Svelte MCP** — Svelte 5 and SvelteKit documentation, code analysis
 - `list-sections` — Discover documentation sections (use FIRST)
 - `get-documentation` — Fetch full docs for specific sections
 - `svelte-autofixer` — Analyze and fix Svelte code issues (ALWAYS use before sending code)
-- `playground-link` — Generate Svelte Playground links (ask user first)
 
-### Chrome DevTools MCP (`chrome-devtools-mcp`)
-
-Browser debugging, performance profiling, and visual verification.
-
-**Tools:**
-
+**Chrome DevTools MCP** — Browser debugging, performance profiling, visual verification
 - `chrome-devtools_navigate_page` — Navigate to URLs or go back/forward/reload
 - `chrome-devtools_take_screenshot` — Capture screenshots for visual verification
 - `chrome-devtools_resize_page` — Set viewport dimensions for responsive testing
 - `chrome-devtools_evaluate_script` — Execute JavaScript (use for `window.getComputedStyle()` debugging)
-- `chrome-devtools_list_pages` — Manage browser tabs
 
-**Configuration:** OpenCode users have these auto-configured in `opencode.json`. VS Code users configure via IDE's MCP panel.
+**Note:** MCP configuration varies by IDE. Check your environment's MCP setup.
 
 ### Bits UI
 
@@ -173,6 +161,16 @@ Headless UI components for Svelte 5. Uses the [llms.txt standard](https://bits-u
 | `src/lib/supabase/database.types.ts`           | Generated database types             |
 | `src/lib/supabase/validateClaims.ts`           | JWT claims validation                |
 | `src/lib/platform/twitchAuth.ts`               | Twitch OAuth utilities               |
+| `src/lib/platform/youtubeAuth.ts`              | YouTube OAuth utilities              |
+| `src/lib/platform/kickAuth.ts`                 | Kick OAuth utilities                 |
+| `src/lib/platform/platformMapper.ts`           | Platform data normalization          |
+| `src/lib/platform/userTransformers.ts`         | User data transformation utilities   |
+| `src/lib/platform/tokenRefresher.ts`           | Token refresh logic                  |
+| `src/lib/platform/tokenResolver.ts`            | Token resolution utilities           |
+| `src/lib/platform/tokenState.ts`               | Token state management               |
+| `src/lib/server/auth.ts`                       | Server auth guards (requireAuth)     |
+| `src/lib/server/oauthState.ts`                 | OAuth state parameter management     |
+| `src/lib/validation/auth.ts`                   | Auth validation schemas              |
 | `src/routes/(protected)/app/+layout.ts`        | Browser client + realtime setup      |
 | `src/routes/(protected)/app/+layout.server.ts` | Session passed to client             |
 
@@ -201,6 +199,22 @@ Four states for platform authentication:
 | `managed_basic`  | OAuth signup, minimal permissions | Show ⚠️ warning + "Complete Setup" |
 | `managed_linked` | Full OAuth with all permissions   | Show profile + "Disconnect"        |
 | `manual_linked`  | Manually entered tokens/API keys  | Show profile + "Disconnect"        |
+
+### Manual Platform Linking
+
+Manual linking allows users to connect platforms by directly entering credentials:
+
+**Key File:** `src/lib/server/platformLinking/manualLink.ts`
+
+**Utilities:**
+- `savePlatformAuth()` — Saves platform authentication data to database
+- `savePlatformUserInfo()` — Saves platform user profile data
+- `isPlatformLinked()` — Checks if platform is already linked
+
+**Use Cases:**
+- Platforms without OAuth support
+- Custom API key integrations
+- Fallback when OAuth fails
 
 ### OAuth Prompt Flows
 
@@ -245,6 +259,7 @@ const store = createReactiveTable(supabase, {
 - OAuth `redirectTo` must be in Supabase dashboard allow list
 - Use dynamic `${url.origin}/auth/confirm/supabase` for production
 - Route groups: `(folder)` syntax — parentheses don't affect URL
+- Route params: `src/params/` directory defines param constraints (e.g., `signInOut.ts`)
 - `pnpm format` = prettier only; `pnpm lint` checks both
 - `svelte-kit sync` runs in `prepare` script
 - Server endpoints need `data-sveltekit-reload` on links
@@ -260,27 +275,11 @@ const store = createReactiveTable(supabase, {
 
 ---
 
-## Workflows
-
-### Sub-agent Collaboration
-
-Use **sub-agents AGGRESSIVELY** for parallel tasks:
-
-- **When to use:**
-  - Independent file editing tasks (different files)
-  - Tasks that don't depend on each other's output
-  - Investigation tasks while making changes elsewhere
-  - Any opportunity for parallelization
-
-- **How:** `task` tool with specific, isolated prompts
-- **Don't wait** — delegate immediately when tasks are independent
-- **Benefits:** Faster completion, parallel execution, specialized focus
-
-### Dev Server Protocol
+## Dev Server Protocol
 
 **ALWAYS check if dev server is running before starting one:**
 
-1. Use `chrome-devtools_navigate_page` with `type: 'url'` to `http://localhost:5173`
+1. Navigate to `http://localhost:5173`
 2. If navigation succeeds, server is running — proceed
 3. If navigation fails, run `pnpm dev` and wait for startup
 4. **Never start multiple server instances**
@@ -305,34 +304,24 @@ pnpm test:visual:setup  # Creates test user + mock data
 
 ### For Vision-Capable Models
 
+Use Chrome DevTools MCP to navigate and take screenshots for visual verification.
+
 **Verification Steps:**
 
 1. **Check dev server status** — Navigate to `http://localhost:5173`. If it fails, run `pnpm dev` and wait.
 
 2. **For protected routes (/app)**:
    - Navigate to `/auth/signin`
-   - Fill in credentials from `TEST_USER_EMAIL` and `TEST_USER_PASSWORD`
-   - Submit and wait for redirect to `/app`
+   - Fill in credentials and submit
+   - Wait for redirect to `/app`
 
-3. **Confirm viewport** — Ask the user or check context:
-   - Mobile: ~375-414px width
-   - Tablet: ~768px width
-   - Desktop: ~1440px+ width (default)
+3. **Resize viewport** — Use `chrome-devtools_resize_page` for target device
 
-4. **Match viewport** — Use `chrome-devtools_resize_page` to set dimensions
+4. **Navigate and screenshot** — Load route, capture for validation
 
-5. **Navigate to route** — Use `chrome-devtools_navigate_page` to load the page
-
-6. **Take screenshots**:
-   - **UI validation** (temporary): `.opencode/temp/component-state.png`
-   - **Documentation** (permanent): `.repo/screenshots/component-final.png`
-
-7. **Iterate** — Adjust and re-verify if results don't match expectations
-
-**Screenshot Asset Management:**
-
-- **Temporary screenshots** (UI validation): `.opencode/temp/` — gitignored, clean periodically
-- **Permanent screenshots** (documentation): `.repo/screenshots/` — committed to repository
+5. **Screenshot locations**:
+   - Temporary (validation): `.repo/temp/` — gitignored
+   - Permanent (docs): `.repo/screenshots/` — committed
 
 ---
 
@@ -570,21 +559,4 @@ return {
 };
 ```
 
-### Agent Skills
 
-OpenCode loads reusable instructions from `.opencode/skills/*/SKILL.md`. Skills are discovered automatically and loaded on-demand via the native `skill` tool.
-
-**Available Skills:**
-
-- **update-docs** — Instructions for updating AGENTS.md, README.md, package.json, and .gitignore when code changes require documentation updates
-  - **Use when:** Adding features, changing workflows, modifying npm scripts, or updating screenshots
-  - **Location:** `.opencode/skills/update-docs/SKILL.md`
-
-**Skill Permissions:**
-
-Skills are restricted by agent mode for safety:
-
-- **Planning mode:** Skills that require file edits are **denied** (read-only analysis)
-- **Build mode:** All skills are **allowed** (full edit permissions)
-
-This prevents accidental modifications during analysis while enabling full documentation updates during implementation.

@@ -29,5 +29,5 @@ vite.config.ts.timestamp-*
 supabase/volumes/
 supabase/.temp/
 
-# OpenCode temp files
-.opencode/temp/
+# Temporary files (screenshots, validation)
+.repo/temp/

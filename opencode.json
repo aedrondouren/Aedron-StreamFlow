@@ -8,7 +8,9 @@
 				"write": "deny",
 				"edit": "deny",
 				"skill": {
-					"update-docs": "deny"
+					"update-docs": "deny",
+					"deep-update-docs": "deny",
+					"update-tests": "deny"
 				},
 				"task": {
 					"*": "allow",
@@ -32,13 +34,15 @@
 					"git reset --hard *": "deny",
 					"git clean *": "deny",
 					"pnpm db:reset": "deny",
+					"pnpm test:spoof:*": "deny",
 					"npm * reset": "deny",
 					"dropdb *": "deny",
 					"docker * prune": "deny",
 					"docker * rm": "deny",
 					"kill *": "deny",
 					"pkill *": "deny",
-					"killall *": "deny"
+					"killall *": "deny",
+					"taskkill *": "deny"
 				}
 			}
 		},
@@ -57,7 +61,7 @@
 	"mcp": {
 		"chrome-devtools": {
 			"type": "local",
-			"command": ["npx", "-y", "chrome-devtools-mcp@latest", "--no-usage-statistics"],
+			"command": ["npx", "-y", "chrome-devtools-mcp@latest", "--no-usage-statistics", "--headless"],
 			"enabled": true
 		}
 	}
