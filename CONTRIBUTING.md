@@ -27,31 +27,16 @@ cp .env.example .env
 
 ### 🔐 Environment Variables
 
-Copy `.env.example` to `.env` and configure:
-
-| Variable                          | Source                | Purpose                        |
-| --------------------------------- | --------------------- | ------------------------------ |
-| `PUBLIC_SUPABASE_URL`             | `$env/static/public`  | Supabase project URL           |
-| `PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `$env/static/public`  | Supabase anon key              |
-| `PUBLIC_TWITCH_CLIENT_ID`         | `$env/static/public`  | Twitch OAuth (safe to expose)  |
-| `PRIVATE_TWITCH_CLIENT_SECRET`    | `$env/static/private` | Twitch OAuth (server-only)     |
-| `PUBLIC_GOOGLE_CLIENT_ID`         | `$env/static/public`  | YouTube OAuth (safe to expose) |
-| `PRIVATE_GOOGLE_CLIENT_SECRET`    | `$env/static/private` | YouTube OAuth (server-only)    |
-| `PUBLIC_KICK_CLIENT_ID`           | `$env/static/public`  | Kick OAuth (safe to expose)    |
-| `PRIVATE_KICK_CLIENT_SECRET`      | `$env/static/private` | Kick OAuth (server-only)       |
-| `TEST_USER_EMAIL`                 | `.env` (auto-gen)     | Test user email for visual testing |
-| `TEST_USER_PASSWORD`              | `.env` (auto-gen)     | Test user password for visual testing |
-| `TEST_USER_ID`                    | `.env` (auto-gen)     | Test user UUID for quick reference |
+See [SYSTEM.md](SYSTEM.md#environment-variables) for the complete list of environment variables.
 
 ### VS Code Extensions
 
 When you open this project in VS Code, you'll be prompted to install recommended extensions:
 
-- **Svelte for VS Code** — Svelte syntax highlighting and IntelliSense
-- **Prettier** — Code formatting
-- **ESLint** — Linting for JavaScript/TypeScript/Svelte
-- **Tailwind CSS IntelliSense** — Autocomplete for Tailwind classes
-- **Supabase** — Database management
+- **Svelte for VS Code** (`svelte.svelte-vscode`) — Svelte syntax highlighting and IntelliSense
+- **Prettier - Code formatter** (`esbenp.prettier-vscode`) — Code formatting
+- **ESLint** (`dbaeumer.vscode-eslint`) — Linting for JavaScript/TypeScript/Svelte
+- **Tailwind CSS IntelliSense** (`bradlc.vscode-tailwindcss`) — Autocomplete for Tailwind classes
 
 ### MCP Servers (Optional)
 
@@ -59,11 +44,23 @@ This project includes MCP (Model Context Protocol) configurations for enhanced A
 
 **For OpenCode users:** MCP servers auto-configure via `opencode.json`:
 
-- GitHub MCP — GitHub operations
-- Chrome DevTools MCP — Browser debugging
-- Playwright MCP — Visual testing
+- **Svelte MCP** (`@sveltejs/opencode`) — Svelte 5 and SvelteKit documentation, code analysis
+- **Chrome DevTools MCP** (`chrome-devtools-mcp`) — Browser debugging, performance profiling, visual verification
 
-**For VS Code/Cursor users:** Configure via IDE's MCP panel using packages listed above.
+**For VS Code/Cursor users:** Configure via IDE's MCP panel using the packages listed above.
+
+### Agent Skills (OpenCode)
+
+OpenCode loads reusable skills from `.opencode/skills/*/SKILL.md`:
+
+- **update-docs** — Quick documentation updates based on recent commit changes
+- **deep-update-docs** — Comprehensive documentation sync through full codebase analysis
+- **update-tests** — Update testing infrastructure and LLM testing documentation
+
+**Skill Permissions:**
+
+- **Planning mode:** All edit skills denied (read-only analysis)
+- **Build mode:** All skills allowed
 
 ---
 
@@ -126,35 +123,7 @@ src/
 
 ## 🏗️ Architecture
 
-This project uses a **server-first approach with client-side enhancements**:
-
-### Routing Strategy
-
-| Route     | Purpose                                          |
-| --------- | ------------------------------------------------ |
-| `/`       | Static landing page (prerendered)                |
-| `/app/*`  | Dashboard — SSR initial load, then Realtime sync |
-| `/auth/*` | Authentication flows (signin, callbacks, logout) |
-
-### Data Flow
-
-1. **Server Load** — Initial data fetched server-side for fast first paint
-2. **Client Hydration** — Browser subscribes to Supabase Realtime
-3. **Updates** — User actions update immediately; other clients sync via Realtime
-
-### Theme System
-
-**Light/Dark/System themes** with automatic system preference detection, inline script to prevent FOUC, CSS-based switching via `data-theme` attributes, and LocalStorage persistence.
-
-### Authentication & Platform Linking
-
-**Four linking states:** `unlinked` → `managed_basic` → `managed_linked` or `manual_linked`. OAuth flows for signup/connect/upgrade with automatic token refresh. Manual linking available for platforms without OAuth support.
-
-### Realtime Data Pattern
-
-**Hybrid SSR + Realtime:** Server load for fast first paint, client subscriptions via `$effect()`, 50ms event batching, and exponential backoff retry logic [1s, 2s, 5s, 10s].
-
-For detailed architecture docs and agent-specific patterns, see [AGENTS.md](AGENTS.md).
+For detailed architecture documentation, see [SYSTEM.md](SYSTEM.md#architecture).
 
 ---
 
@@ -174,11 +143,11 @@ Run `pnpm format` before committing to auto-fix issues.
 
 ## Pull Request Process
 
-1. **Create a branch** from `supabase` (main development branch):
+1. **Create a branch** from `main` (default development branch):
 
    ```bash
-   git checkout supabase
-   git pull origin supabase
+   git checkout main
+   git pull origin main
    git checkout -b feature/your-feature-name
    ```
 
@@ -190,7 +159,7 @@ Run `pnpm format` before committing to auto-fix issues.
    pnpm check && pnpm lint && pnpm build
    ```
 
-4. **Push to your fork** and open a PR against `supabase`
+4. **Push to your fork** and open a PR against `main`
 
 5. **PR Requirements:**
    - All checks pass
@@ -264,10 +233,10 @@ Include:
 
 ### Supported Versions
 
-| Version                  | Supported |
-| ------------------------ | --------- |
-| Latest `supabase` branch | ✅        |
-| Older commits            | ❌        |
+| Version           | Supported |
+| ----------------- | --------- |
+| Latest `main` branch | ✅        |
+| Older commits     | ❌        |
 
 ### Security Best Practices
 

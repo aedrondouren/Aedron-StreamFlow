@@ -134,6 +134,8 @@
 - **🗄️ Supabase** — Auth, database, and realtime subscriptions
 - **🌓 Theme System** — Light/dark/system themes with automatic system preference detection
 
+For detailed technical documentation, see [SYSTEM.md](SYSTEM.md).
+
 ## 🚀 Quick Start
 
 ```bash
