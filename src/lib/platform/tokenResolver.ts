@@ -1,8 +1,8 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '$lib/supabase/database.types';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import { refreshToken as refreshKickToken } from './kickAuth';
 import { refreshToken as refreshTwitchToken } from './twitchAuth';
 import { refreshToken as refreshYouTubeToken } from './youtubeAuth';
-import { refreshToken as refreshKickToken } from './kickAuth';
 
 // Simple in-memory cache for tokens
 const tokenCache = new Map<

@@ -1,6 +1,6 @@
-import { fail, redirect, type Actions } from '@sveltejs/kit';
-import { PLATFORM_SCOPES, type Platform } from '$lib/platform/scopes';
 import { dev } from '$app/environment';
+import { PLATFORM_SCOPES, type Platform } from '$lib/platform/scopes';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {
 	signUp: async ({ request, locals: { supabase } }) => {

@@ -4,12 +4,7 @@
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
-
-	// Access data reactively
-	const platform = $derived(data.platform);
-	const next = $derived(data.next);
-	const oauthState = $derived(data.oauthState);
-	const currentState = $derived(data.currentState ?? 'new');
+	const { platform, next, oauthState, currentState = 'new' } = $derived(data);
 
 	let showDetails = $state(false);
 	let isConnecting = $state(false);

@@ -1,6 +1,6 @@
+import { refreshToken as refreshKickToken } from './kickAuth';
 import { refreshToken as refreshTwitchToken } from './twitchAuth';
 import { refreshToken as refreshYouTubeToken } from './youtubeAuth';
-import { refreshToken as refreshKickToken } from './kickAuth';
 
 export interface TokenResponse {
 	access_token: string;

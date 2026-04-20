@@ -1,11 +1,11 @@
 <script lang="ts" module>
+	import { browser } from '$app/environment';
 	import { invalidate } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import type { LayoutProps } from './$types';
 </script>
 
 <script lang="ts">
-	import { browser } from '$app/environment';
 	import favicon from '$lib/assets/favicon.png';
 
 	let { data, children }: LayoutProps = $props();

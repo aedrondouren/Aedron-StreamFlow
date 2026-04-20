@@ -1,8 +1,8 @@
-import type { SupabaseClient, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
-import type { Database, Tables } from '$lib/supabase/database.types';
 import { createBatcher } from '$lib/realtime/batcher.svelte';
-import { createRealtimeSubscription, watchAuthState } from '$lib/realtime/subscription.svelte';
 import { mergeChanges } from '$lib/realtime/merge';
+import { createRealtimeSubscription, watchAuthState } from '$lib/realtime/subscription.svelte';
+import type { Database, Tables } from '$lib/supabase/database.types';
+import type { RealtimePostgresChangesPayload, SupabaseClient } from '@supabase/supabase-js';
 
 type TableName = keyof Database['public']['Tables'];
 

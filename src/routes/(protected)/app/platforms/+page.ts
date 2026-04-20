@@ -1,7 +1,7 @@
-import type { PageLoad } from './$types';
-import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '$lib/supabase/database.types';
 import { type PlatformStatus } from '$lib/platform/tokenState';
+import type { Database } from '$lib/supabase/database.types';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ parent }) => {
 	const { supabase, claims } = (await parent()) as {

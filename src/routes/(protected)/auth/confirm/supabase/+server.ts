@@ -1,12 +1,12 @@
+import { dev } from '$app/environment';
 import { PUBLIC_TWITCH_CLIENT_ID } from '$env/static/public';
+import { PLATFORM_SCOPES } from '$lib/platform/scopes';
+import { linkManagedPlatform } from '$lib/platform/tokenState';
+import { createOAuthState, validateOAuthState } from '$lib/server/oauthState';
 import type { Database } from '$lib/supabase/database.types';
-import type { SupabaseClient, Session } from '@supabase/supabase-js';
+import type { Session, SupabaseClient } from '@supabase/supabase-js';
 import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { dev } from '$app/environment';
-import { linkManagedPlatform } from '$lib/platform/tokenState';
-import { PLATFORM_SCOPES } from '$lib/platform/scopes';
-import { validateOAuthState, createOAuthState } from '$lib/server/oauthState';
 
 /**
  * Fetch Twitch user profile, store in user_info, and return platform user ID

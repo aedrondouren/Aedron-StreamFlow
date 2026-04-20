@@ -1,9 +1,9 @@
+import { dev } from '$app/environment';
 import { exchangeCodeForToken, getCurrentChannel } from '$lib/platform/youtubeAuth';
 import type { Database } from '$lib/supabase/database.types';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { dev } from '$app/environment';
 
 export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
 	const code = url.searchParams.get('code');

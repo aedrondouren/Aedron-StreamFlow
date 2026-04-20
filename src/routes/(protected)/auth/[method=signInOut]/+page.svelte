@@ -1,9 +1,11 @@
-<script lang="ts">
+<script lang="ts" module>
 	import { resolve } from '$app/paths';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { validatePasswordMatch } from '$lib/validation/auth';
 	import type { PageProps } from './$types';
+</script>
 
+<script lang="ts">
 	let { params, form }: PageProps = $props();
 
 	// Error message mapping for query parameter errors
@@ -20,7 +22,7 @@
 	};
 
 	// Get error from query params or form
-	const queryError = $derived($page.url.searchParams.get('error'));
+	const queryError = $derived(page.url.searchParams.get('error'));
 	const displayError = $derived(
 		form?.error || (queryError ? errorMessages[queryError] || queryError : null)
 	);

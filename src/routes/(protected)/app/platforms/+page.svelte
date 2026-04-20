@@ -1,12 +1,15 @@
-<script lang="ts">
+<script lang="ts" module>
 	import { browser } from '$app/environment';
-	import { page } from '$app/stores';
-	import { createReactiveTable } from '$lib/stores/reactiveTable.svelte';
+	import { page } from '$app/state';
 	import PlatformCard from '$lib/components/PlatformCard.svelte';
+	import { createReactiveTable } from '$lib/stores/reactiveTable.svelte';
 	import type { Tables } from '$lib/supabase/database.types';
-	import type { PlatformStatus } from '$lib/platform/tokenState';
 	import type { PageProps } from './$types';
 
+	const platformList = ['twitch', 'youtube', 'kick'] as const;
+</script>
+
+<script lang="ts">
 	let { data, form }: PageProps = $props();
 
 	// Track user info updates from realtime
@@ -52,9 +55,8 @@
 		}));
 	});
 
-	const platformStates = $derived(data.platformStates as Record<string, PlatformStatus>);
-	const linkedProviders = $derived(data.linkedProviders ?? new Set<string>());
-	const infoMessage = $derived($page.url.searchParams.get('info'));
+	const { platformStates, linkedProviders } = $derived(data);
+	const infoMessage = $derived(page.url.searchParams.get('info'));
 
 	function handleRetry() {
 		userInfoStore?.retry();
@@ -68,8 +70,6 @@
 	function getConnectFlowType(platform: string): string {
 		return linkedProviders.has(platform) ? 'upgrade' : 'connect';
 	}
-
-	const platformList: Array<'twitch' | 'youtube' | 'kick'> = ['twitch', 'youtube', 'kick'];
 </script>
 
 <div class="space-y-6">

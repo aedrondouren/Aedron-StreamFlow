@@ -1,7 +1,7 @@
-import { PUBLIC_GOOGLE_CLIENT_ID } from '$env/static/public';
-import { PRIVATE_GOOGLE_CLIENT_SECRET } from '$env/static/private';
-import { parseScopes } from './scopes';
 import { dev } from '$app/environment';
+import { PRIVATE_GOOGLE_CLIENT_SECRET } from '$env/static/private';
+import { PUBLIC_GOOGLE_CLIENT_ID } from '$env/static/public';
+import { parseScopes } from './scopes';
 import type { PlatformOAuthToken } from './types';
 
 export type YouTubeOAuthToken = PlatformOAuthToken;

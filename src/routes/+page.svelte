@@ -1,5 +1,8 @@
-<script lang="ts">
+<script lang="ts" module>
 	import { resolve } from '$app/paths';
+</script>
+
+<script lang="ts">
 	import favicon from '$lib/assets/favicon.png';
 </script>
 

@@ -1,5 +1,5 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '$lib/supabase/database.types';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 export type PlatformState = 'unlinked' | 'managed_basic' | 'managed_linked' | 'manual_linked';
 

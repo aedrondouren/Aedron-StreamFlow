@@ -1,20 +1,20 @@
-import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { dev } from '$app/environment';
 import {
-	refreshToken as refreshTwitchToken,
-	getCurrentUser as getTwitchUser
+	getCurrentUser as getKickUser,
+	refreshToken as refreshKickToken
+} from '$lib/platform/kickAuth';
+import { PLATFORM_SCOPES, type Platform } from '$lib/platform/scopes';
+import {
+	getCurrentUser as getTwitchUser,
+	refreshToken as refreshTwitchToken
 } from '$lib/platform/twitchAuth';
 import {
-	refreshToken as refreshYouTubeToken,
-	getCurrentChannel as getYouTubeChannel
+	getCurrentChannel as getYouTubeChannel,
+	refreshToken as refreshYouTubeToken
 } from '$lib/platform/youtubeAuth';
-import {
-	refreshToken as refreshKickToken,
-	getCurrentUser as getKickUser
-} from '$lib/platform/kickAuth';
 import { requireAuth } from '$lib/server/auth';
-import { PLATFORM_SCOPES, type Platform } from '$lib/platform/scopes';
 import { createOAuthState } from '$lib/server/oauthState';
-import { dev } from '$app/environment';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {
 	unlink: async ({ request, locals: { supabase }, url }) => {

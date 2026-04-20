@@ -228,7 +228,7 @@ const store = createReactiveTable(supabase, {
 
 ## Gotchas
 
-- Tailwind v4 config lives in CSS (`@import "tailwindcss"`), not JS
+- Tailwind v4 config lives in CSS (`@import "tailwindcss"`), not in JS
 - `.cache/` and `supabase/volumes/` are gitignored
 - `PUBLIC_*` env vars from `$env/static/public`, `PRIVATE_*` from `$env/static/private`
 - OAuth `redirectTo` must be in Supabase dashboard allow list
@@ -242,6 +242,10 @@ const store = createReactiveTable(supabase, {
 - When debugging styling issues, use `chrome-devtools_evaluate_script` with `window.getComputedStyle(element)` to inspect actual computed styles
 - **Never cast types needlessly** — ensure data shapes match instead of using `as Type`
 - **Use `resolve()` from `$app/paths`** for all internal navigation hrefs (type-safe routing)
+- **Module script imports**: Place static/runtime imports (types, utilities, stores) in `<script lang="ts" module>`, keep runtime-only imports (assets, CSS) in regular `<script>`
+- **$derived destructuring**: Destructure all derived values from `data` props in a single `$derived()` call with defaults (e.g., `{ a, b = 'default' } = $derived(data)`)
+- **Import ordering**: VSCode handles import sorting on save; Prettier handles formatting only
+- **Empty route files**: Remove unused `+page.svelte`/`+page.ts` stubs; recreate when content is needed
 
 ---
 
