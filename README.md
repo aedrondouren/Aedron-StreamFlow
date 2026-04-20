@@ -113,6 +113,7 @@
 - **⚡ SvelteKit 2** — Modern web framework with Svelte 5 runes
 - **🔷 TypeScript** — Strict mode for type safety
 - **🎨 Tailwind CSS v4** — Utility-first styling
+- **🧩 bits-ui** — Headless UI components for accessibility
 - **🗄️ Supabase** — Auth, database, and realtime subscriptions
 
 ## 🚀 Quick Start
@@ -153,6 +154,9 @@ pnpm build        # Production build
 # Database
 pnpm db:generate  # Generate TypeScript types
 pnpm db:push      # Push migrations to Supabase
+
+# Testing
+pnpm test:viewports  # Test all routes at mobile, tablet, and desktop viewports
 ```
 
 ## 📁 Project Structure

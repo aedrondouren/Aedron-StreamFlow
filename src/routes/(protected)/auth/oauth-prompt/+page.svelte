@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { Button } from '$lib/components';
 	import { formatScopesJson, getScopeDescriptions } from '$lib/platform/scopes';
 	import type { PageProps } from './$types';
 
@@ -49,12 +50,12 @@
 	<div class="flex min-h-screen items-center justify-center bg-base-900 p-4">
 		<div class="rounded-lg border border-base-700 bg-base-800 p-6 text-center">
 			<p class="text-error-400">{data.error || 'Invalid platform specified'}</p>
-			<a
+			<Button.Root
 				href={resolve('/auth/signin')}
 				class="mt-4 inline-block cursor-pointer text-primary-400 hover:underline"
 			>
 				Go back to sign in
-			</a>
+			</Button.Root>
 		</div>
 	</div>
 {:else}
@@ -241,13 +242,13 @@
 				</ul>
 			</div>
 
-			<button
+			<Button.Root
 				type="button"
 				class="mb-4 cursor-pointer text-sm text-primary-400 hover:text-primary-300 hover:underline"
 				onclick={() => (showDetails = !showDetails)}
 			>
 				{showDetails ? 'Hide Details' : 'Show Details'}
-			</button>
+			</Button.Root>
 
 			{#if showDetails}
 				<div class="mb-6 overflow-hidden rounded-md bg-base-900">
@@ -263,7 +264,7 @@
 					<input type="hidden" name="state" value={oauthState} />
 					<input type="hidden" name="next" value={next} />
 					<input type="hidden" name="flowType" value={data.flowType} />
-					<button
+					<Button.Root
 						type="submit"
 						disabled={isSkipping}
 						onclick={() => (isConnecting = true)}
@@ -276,23 +277,23 @@
 						{:else}
 							Upgrade to Full Access
 						{/if}
-					</button>
+					</Button.Root>
 				</form>
 
 				<!-- Continue without linking / Manual Linking Form -->
 				{#if data.flowType === 'connect'}
-					<a
+					<Button.Root
 						href={resolve(`/auth/link?platform=${platform}&next=/app/platforms`)}
 						class="block w-full cursor-pointer rounded-md border border-base-600 bg-base-700 px-4 py-3 text-center text-sm font-medium text-base-50 transition-colors hover:bg-base-600"
 					>
 						Link Manually Instead
-					</a>
-					<a
+					</Button.Root>
+					<Button.Root
 						href={resolve('/app/platforms')}
 						class="block w-full cursor-pointer rounded-md px-4 py-3 text-center text-sm font-medium text-base-300 transition-colors hover:text-base-200"
 					>
 						Connect Later
-					</a>
+					</Button.Root>
 				{:else}
 					<form method="POST" action="/auth/signin?/initiateOAuth">
 						<input type="hidden" name="platform" value={platform} />
@@ -300,7 +301,7 @@
 						<input type="hidden" name="state" value={oauthState} />
 						<input type="hidden" name="next" value={next} />
 						<input type="hidden" name="flowType" value={data.flowType} />
-						<button
+						<Button.Root
 							type="submit"
 							disabled={isConnecting}
 							onclick={() => (isSkipping = true)}
@@ -313,7 +314,7 @@
 							{:else}
 								Keep Basic Access Only
 							{/if}
-						</button>
+						</Button.Root>
 					</form>
 				{/if}
 			</div>

@@ -1,7 +1,8 @@
-<script lang="ts">
+<script lang="ts" module>
 	import { resolve } from '$app/paths';
-	import type { Tables } from '$lib/supabase/database.types';
+	import { Button } from '$lib/components';
 	import type { PlatformStatus } from '$lib/platform/tokenState';
+	import type { Tables } from '$lib/supabase/database.types';
 
 	interface Props {
 		platform: 'twitch' | 'youtube' | 'kick';
@@ -10,7 +11,9 @@
 		isLinked: boolean;
 		flowType: string;
 	}
+</script>
 
+<script lang="ts">
 	let { platform, platformData, platformState, isLinked, flowType }: Props = $props();
 
 	const platformConfig = {
@@ -105,22 +108,22 @@
 			{#if !isManaged}
 				<form method="POST" action="?/refresh" class="flex gap-2">
 					<input type="hidden" name="platform" value={platform} />
-					<button
+					<Button.Root
 						type="submit"
 						class="flex-1 cursor-pointer rounded-md bg-base-700 px-4 py-2 text-sm font-medium text-base-50 transition-colors hover:bg-base-600"
 					>
 						Refresh Profile
-					</button>
+					</Button.Root>
 				</form>
 			{/if}
 			<form method="POST" action="?/unlink">
 				<input type="hidden" name="platform" value={platform} />
-				<button
+				<Button.Root
 					type="submit"
 					class="w-full cursor-pointer rounded-md border border-error-600 px-4 py-2 text-sm font-medium text-error-400 transition-colors hover:bg-error-500/20"
 				>
 					Disconnect
-				</button>
+				</Button.Root>
 			</form>
 		</div>
 	{:else}
@@ -132,21 +135,21 @@
 		{#if platformState.state === 'managed_basic'}
 			{@const href =
 				`/auth/oauth-prompt?platform=${platform}&flowType=upgrade` as `/auth/oauth-prompt?platform=${typeof platform}&flowType=upgrade`}
-			<a
+			<Button.Root
 				href={resolve(href)}
 				class="block w-full cursor-pointer rounded-md {colors.bg600} px-4 py-2 text-center text-sm font-medium text-base-50 transition-colors {colors.hoverBg700}"
 			>
 				{getConnectButtonText()}
-			</a>
+			</Button.Root>
 		{:else}
 			{@const href =
 				`/auth/oauth-prompt?platform=${platform}&flowType=${flowType}` as `/auth/oauth-prompt?platform=${typeof platform}&flowType=${string}`}
-			<a
+			<Button.Root
 				href={resolve(href)}
 				class="block w-full cursor-pointer rounded-md {colors.bg600} px-4 py-2 text-center text-sm font-medium text-base-50 transition-colors {colors.hoverBg700}"
 			>
 				{getConnectButtonText()}
-			</a>
+			</Button.Root>
 		{/if}
 	{/if}
 </div>

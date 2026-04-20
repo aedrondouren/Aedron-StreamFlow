@@ -1,5 +1,6 @@
 <script lang="ts" module>
 	import { resolve } from '$app/paths';
+	import { Button, Separator } from '$lib/components';
 	import { page } from '$app/state';
 	import { validatePasswordMatch } from '$lib/validation/auth';
 	import type { PageProps } from './$types';
@@ -122,12 +123,12 @@
 				</div>
 			{/if}
 
-			<button
+			<Button.Root
 				type="submit"
 				class="w-full cursor-pointer rounded-md bg-primary-600 py-2 font-semibold text-base-50 transition-colors hover:bg-primary-700"
 			>
 				{method}
-			</button>
+			</Button.Root>
 		</form>
 
 		{#if isSignIn}
@@ -141,11 +142,15 @@
 					</div>
 				</div>
 
+				<div class="sr-only">
+					<Separator.Root />
+				</div>
+
 				<div class="mt-4 grid grid-cols-3 gap-2">
 					<!-- Twitch OAuth -->
 					<form method="POST" action="?/signinWithOAuth&provider=twitch" class="contents">
 						<input type="hidden" name="flowType" value="signup" />
-						<button
+						<Button.Root
 							type="submit"
 							class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-md border border-base-600 bg-base-700 py-2 font-semibold text-base-50 transition-colors hover:bg-base-600"
 						>
@@ -155,14 +160,14 @@
 								/>
 							</svg>
 							Twitch
-						</button>
+						</Button.Root>
 					</form>
 
 					<!-- YouTube OAuth -->
 					<form method="POST" action="?/signinWithOAuth&provider=google" class="contents">
 						<input type="hidden" name="flowType" value="signup" />
 						<input type="hidden" name="scope" value="openid profile email" />
-						<button
+						<Button.Root
 							type="submit"
 							class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-md border border-base-600 bg-base-700 py-2 font-semibold text-base-50 transition-colors hover:bg-base-600"
 						>
@@ -172,13 +177,13 @@
 								/>
 							</svg>
 							YouTube
-						</button>
+						</Button.Root>
 					</form>
 
 					<!-- Kick OAuth -->
 					<form method="POST" action="?/signinWithOAuth&provider=kick" class="contents">
 						<input type="hidden" name="flowType" value="signup" />
-						<button
+						<Button.Root
 							type="submit"
 							class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-md border border-base-600 bg-base-700 py-2 font-semibold text-base-50 transition-colors hover:bg-base-600"
 						>
@@ -188,7 +193,7 @@
 								/>
 							</svg>
 							Kick
-						</button>
+						</Button.Root>
 					</form>
 				</div>
 			</div>
@@ -198,8 +203,10 @@
 			{switchMessage}
 			<a
 				href={resolve(isSignIn ? '/auth/signup' : '/auth/signin')}
-				class="cursor-pointer text-primary-400 hover:underline">{switchMethod}</a
+				class="cursor-pointer text-primary-400 hover:underline"
 			>
+				{switchMethod}
+			</a>
 		</p>
 	</div>
 </main>

@@ -1,5 +1,6 @@
 <script lang="ts" module>
 	import { resolve } from '$app/paths';
+	import { Button } from '$lib/components';
 </script>
 
 <script lang="ts">
@@ -22,7 +23,7 @@
 				<span class="text-lg font-bold text-primary-400">StreamFlow</span>
 			</div>
 			<div class="flex items-center gap-3">
-				<a
+				<Button.Root
 					href="https://github.com/aedrondouren/Aedron-StreamFlow"
 					target="_blank"
 					rel="noopener noreferrer"
@@ -36,13 +37,13 @@
 						/>
 					</svg>
 					<span class="hidden sm:inline">GitHub</span>
-				</a>
-				<a
+				</Button.Root>
+				<Button.Root
 					href={resolve('/app')}
 					class="rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-base-50 transition-colors hover:bg-primary-700"
 				>
 					Dashboard
-				</a>
+				</Button.Root>
 			</div>
 		</div>
 	</header>
@@ -58,12 +59,12 @@
 					viewers, and control your stream — all at once.
 				</p>
 				<div class="mt-10 flex items-center justify-center gap-4">
-					<a
+					<Button.Root
 						href={resolve('/app')}
 						class="rounded-lg bg-primary-600 px-8 py-3 text-base font-semibold text-base-50 transition-colors hover:bg-primary-700"
 					>
 						Get Started
-					</a>
+					</Button.Root>
 				</div>
 			</div>
 		</section>
@@ -170,7 +171,7 @@
 					<p class="mt-4 text-base-300">Connect and manage multiple streaming services</p>
 				</div>
 				<div class="mt-12 flex flex-wrap items-center justify-center gap-6">
-					<a
+					<Button.Root
 						href="https://www.twitch.tv"
 						target="_blank"
 						rel="noopener noreferrer"
@@ -178,12 +179,12 @@
 					>
 						<svg class="h-5 w-5 text-twitch-500" viewBox="0 0 24 24" fill="currentColor">
 							<path
-								d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"
+								d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"
 							/>
 						</svg>
 						<span class="font-medium text-base-50">Twitch</span>
-					</a>
-					<a
+					</Button.Root>
+					<Button.Root
 						href="https://kick.com"
 						target="_blank"
 						rel="noopener noreferrer"
@@ -195,8 +196,8 @@
 							/>
 						</svg>
 						<span class="font-medium text-base-50">Kick</span>
-					</a>
-					<a
+					</Button.Root>
+					<Button.Root
 						href="https://www.youtube.com/live"
 						target="_blank"
 						rel="noopener noreferrer"
@@ -208,7 +209,7 @@
 							/>
 						</svg>
 						<span class="font-medium text-base-50">YouTube Live</span>
-					</a>
+					</Button.Root>
 				</div>
 				<p class="mt-8 text-center text-sm text-base-400">More platforms coming soon</p>
 			</div>
@@ -298,12 +299,12 @@
 					Join streamers who manage their content smarter, not harder.
 				</p>
 				<div class="mt-10">
-					<a
+					<Button.Root
 						href={resolve('/app')}
 						class="inline-block rounded-lg bg-primary-600 px-8 py-3 text-base font-semibold text-base-50 transition-colors hover:bg-primary-700"
 					>
 						Get Started Now
-					</a>
+					</Button.Root>
 				</div>
 			</div>
 		</section>
@@ -313,7 +314,7 @@
 		<div class="mx-auto max-w-7xl">
 			<div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
 				<p class="text-sm text-base-400">© 2025 Aedron</p>
-				<a
+				<Button.Root
 					href="https://github.com/aedrondouren"
 					target="_blank"
 					rel="noopener noreferrer"
@@ -327,7 +328,7 @@
 						/>
 					</svg>
 					github.com/aedrondouren
-				</a>
+				</Button.Root>
 			</div>
 		</div>
 	</footer>

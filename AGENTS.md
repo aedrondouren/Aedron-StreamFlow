@@ -99,11 +99,22 @@ Browser debugging, performance profiling, and visual verification.
 
 Headless UI components for Svelte 5. Uses the [llms.txt standard](https://bits-ui.com/docs/llms) for LLM-friendly documentation.
 
-**LLM Documentation:**
+**LLM Documentation Navigation:**
 
-- Root index: https://bits-ui.com/llms.txt
-- Full docs: https://bits-ui.com/docs/llms.txt
-- Per-component: Append `/llms.txt` to any component URL (e.g., `/docs/components/tooltip/llms.txt`)
+- **Root index**: https://bits-ui.com/llms.txt — Lists all available documentation pages
+- **Schema explanation**: https://bits-ui.com/docs/llms/llms.txt — Explains the llms.txt format
+- **Per-component**: Append `/llms.txt` to any component URL (e.g., `/docs/components/button/llms.txt`)
+- **Full consolidated docs**: https://bits-ui.com/docs/llms.txt — Complete documentation in one file
+
+**Workflow for Discovering Components:**
+
+1. Fetch root index to see all available components: `https://bits-ui.com/llms.txt`
+2. Fetch specific component docs: `https://bits-ui.com/docs/components/{component}/llms.txt`
+3. Use `svelte-autofixer` to validate component usage before sending code
+4. Add new component to barrel export: `src/lib/components/index.ts`
+5. Import from centralized barrel: `import { Button, Tooltip } from '$lib/components'`
+
+**Important:** All bits-ui components must be added to the barrel export file (`src/lib/components/index.ts`) before they can be imported. The barrel export is the single source of truth for UI component imports.
 
 **Key Components:**
 
@@ -117,7 +128,7 @@ Headless UI components for Svelte 5. Uses the [llms.txt standard](https://bits-u
 
 ```svelte
 <script>
-	import { Button, Tooltip } from 'bits-ui';
+	import { Button, Tooltip } from '$lib/components';
 </script>
 
 <!-- Button as link -->
@@ -276,7 +287,7 @@ Use **sub-agents AGGRESSIVELY** for parallel tasks:
 
 ### Visual Verification
 
-When making UI changes, verify visually using Chrome DevTools MCP.
+When making UI changes, verify using Chrome DevTools MCP. Non-vision models should use scripting-based validation.
 
 **Quick Setup:**
 
@@ -289,6 +300,10 @@ pnpm test:visual:setup  # Creates test user + mock data
 - `TEST_USER_EMAIL` — Email for login
 - `TEST_USER_PASSWORD` — Auto-generated secure password
 - `TEST_USER_ID` — Supabase user UUID
+
+---
+
+### For Vision-Capable Models
 
 **Verification Steps:**
 
@@ -319,9 +334,241 @@ pnpm test:visual:setup  # Creates test user + mock data
 - **Temporary screenshots** (UI validation): `.opencode/temp/` — gitignored, clean periodically
 - **Permanent screenshots** (documentation): `.repo/screenshots/` — committed to repository
 
-**Debugging Styling Issues:**
+---
+
+### For Non-Vision Models (Scripting-Based Validation)
+
+Use `chrome-devtools_evaluate_script` to programmatically validate UI elements:
+
+**1. Visibility & Layout Validation:**
+
+```javascript
+// Check if element is visible and properly laid out
+const element = document.querySelector('[data-testid="my-component"]');
+const styles = window.getComputedStyle(element);
+
+// Visibility checks
+console.assert(styles.display !== 'none', 'Element should be visible');
+console.assert(styles.visibility === 'visible', 'Element should not be hidden');
+console.assert(styles.opacity > 0, 'Element should not be transparent');
+
+// Layout checks
+console.assert(
+	styles.position === 'relative' || styles.position === 'static',
+	'Should use standard positioning'
+);
+console.assert(styles.width !== '0px', 'Element should have width');
+console.assert(styles.height !== '0px', 'Element should have height');
+
+// Return validation report
+return {
+	visible: styles.display !== 'none' && styles.opacity > 0,
+	width: styles.width,
+	height: styles.height,
+	position: styles.position,
+	display: styles.display,
+	flexDirection: styles.flexDirection,
+	hasClasses: element.className
+};
+```
+
+**2. Responsive Layout Validation:**
+
+```javascript
+// Test at different viewports
+const viewports = {
+	mobile: { width: 375, height: 812 },
+	tablet: { width: 768, height: 1024 },
+	desktop: { width: 1440, height: 900 }
+};
+
+for (const [name, size] of Object.entries(viewports)) {
+	// Resize page
+	// Then validate layout changes
+	const container = document.querySelector('[data-sidebar]');
+	const styles = window.getComputedStyle(container);
+
+	console.assert(
+		name === 'mobile' ? styles.display === 'none' : styles.display !== 'none',
+		`Sidebar should be ${name === 'mobile' ? 'hidden' : 'visible'} on ${name}`
+	);
+}
+```
+
+**3. Styling Validation:**
+
+```javascript
+const button = document.querySelector('button[data-testid="primary-action"]');
+const styles = window.getComputedStyle(button);
+
+// Check Tailwind classes applied correctly
+console.assert(
+	styles.backgroundColor === 'rgb(99, 102, 241)' || // primary-600
+		styles.backgroundColor.includes('99, 102, 241'),
+	'Button should have primary color background'
+);
+console.assert(styles.borderRadius === '0.375rem', 'Should have rounded-md corners');
+console.assert(styles.fontWeight === '600', 'Should be semibold');
+```
+
+**4. Interaction Validation (Hover/Focus States):**
+
+```javascript
+// Check hover state exists
+const button = document.querySelector('button');
+const hoverStyles = window.getComputedStyle(button, ':hover');
+const normalStyles = window.getComputedStyle(button);
+
+console.assert(
+	hoverStyles.backgroundColor !== normalStyles.backgroundColor ||
+		hoverStyles.transform !== normalStyles.transform,
+	'Button should have hover state changes'
+);
+
+// Check focus-visible for accessibility
+const focusStyles = window.getComputedStyle(button, ':focus-visible');
+console.assert(
+	focusStyles.outlineWidth !== '0px' || focusStyles.boxShadow !== 'none',
+	'Button should have focus indicator for accessibility'
+);
+```
+
+**5. Animation/Transition Validation:**
+
+```javascript
+// Check if transitions are configured
+const element = document.querySelector('.animated-element');
+const styles = window.getComputedStyle(element);
+
+console.assert(
+	styles.transitionDuration !== '0s' && styles.transitionDuration !== '',
+	'Element should have transition duration'
+);
+
+// Validate transition properties
+const transitionProperties = [
+	'transition-property',
+	'transition-duration',
+	'transition-timing-function'
+].map((prop) => styles.getPropertyValue(prop));
+
+console.log('Transition config:', transitionProperties);
+
+// For transform-based animations
+const transform = styles.transform;
+console.assert(
+	transform !== 'none' || transform === 'matrix(1, 0, 0, 1, 0, 0)',
+	'Transform should be applied (or at least have default matrix)'
+);
+```
+
+**6. Complete Validation Workflow:**
+
+```javascript
+// Comprehensive validation function
+function validateComponent(selector, expectations) {
+	const element = document.querySelector(selector);
+	if (!element) {
+		return { error: `Element not found: ${selector}` };
+	}
+
+	const styles = window.getComputedStyle(element);
+	const rect = element.getBoundingClientRect();
+
+	const results = {
+		selector,
+		found: true,
+		visible: rect.width > 0 && rect.height > 0 && styles.opacity > 0,
+		dimensions: { width: rect.width, height: rect.height },
+		styles: {
+			display: styles.display,
+			position: styles.position,
+			flexDirection: styles.flexDirection,
+			backgroundColor: styles.backgroundColor,
+			color: styles.color,
+			borderRadius: styles.borderRadius,
+			transition: styles.transition
+		},
+		classes: element.className,
+		hasHover: styles.getPropertyValue('transition-duration') !== '0s',
+		accessibility: {
+			role: element.getAttribute('role'),
+			ariaLabel: element.getAttribute('aria-label'),
+			tabIndex: element.getAttribute('tabindex')
+		}
+	};
+
+	// Validate expectations
+	const errors = [];
+	if (expectations.minWidth && rect.width < expectations.minWidth) {
+		errors.push(`Width ${rect.width}px < expected ${expectations.minWidth}px`);
+	}
+	if (expectations.shouldHaveTransition && !results.hasHover) {
+		errors.push('Expected transition but none found');
+	}
+
+	return { ...results, errors };
+}
+
+// Usage
+const report = validateComponent('[data-sidebar]', {
+	minWidth: 200,
+	shouldHaveTransition: true
+});
+console.log('Validation report:', report);
+```
+
+**7. Automated Viewport Testing:**
+
+Test all routes at mobile, tablet, and desktop sizes using the same workflow as visual verification:
+
+```javascript
+// Example: Test sidebar responsiveness across viewports
+const viewports = [
+  { name: 'mobile', width: 375, height: 812 },
+  { name: 'tablet', width: 768, height: 1024 },
+  { name: 'desktop', width: 1440, height: 900 }
+];
+
+for (const viewport of viewports) {
+  // Resize to viewport
+  // Navigate to route
+  // Validate responsive behavior
+  const sidebar = document.querySelector('[data-sidebar]');
+  const styles = window.getComputedStyle(sidebar);
+  
+  console.assert(
+    viewport.name === 'mobile' ? styles.display === 'none' : styles.display !== 'none',
+    `Sidebar should be ${viewport.name === 'mobile' ? 'hidden' : 'visible'} on ${viewport.name}`
+  );
+}
+```
+
+---
+
+### Debugging Styling Issues
 
 Use `chrome-devtools_evaluate_script` with `window.getComputedStyle(element)` to inspect actual computed styles when debugging CSS problems.
+
+**Example: Debug why a button isn't visible**
+
+```javascript
+const button = document.querySelector('button');
+const styles = window.getComputedStyle(button);
+const rect = button.getBoundingClientRect();
+
+return {
+	display: styles.display,
+	visibility: styles.visibility,
+	opacity: styles.opacity,
+	width: rect.width,
+	height: rect.height,
+	position: styles.position,
+	zIndex: styles.zIndex,
+	transform: styles.transform,
+	classes: button.className
+};
+```
 
 ### Agent Skills
 
