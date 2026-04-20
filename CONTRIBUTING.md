@@ -6,9 +6,9 @@ Thank you for your interest in contributing! This guide covers setup, developmen
 
 ### Prerequisites
 
-- Node.js 20+
-- pnpm (run `corepack enable` to enable)
-- Supabase account (for testing auth features)
+- **Node.js** 20+
+- **pnpm** (`corepack enable`)
+- **Supabase** project (local or hosted)
 
 ### Setup
 
@@ -20,10 +20,28 @@ cd Aedron-StreamFlow
 # Install dependencies
 pnpm install
 
-# Environment setup
+# Setup environment
 cp .env.example .env
-# Edit .env with your credentials
+# Edit .env with your Supabase credentials
 ```
+
+### 🔐 Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+
+| Variable                          | Source                | Purpose                        |
+| --------------------------------- | --------------------- | ------------------------------ |
+| `PUBLIC_SUPABASE_URL`             | `$env/static/public`  | Supabase project URL           |
+| `PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `$env/static/public`  | Supabase anon key              |
+| `PUBLIC_TWITCH_CLIENT_ID`         | `$env/static/public`  | Twitch OAuth (safe to expose)  |
+| `PRIVATE_TWITCH_CLIENT_SECRET`    | `$env/static/private` | Twitch OAuth (server-only)     |
+| `PUBLIC_GOOGLE_CLIENT_ID`         | `$env/static/public`  | YouTube OAuth (safe to expose) |
+| `PRIVATE_GOOGLE_CLIENT_SECRET`    | `$env/static/private` | YouTube OAuth (server-only)    |
+| `PUBLIC_KICK_CLIENT_ID`           | `$env/static/public`  | Kick OAuth (safe to expose)    |
+| `PRIVATE_KICK_CLIENT_SECRET`      | `$env/static/private` | Kick OAuth (server-only)       |
+| `TEST_USER_EMAIL`                 | `.env` (auto-gen)     | Test user email for visual testing |
+| `TEST_USER_PASSWORD`              | `.env` (auto-gen)     | Test user password for visual testing |
+| `TEST_USER_ID`                    | `.env` (auto-gen)     | Test user UUID for quick reference |
 
 ### VS Code Extensions
 
@@ -49,27 +67,64 @@ This project includes MCP (Model Context Protocol) configurations for enhanced A
 
 ---
 
-## Development Workflow
+## 🔧 Development Commands
 
 ```bash
-pnpm dev          # Start development server
+pnpm dev          # Start dev server with hot reload
 pnpm check        # TypeScript type checking
 pnpm lint         # Lint and format check
 pnpm format       # Auto-format code
-pnpm build        # Production build test
+pnpm build        # Production build
+
+# Database
+pnpm db:generate  # Generate TypeScript types
+pnpm db:push      # Push migrations to Supabase
+pnpm db:reset     # Reset hosted database (⚠️ destructive)
+
+# Testing
+pnpm test:visual:setup         # Setup test environment with mock data (test user + Twitch)
+pnpm test:user:cleanup         # Delete test user and all platform data (⚠️ destructive)
+
+# Mock Platform States (for visual testing)
+pnpm test:spoof:twitch         # Mock Twitch connection
+pnpm test:spoof:youtube        # Mock YouTube connection
+pnpm test:spoof:kick           # Mock Kick connection
+pnpm test:spoof:managed-basic  # Mock managed_basic state (upgrade prompt)
 ```
 
-### Testing
+**Test Credentials** (after running `test:visual:setup`):
 
-```bash
-pnpm test:visual:setup    # Setup test environment with mock data
-```
-
-This creates a test user (`test@email.test`) and mock Twitch connection for visual testing.
+- Email: `test@email.test`
+- Password: Auto-generated (check `.env`)
 
 ---
 
-## Project Architecture
+## 📁 Project Structure
+
+```
+src/
+├── lib/
+│   ├── components/          # Reusable UI components (ThemeToggle, PlatformCard)
+│   ├── platform/            # Platform OAuth and API integration
+│   ├── realtime/            # Supabase Realtime utilities
+│   ├── server/              # Server-side utilities (auth, platform linking)
+│   ├── stores/              # Reactive state management
+│   ├── supabase/            # Database types and helpers
+│   └── validation/          # Validation schemas
+├── params/                  # Route param constraints
+├── routes/
+│   ├── (protected)/         # Auth-required routes
+│   │   ├── app/             # Dashboard and platform management
+│   │   └── auth/            # Authentication flows
+│   └── +page.svelte         # Landing page
+├── app.css                  # Tailwind configuration
+├── app.html                 # HTML template with theme script
+└── hooks.server.ts          # Server-side auth guards
+```
+
+---
+
+## 🏗️ Architecture
 
 This project uses a **server-first approach with client-side enhancements**:
 
@@ -87,14 +142,19 @@ This project uses a **server-first approach with client-side enhancements**:
 2. **Client Hydration** — Browser subscribes to Supabase Realtime
 3. **Updates** — User actions update immediately; other clients sync via Realtime
 
-### Tech Stack Highlights
+### Theme System
 
-- **SvelteKit 2** with **Svelte 5 runes** (`$state`, `$derived`, `$effect`)
-- **TypeScript** in strict mode
-- **Tailwind CSS v4** (config in CSS, not JS)
-- **Supabase** — Auth, database, and realtime subscriptions
+**Light/Dark/System themes** with automatic system preference detection, inline script to prevent FOUC, CSS-based switching via `data-theme` attributes, and LocalStorage persistence.
 
-For detailed architecture docs, agent-specific patterns, and MCP usage, see [AGENTS.md](AGENTS.md).
+### Authentication & Platform Linking
+
+**Four linking states:** `unlinked` → `managed_basic` → `managed_linked` or `manual_linked`. OAuth flows for signup/connect/upgrade with automatic token refresh. Manual linking available for platforms without OAuth support.
+
+### Realtime Data Pattern
+
+**Hybrid SSR + Realtime:** Server load for fast first paint, client subscriptions via `$effect()`, 50ms event batching, and exponential backoff retry logic [1s, 2s, 5s, 10s].
+
+For detailed architecture docs and agent-specific patterns, see [AGENTS.md](AGENTS.md).
 
 ---
 

@@ -5,15 +5,38 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/SvelteKit-2.0-FF3E00?logo=svelte" alt="SvelteKit">
-  <img src="https://img.shields.io/badge/Svelte-5-FF3E00?logo=svelte" alt="Svelte 5">
-  <img src="https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript" alt="TypeScript">
-  <img src="https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss" alt="Tailwind">
-  <img src="https://img.shields.io/badge/Supabase-Realtime-3ECF8E?logo=supabase" alt="Supabase">
-  <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
+  <a href="https://kit.svelte.dev" target="_blank">
+    <img src="https://img.shields.io/badge/SvelteKit-v2-FF3E00?logo=svelte" alt="SvelteKit">
+  </a>
+  <a href="https://svelte.dev" target="_blank">
+    <img src="https://img.shields.io/badge/Svelte-v5-FF3E00?logo=svelte" alt="Svelte 5">
+  </a>
+  <a href="https://www.typescriptlang.org" target="_blank">
+    <img src="https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript" alt="TypeScript">
+  </a>
+  <a href="https://tailwindcss.com" target="_blank">
+    <img src="https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss" alt="Tailwind">
+  </a>
+</p>
+<p align="center">
+  <a href="https://supabase.com" target="_blank">
+    <img src="https://img.shields.io/badge/Supabase-v2-3ECF8E?logo=supabase" alt="Supabase">
+  </a>
+  <a href="https://bits-ui.com" target="_blank">
+    <img src="https://img.shields.io/badge/Bits_UI-v2-171717?logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iMTEiIHZpZXdCb3g9IjAgMCAxMSAxMSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1LjkzNTU1IiBjeT0iNS45ODczIiByPSI1IiB0cmFuc2Zvcm09InJvdGF0ZSg5MCA1LjkzNTU1IDUuOTg3MykiIGZpbGw9IiNGRkZGRkYiLz48L3N2Zz4=" alt="Bits UI">
+  </a>
+  <a href="https://github.com/aedrondouren/Aedron-StreamFlow/blob/supabase/LICENSE" target="_blank">
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
+  </a>
 </p>
 
----
+## 📑 Table of Contents
+
+| Section | Links |
+|---------|-------|
+| 🎯 Overview | [Features](#-features) • [Screenshots](#-screenshots) • [Platforms](#-supported-platforms) |
+| 🛠️ Setup | [Tech Stack](#-tech-stack) • [Quick Start](#-quick-start) • [Prerequisites](#-prerequisites) |
+| 📚 More | [Contributing](#-contributing) • [License](#-license) |
 
 ## ✨ Features
 
@@ -150,142 +173,6 @@ Open [http://localhost:5173](http://localhost:5173) and you're ready to go!
 - **Node.js** 20+
 - **pnpm** (`corepack enable`)
 - **Supabase** project (local or hosted)
-
-## 🔐 Environment Variables
-
-Copy `.env.example` to `.env` and configure:
-
-| Variable                          | Source                | Purpose                        |
-| --------------------------------- | --------------------- | ------------------------------ |
-| `PUBLIC_SUPABASE_URL`             | `$env/static/public`  | Supabase project URL           |
-| `PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `$env/static/public`  | Supabase anon key              |
-| `PUBLIC_TWITCH_CLIENT_ID`         | `$env/static/public`  | Twitch OAuth (safe to expose)  |
-| `PRIVATE_TWITCH_CLIENT_SECRET`    | `$env/static/private` | Twitch OAuth (server-only)     |
-| `PUBLIC_GOOGLE_CLIENT_ID`         | `$env/static/public`  | YouTube OAuth (safe to expose) |
-| `PRIVATE_GOOGLE_CLIENT_SECRET`    | `$env/static/private` | YouTube OAuth (server-only)    |
-| `PUBLIC_KICK_CLIENT_ID`           | `$env/static/public`  | Kick OAuth (safe to expose)    |
-| `PRIVATE_KICK_CLIENT_SECRET`      | `$env/static/private` | Kick OAuth (server-only)       |
-
-## 🔧 Development Commands
-
-```bash
-pnpm dev          # Start dev server with hot reload
-pnpm check        # TypeScript type checking
-pnpm lint         # Lint and format check
-pnpm format       # Auto-format code
-pnpm build        # Production build
-
-# Database
-pnpm db:generate  # Generate TypeScript types
-pnpm db:push      # Push migrations to Supabase
-pnpm db:reset     # Reset hosted database (⚠️ destructive)
-```
-
-## 📁 Project Structure
-
-```
-src/
-├── lib/
-│   ├── platform/      # Platform OAuth and API integration
-│   ├── realtime/      # Supabase Realtime utilities
-│   ├── stores/        # Reactive state management
-│   └── supabase/      # Types and database helpers
-├── routes/
-│   ├── (protected)/   # Auth-required routes
-│   │   ├── app/       # Dashboard and platform management
-│   │   └── auth/      # Authentication flows
-│   └── +page.svelte   # Landing page
-├── hooks.server.ts    # Server-side auth guards
-└── app.css           # Tailwind configuration
-```
-
-## 🏗️ Architecture
-
-**Server-first with client-side enhancements:**
-
-1. **SSR** — Initial data loaded server-side for fast first paint
-2. **Realtime** — Client subscribes to database changes via Supabase
-3. **Hybrid** — Actions return immediately; other clients sync in real-time
-
-### Theme System
-
-**Light/Dark/System themes with automatic detection:**
-
-- **Inline script** in `src/app.html` prevents FOUC (Flash of Unstyled Content)
-- **CSS-based switching** using `data-theme` and `data-system-theme` attributes
-- **System preference detection** via `prefers-color-scheme` media query
-- **LocalStorage persistence** for user theme preference
-
-**Key Files:**
-
-- `src/app.html` — Inline theme initialization script
-- `src/app.css` — Tailwind dark mode variant with `@custom-variant`
-- `src/lib/stores/theme.svelte.ts` — Theme utilities (SSR-safe)
-- `src/lib/components/ThemeToggle.svelte` — Theme toggle UI component
-
-**CSS Variants:**
-
-```css
-@custom-variant dark (&:where(:root[data-theme=dark], :root[data-theme=dark] *, :root[data-theme=system][data-system-theme=dark], :root[data-theme=system][data-system-theme=dark] *));
-```
-
-**Custom Theme Variants:** Use `theme-light`, `theme-dark`, `theme-system` for conditional rendering:
-
-```svelte
-<span class="hidden theme-light:inline">Light icon</span>
-<span class="hidden theme-dark:inline">Dark icon</span>
-<span class="hidden theme-system:inline">System icon</span>
-```
-
-### Authentication & Platform Linking
-
-**OAuth Prompt Flows** (`/auth/oauth-prompt`):
-
-- **`signup`** — Initial signup flow with optional platform linking
-- **`connect`** — Explicit platform connection with OAuth vs Manual comparison
-- **`upgrade`** — Upgrading from `managed_basic` to `managed_linked` state
-
-**Platform Linking States:**
-
-| State            | Description                       | UI Behavior                        |
-| ---------------- | --------------------------------- | ---------------------------------- |
-| `unlinked`       | No platform connection            | Show "Connect [Platform]" button   |
-| `managed_basic`  | OAuth signup, minimal permissions | Show ⚠️ warning + "Complete Setup" |
-| `managed_linked` | Full OAuth with all permissions   | Show profile + "Disconnect"        |
-| `manual_linked`  | Manually entered tokens/API keys  | Show profile + "Disconnect"        |
-
-**Manual Platform Linking:**
-
-Manual linking allows users to connect platforms by directly entering credentials (useful for platforms without OAuth support):
-
-- `src/lib/server/platformLinking/manualLink.ts` — Utilities for manual credential storage
-- `savePlatformAuth()` — Saves platform authentication data to database
-- `savePlatformUserInfo()` — Saves platform user profile data
-- `isPlatformLinked()` — Checks if platform is already linked
-
-**Token Management:**
-
-The application handles OAuth token refresh automatically:
-
-- `src/lib/platform/tokenResolver.ts` — Resolves tokens for API calls with caching
-- `src/lib/platform/tokenRefresher.ts` — Refreshes expired tokens
-- `src/lib/platform/tokenState.ts` — Manages platform linking state transitions
-
-### Realtime Data Pattern
-
-**Hybrid SSR + Realtime synchronization:**
-
-1. **Server Load** — Fast first paint with server-fetched data
-2. **Client Subscription** — `$effect()` subscribes to Realtime on mount
-3. **Batched Updates** — 50ms window for rapid changes
-4. **Retry Logic** — Exponential backoff [1s, 2s, 5s, 10s] with manual retry
-
-**Key Utilities:**
-
-- `src/lib/realtime/batcher.svelte.ts` — Batches rapid events (50ms window)
-- `src/lib/realtime/merge.ts` — Merges realtime payloads with O(n) Map-based algorithm
-- `src/lib/realtime/subscription.svelte.ts` — Subscription manager with exponential backoff
-- `src/lib/stores/reactiveTable.svelte.ts` — Reactive table factory with auth state awareness
 
 ## 🤝 Contributing
 
