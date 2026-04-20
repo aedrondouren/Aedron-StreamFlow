@@ -73,14 +73,14 @@
 	const colors = $derived(platformColorClasses[platform]);
 </script>
 
-<div class="rounded-lg border border-base-700 bg-base-800 p-4">
+<div class="rounded-lg border border-base-200 bg-base-50 p-4 dark:border-base-700 dark:bg-base-800">
 	<div class="mb-3 flex items-center gap-3">
 		<svg class="h-6 w-6 {colors.text500}" viewBox="0 0 24 24" fill="currentColor">
 			<path d={config.svgPath} />
 		</svg>
 		<div>
-			<h3 class="font-semibold text-base-50">{config.name}</h3>
-			<p class="text-sm text-base-300">Streaming Platform</p>
+			<h3 class="font-semibold text-base-900 dark:text-base-50">{config.name}</h3>
+			<p class="text-sm text-base-700 dark:text-base-300">Streaming Platform</p>
 		</div>
 	</div>
 
@@ -95,12 +95,16 @@
 					Connected as {platformData?.user_info?.display_name || platformData?.user_info?.login}
 				</div>
 				{#if isManaged}
-					<div class="text-xs text-base-400">via {config.oauthProvider} OAuth</div>
+					<div class="text-xs text-base-600 dark:text-base-400">
+						via {config.oauthProvider} OAuth
+					</div>
 				{:else}
-					<div class="text-xs text-base-400">Manually linked</div>
+					<div class="text-xs text-base-600 dark:text-base-400">Manually linked</div>
 				{/if}
 				{#if platformData?.platform_user_id}
-					<div class="text-xs text-base-400">ID: {platformData.platform_user_id}</div>
+					<div class="text-xs text-base-600 dark:text-base-400">
+						ID: {platformData.platform_user_id}
+					</div>
 				{/if}
 			</div>
 		</div>
@@ -110,7 +114,7 @@
 					<input type="hidden" name="platform" value={platform} />
 					<Button.Root
 						type="submit"
-						class="flex-1 cursor-pointer rounded-md bg-base-700 px-4 py-2 text-sm font-medium text-base-50 transition-colors hover:bg-base-600"
+						class="flex-1 cursor-pointer rounded-md bg-base-200 px-4 py-2 text-sm font-medium text-base-700 transition-colors hover:bg-base-300 dark:bg-base-700 dark:text-base-50 dark:hover:bg-base-600"
 					>
 						Refresh Profile
 					</Button.Root>
@@ -128,7 +132,9 @@
 		</div>
 	{:else}
 		{#if platformState.state === 'managed_basic'}
-			<div class="mb-3 rounded-md bg-warning-500/20 p-2 text-xs text-warning-400">
+			<div
+				class="mb-3 rounded-md border border-warning-600/30 bg-warning-500/10 p-2 text-xs text-warning-400"
+			>
 				⚠️ Authentication only. Click to enable platform features.
 			</div>
 		{/if}

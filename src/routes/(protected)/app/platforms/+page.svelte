@@ -4,13 +4,13 @@
 	import PlatformCard from '$lib/components/PlatformCard.svelte';
 	import { createReactiveTable } from '$lib/stores/reactiveTable.svelte';
 	import type { Tables } from '$lib/supabase/database.types';
-	import type { PageProps } from './$types';
+	import type { PageProps, ActionData } from './$types';
 
 	const platformList = ['twitch', 'youtube', 'kick'] as const;
 </script>
 
 <script lang="ts">
-	let { data, form }: PageProps = $props();
+	let { data, form }: { data: PageProps['data']; form: ActionData | undefined } = $props();
 
 	// Track user info updates from realtime
 	let userInfoStore = $state<ReturnType<typeof createReactiveTable<'user_info'>> | null>(null);
@@ -72,31 +72,40 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Platforms - StreamFlow</title>
+</svelte:head>
+
 <div class="space-y-6">
 	<div class="flex items-center justify-between">
-		<h2 class="text-2xl font-bold text-base-50">Platform Management</h2>
+		<h2 class="text-2xl font-bold text-base-900 dark:text-base-50">Platform Management</h2>
 	</div>
 
-	<p class="text-base-300">Connect and manage your streaming platforms here.</p>
+	<p class="text-base-700 dark:text-base-300">Connect and manage your streaming platforms here.</p>
 
 	{#if form?.error}
-		<div class="rounded-md bg-error-500/20 p-3 text-sm text-error-400">
+		<div class="rounded-md border border-error-600/30 bg-error-500/10 p-3 text-sm text-error-400">
 			{form.error}
 		</div>
 	{/if}
 
 	{#if infoMessage === 'already_linked'}
-		<div class="rounded-md bg-warning-500/20 p-3 text-sm text-warning-400">
+		<div
+			class="rounded-md border border-warning-600/30 bg-warning-500/10 p-3 text-sm text-warning-400"
+		>
 			Platform is already connected. Use Disconnect to remove.
 		</div>
 	{/if}
 
 	{#if userInfoStore?.error}
-		<div class="mb-3 rounded-md bg-error-500/20 p-3 text-sm text-error-400">
+		<div
+			class="mb-3 rounded-md border border-error-600/30 bg-error-500/10 p-3 text-sm text-error-400"
+		>
 			<p>Failed to sync profile data</p>
 			<button
 				onclick={handleRetry}
 				class="mt-2 cursor-pointer text-xs underline hover:text-error-300"
+				aria-label="Retry connection"
 			>
 				Retry connection
 			</button>

@@ -47,20 +47,24 @@
 </script>
 
 {#if !platform}
-	<div class="flex min-h-screen items-center justify-center bg-base-900 p-4">
-		<div class="rounded-lg border border-base-700 bg-base-800 p-6 text-center">
+	<div class="flex min-h-screen items-center justify-center bg-base-50 p-4 dark:bg-base-900">
+		<div
+			class="rounded-lg border border-base-200 bg-base-50 p-6 text-center dark:border-base-700 dark:bg-base-800"
+		>
 			<p class="text-error-400">{data.error || 'Invalid platform specified'}</p>
 			<Button.Root
 				href={resolve('/auth/signin')}
-				class="mt-4 inline-block cursor-pointer text-primary-400 hover:underline"
+				class="mt-4 inline-block cursor-pointer text-primary-600 hover:underline dark:text-primary-400"
 			>
 				Go back to sign in
 			</Button.Root>
 		</div>
 	</div>
 {:else}
-	<div class="flex min-h-screen items-center justify-center bg-base-900 p-4">
-		<div class="w-full max-w-md rounded-lg border border-base-700 bg-base-800 p-6 shadow-xl">
+	<div class="flex min-h-screen items-center justify-center bg-base-50 p-4 dark:bg-base-900">
+		<div
+			class="w-full max-w-md rounded-lg border border-base-200 bg-base-50 p-6 shadow-xl dark:border-base-700 dark:bg-base-800"
+		>
 			<div class="mb-6 text-center">
 				{#if platform === 'twitch'}
 					<svg class="mx-auto h-12 w-12 text-twitch-500" viewBox="0 0 24 24" fill="currentColor">
@@ -81,7 +85,7 @@
 						/>
 					</svg>
 				{/if}
-				<h1 class="mt-4 text-xl font-bold text-base-50">
+				<h1 class="mt-4 text-xl font-bold text-base-900 dark:text-base-50">
 					{#if currentState === 'new'}
 						{#if data.flowType === 'connect'}
 							Link {platformNames[platform]} Account
@@ -92,7 +96,7 @@
 						Upgrade {platformNames[platform]} Access
 					{/if}
 				</h1>
-				<p class="mt-2 text-sm text-base-300">
+				<p class="mt-2 text-sm text-base-700 dark:text-base-300">
 					{#if currentState === 'new'}
 						{#if data.flowType === 'connect'}
 							Choose how you want to connect your {platformNames[platform]} account.
