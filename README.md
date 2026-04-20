@@ -81,6 +81,12 @@
 </p>
 
 <p align="center">
+  <img src=".repo/screenshots/platforms-twitch-basic.png" alt="Platform Management - Twitch Basic State" width="600"/>
+  <br/>
+  <em>Platform showing managed_basic state with upgrade prompt</em>
+</p>
+
+<p align="center">
   <img src=".repo/screenshots/oauth-prompt-twitch-signup.png" alt="OAuth Prompt - Signup Flow" width="600"/>
   <br/>
   <em>Initial OAuth prompt during signup with optional linking</em>
@@ -104,7 +110,7 @@
 | -------- | -------- | -------------------------------------------------- |
 | Twitch   | ✅ Full  | Complete OAuth with managed & manual linking       |
 | YouTube  | ⚡ OAuth | Google OAuth complete, API integration in progress |
-| Kick     | 🚧 WIP   | OAuth structure ready, awaiting API finalization   |
+| Kick     | 🚧 WIP   | OAuth/API integration in development             |
 
 **Coming Soon:** TikTok Live, Instagram Live, X (Twitter) Spaces, YouTube Video & Shorts
 
@@ -142,6 +148,21 @@ Open [http://localhost:5173](http://localhost:5173) and you're ready to go!
 - **pnpm** (`corepack enable`)
 - **Supabase** project (local or hosted)
 
+## 🔐 Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+
+| Variable                          | Source                | Purpose                                |
+| --------------------------------- | --------------------- | -------------------------------------- |
+| `PUBLIC_SUPABASE_URL`             | `$env/static/public`  | Supabase project URL                   |
+| `PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `$env/static/public`  | Supabase anon key                      |
+| `PUBLIC_TWITCH_CLIENT_ID`         | `$env/static/public`  | Twitch OAuth (safe to expose)          |
+| `PRIVATE_TWITCH_CLIENT_SECRET`    | `$env/static/private` | Twitch OAuth (server-only)             |
+| `PUBLIC_GOOGLE_CLIENT_ID`         | `$env/static/public`  | YouTube OAuth (safe to expose)         |
+| `PRIVATE_GOOGLE_CLIENT_SECRET`    | `$env/static/private` | YouTube OAuth (server-only)            |
+| `PUBLIC_KICK_CLIENT_ID`           | `$env/static/public`  | Kick OAuth (safe to expose)            |
+| `PRIVATE_KICK_CLIENT_SECRET`      | `$env/static/private` | Kick OAuth (server-only)               |
+
 ## 🔧 Development Commands
 
 ```bash
@@ -154,9 +175,15 @@ pnpm build        # Production build
 # Database
 pnpm db:generate  # Generate TypeScript types
 pnpm db:push      # Push migrations to Supabase
+pnpm db:reset     # Reset hosted database (⚠️ destructive)
 
 # Testing
-pnpm test:viewports  # Test all routes at mobile, tablet, and desktop viewports
+pnpm test:user:setup         # Create test user in Supabase
+pnpm test:spoof:twitch       # Generate mock Twitch platform data (connected)
+pnpm test:spoof:youtube      # Generate mock YouTube platform data (connected)
+pnpm test:spoof:kick         # Generate mock Kick platform data (connected)
+pnpm test:spoof:managed-basic # Generate Twitch in managed_basic state
+pnpm test:visual:setup       # Combined: test user + mock data
 ```
 
 ## 📁 Project Structure
@@ -184,6 +211,39 @@ src/
 1. **SSR** — Initial data loaded server-side for fast first paint
 2. **Realtime** — Client subscribes to database changes via Supabase
 3. **Hybrid** — Actions return immediately; other clients sync in real-time
+
+### Authentication & Platform Linking
+
+**OAuth Prompt Flows** (`/auth/oauth-prompt`):
+
+- **`signup`** — Initial signup flow with optional platform linking
+- **`connect`** — Explicit platform connection with OAuth vs Manual comparison
+- **`upgrade`** — Upgrading from `managed_basic` to `managed_linked` state
+
+**Platform Linking States:**
+
+| State            | Description                       | UI Behavior                        |
+| ---------------- | --------------------------------- | ---------------------------------- |
+| `unlinked`       | No platform connection            | Show "Connect [Platform]" button   |
+| `managed_basic`  | OAuth signup, minimal permissions | Show ⚠️ warning + "Complete Setup" |
+| `managed_linked` | Full OAuth with all permissions   | Show profile + "Disconnect"        |
+| `manual_linked`  | Manually entered tokens/API keys  | Show profile + "Disconnect"        |
+
+### Realtime Data Pattern
+
+**Hybrid SSR + Realtime synchronization:**
+
+1. **Server Load** — Fast first paint with server-fetched data
+2. **Client Subscription** — `$effect()` subscribes to Realtime on mount
+3. **Batched Updates** — 50ms window for rapid changes
+4. **Retry Logic** — Exponential backoff [1s, 2s, 5s, 10s] with manual retry
+
+**Key Utilities:**
+
+- `src/lib/realtime/batcher.svelte.ts` — Batches rapid events
+- `src/lib/realtime/merge.ts` — Merges realtime payloads
+- `src/lib/realtime/subscription.svelte.ts` — Subscription manager with retry
+- `src/lib/stores/reactiveTable.svelte.ts` — Reactive table factory
 
 ## 🤝 Contributing
 
