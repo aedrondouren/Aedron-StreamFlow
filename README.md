@@ -38,6 +38,8 @@
 
 ## 📸 Screenshots
 
+> **Note:** Screenshots show the dark theme. The application supports light, dark, and system theme modes with automatic detection.
+
 <p align="center">
   <img src=".repo/screenshots/landing-page.png" alt="Landing Page" width="600"/>
   <br/>
@@ -110,7 +112,7 @@
 | -------- | -------- | -------------------------------------------------- |
 | Twitch   | ✅ Full  | Complete OAuth with managed & manual linking       |
 | YouTube  | ⚡ OAuth | Google OAuth complete, API integration in progress |
-| Kick     | 🚧 WIP   | OAuth/API integration in development             |
+| Kick     | 🚧 WIP   | OAuth/API integration in development               |
 
 **Coming Soon:** TikTok Live, Instagram Live, X (Twitter) Spaces, YouTube Video & Shorts
 
@@ -118,9 +120,10 @@
 
 - **⚡ SvelteKit 2** — Modern web framework with Svelte 5 runes
 - **🔷 TypeScript** — Strict mode for type safety
-- **🎨 Tailwind CSS v4** — Utility-first styling
+- **🎨 Tailwind CSS v4** — Utility-first styling with custom theme variants
 - **🧩 bits-ui** — Headless UI components for accessibility
 - **🗄️ Supabase** — Auth, database, and realtime subscriptions
+- **🌓 Theme System** — Light/dark/system themes with automatic system preference detection
 
 ## 🚀 Quick Start
 
@@ -152,16 +155,16 @@ Open [http://localhost:5173](http://localhost:5173) and you're ready to go!
 
 Copy `.env.example` to `.env` and configure:
 
-| Variable                          | Source                | Purpose                                |
-| --------------------------------- | --------------------- | -------------------------------------- |
-| `PUBLIC_SUPABASE_URL`             | `$env/static/public`  | Supabase project URL                   |
-| `PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `$env/static/public`  | Supabase anon key                      |
-| `PUBLIC_TWITCH_CLIENT_ID`         | `$env/static/public`  | Twitch OAuth (safe to expose)          |
-| `PRIVATE_TWITCH_CLIENT_SECRET`    | `$env/static/private` | Twitch OAuth (server-only)             |
-| `PUBLIC_GOOGLE_CLIENT_ID`         | `$env/static/public`  | YouTube OAuth (safe to expose)         |
-| `PRIVATE_GOOGLE_CLIENT_SECRET`    | `$env/static/private` | YouTube OAuth (server-only)            |
-| `PUBLIC_KICK_CLIENT_ID`           | `$env/static/public`  | Kick OAuth (safe to expose)            |
-| `PRIVATE_KICK_CLIENT_SECRET`      | `$env/static/private` | Kick OAuth (server-only)               |
+| Variable                          | Source                | Purpose                        |
+| --------------------------------- | --------------------- | ------------------------------ |
+| `PUBLIC_SUPABASE_URL`             | `$env/static/public`  | Supabase project URL           |
+| `PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `$env/static/public`  | Supabase anon key              |
+| `PUBLIC_TWITCH_CLIENT_ID`         | `$env/static/public`  | Twitch OAuth (safe to expose)  |
+| `PRIVATE_TWITCH_CLIENT_SECRET`    | `$env/static/private` | Twitch OAuth (server-only)     |
+| `PUBLIC_GOOGLE_CLIENT_ID`         | `$env/static/public`  | YouTube OAuth (safe to expose) |
+| `PRIVATE_GOOGLE_CLIENT_SECRET`    | `$env/static/private` | YouTube OAuth (server-only)    |
+| `PUBLIC_KICK_CLIENT_ID`           | `$env/static/public`  | Kick OAuth (safe to expose)    |
+| `PRIVATE_KICK_CLIENT_SECRET`      | `$env/static/private` | Kick OAuth (server-only)       |
 
 ## 🔧 Development Commands
 
@@ -176,14 +179,6 @@ pnpm build        # Production build
 pnpm db:generate  # Generate TypeScript types
 pnpm db:push      # Push migrations to Supabase
 pnpm db:reset     # Reset hosted database (⚠️ destructive)
-
-# Testing
-pnpm test:user:setup         # Create test user in Supabase
-pnpm test:spoof:twitch       # Generate mock Twitch platform data (connected)
-pnpm test:spoof:youtube      # Generate mock YouTube platform data (connected)
-pnpm test:spoof:kick         # Generate mock Kick platform data (connected)
-pnpm test:spoof:managed-basic # Generate Twitch in managed_basic state
-pnpm test:visual:setup       # Combined: test user + mock data
 ```
 
 ## 📁 Project Structure
@@ -212,6 +207,36 @@ src/
 2. **Realtime** — Client subscribes to database changes via Supabase
 3. **Hybrid** — Actions return immediately; other clients sync in real-time
 
+### Theme System
+
+**Light/Dark/System themes with automatic detection:**
+
+- **Inline script** in `src/app.html` prevents FOUC (Flash of Unstyled Content)
+- **CSS-based switching** using `data-theme` and `data-system-theme` attributes
+- **System preference detection** via `prefers-color-scheme` media query
+- **LocalStorage persistence** for user theme preference
+
+**Key Files:**
+
+- `src/app.html` — Inline theme initialization script
+- `src/app.css` — Tailwind dark mode variant with `@custom-variant`
+- `src/lib/stores/theme.svelte.ts` — Theme utilities (SSR-safe)
+- `src/lib/components/ThemeToggle.svelte` — Theme toggle UI component
+
+**CSS Variants:**
+
+```css
+@custom-variant dark (&:where(:root[data-theme=dark], :root[data-theme=dark] *, :root[data-theme=system][data-system-theme=dark], :root[data-theme=system][data-system-theme=dark] *));
+```
+
+**Custom Theme Variants:** Use `theme-light`, `theme-dark`, `theme-system` for conditional rendering:
+
+```svelte
+<span class="hidden theme-light:inline">Light icon</span>
+<span class="hidden theme-dark:inline">Dark icon</span>
+<span class="hidden theme-system:inline">System icon</span>
+```
+
 ### Authentication & Platform Linking
 
 **OAuth Prompt Flows** (`/auth/oauth-prompt`):
@@ -229,6 +254,23 @@ src/
 | `managed_linked` | Full OAuth with all permissions   | Show profile + "Disconnect"        |
 | `manual_linked`  | Manually entered tokens/API keys  | Show profile + "Disconnect"        |
 
+**Manual Platform Linking:**
+
+Manual linking allows users to connect platforms by directly entering credentials (useful for platforms without OAuth support):
+
+- `src/lib/server/platformLinking/manualLink.ts` — Utilities for manual credential storage
+- `savePlatformAuth()` — Saves platform authentication data to database
+- `savePlatformUserInfo()` — Saves platform user profile data
+- `isPlatformLinked()` — Checks if platform is already linked
+
+**Token Management:**
+
+The application handles OAuth token refresh automatically:
+
+- `src/lib/platform/tokenResolver.ts` — Resolves tokens for API calls with caching
+- `src/lib/platform/tokenRefresher.ts` — Refreshes expired tokens
+- `src/lib/platform/tokenState.ts` — Manages platform linking state transitions
+
 ### Realtime Data Pattern
 
 **Hybrid SSR + Realtime synchronization:**
@@ -240,10 +282,10 @@ src/
 
 **Key Utilities:**
 
-- `src/lib/realtime/batcher.svelte.ts` — Batches rapid events
-- `src/lib/realtime/merge.ts` — Merges realtime payloads
-- `src/lib/realtime/subscription.svelte.ts` — Subscription manager with retry
-- `src/lib/stores/reactiveTable.svelte.ts` — Reactive table factory
+- `src/lib/realtime/batcher.svelte.ts` — Batches rapid events (50ms window)
+- `src/lib/realtime/merge.ts` — Merges realtime payloads with O(n) Map-based algorithm
+- `src/lib/realtime/subscription.svelte.ts` — Subscription manager with exponential backoff
+- `src/lib/stores/reactiveTable.svelte.ts` — Reactive table factory with auth state awareness
 
 ## 🤝 Contributing
 

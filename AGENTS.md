@@ -23,12 +23,8 @@ pnpm db:generate  # Generate TypeScript types from hosted DB
 pnpm db:push      # Push migrations to hosted database
 pnpm db:reset     # Reset hosted database (⚠️ destructive)
 
-# Testing
-pnpm test:user:setup         # Create test user in Supabase
-pnpm test:spoof:twitch       # Generate mock Twitch platform data (connected)
-pnpm test:spoof:youtube      # Generate mock YouTube platform data (connected)
-pnpm test:spoof:managed-basic # Generate Twitch in managed_basic state
-pnpm test:visual:setup       # Combined: test user + mock data
+# Testing (LLM-specific)
+pnpm test:user:cleanup  # Delete test user and all platform data (⚠️ destructive)
 ```
 
 ### Stack
@@ -40,6 +36,7 @@ pnpm test:visual:setup       # Combined: test user + mock data
 - **ESLint** + **typescript-eslint** + `eslint-plugin-svelte` + `eslint-config-prettier`
 - **Prettier** with `prettier-plugin-svelte` and `prettier-plugin-tailwindcss`
 - **Supabase** for auth, database, and realtime
+- **Theme System** — Light/dark mode with `data-theme` attribute and system preference detection
 
 ### Package Manager
 
@@ -57,12 +54,16 @@ pnpm test:visual:setup       # Combined: test user + mock data
 | --------------------------------- | --------------------- | -------------------------------------- |
 | `PUBLIC_SUPABASE_URL`             | `$env/static/public`  | Supabase project URL                   |
 | `PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `$env/static/public`  | Supabase anon key                      |
+| `PRIVATE_SUPABASE_SERVICE_ROLE_KEY` | `$env/static/private` | Supabase service role key (admin ops)  |
 | `PUBLIC_TWITCH_CLIENT_ID`         | `$env/static/public`  | Twitch OAuth (safe to expose)          |
 | `PRIVATE_TWITCH_CLIENT_SECRET`    | `$env/static/private` | Twitch OAuth (server-only)             |
-| `GOOGLE_CLIENT_ID`                | `$env/static/private` | YouTube OAuth via Google (server-only) |
-| `GOOGLE_CLIENT_SECRET`            | `$env/static/private` | YouTube OAuth via Google (server-only) |
+| `PUBLIC_GOOGLE_CLIENT_ID`         | `$env/static/public`  | YouTube OAuth (safe to expose)         |
+| `PRIVATE_GOOGLE_CLIENT_SECRET`    | `$env/static/private` | YouTube OAuth (server-only)            |
 | `PUBLIC_KICK_CLIENT_ID`           | `$env/static/public`  | Kick OAuth (safe to expose)            |
 | `PRIVATE_KICK_CLIENT_SECRET`      | `$env/static/private` | Kick OAuth (server-only)               |
+| `TEST_USER_EMAIL`                 | `.env` (auto-gen)     | Test user email for visual testing     |
+| `TEST_USER_PASSWORD`              | `.env` (auto-gen)     | Test user password for visual testing  |
+| `TEST_USER_ID`                    | `.env` (auto-gen)     | Test user UUID for visual testing      |
 
 ---
 
@@ -71,11 +72,13 @@ pnpm test:visual:setup       # Combined: test user + mock data
 This project uses MCP (Model Context Protocol) servers for enhanced capabilities:
 
 **Svelte MCP** — Svelte 5 and SvelteKit documentation, code analysis
+
 - `list-sections` — Discover documentation sections (use FIRST)
 - `get-documentation` — Fetch full docs for specific sections
 - `svelte-autofixer` — Analyze and fix Svelte code issues (ALWAYS use before sending code)
 
 **Chrome DevTools MCP** — Browser debugging, performance profiling, visual verification
+
 - `chrome-devtools_navigate_page` — Navigate to URLs or go back/forward/reload
 - `chrome-devtools_take_screenshot` — Capture screenshots for visual verification
 - `chrome-devtools_resize_page` — Set viewport dimensions for responsive testing
@@ -168,9 +171,18 @@ Headless UI components for Svelte 5. Uses the [llms.txt standard](https://bits-u
 | `src/lib/platform/tokenRefresher.ts`           | Token refresh logic                  |
 | `src/lib/platform/tokenResolver.ts`            | Token resolution utilities           |
 | `src/lib/platform/tokenState.ts`               | Token state management               |
+| `src/lib/platform/scopes.ts`                   | OAuth scope definitions & utils      |
+| `src/lib/platform/types.ts`                    | Shared platform types                |
 | `src/lib/server/auth.ts`                       | Server auth guards (requireAuth)     |
 | `src/lib/server/oauthState.ts`                 | OAuth state parameter management     |
+| `src/lib/server/platformLinking/manualLink.ts` | Manual platform linking utilities    |
 | `src/lib/validation/auth.ts`                   | Auth validation schemas              |
+| `src/lib/stores/theme.svelte.ts`               | Theme utilities (SSR-safe)           |
+| `src/lib/components/ThemeToggle.svelte`        | Theme toggle component               |
+| `src/lib/realtime/batcher.svelte.ts`           | Event batching (50ms window)         |
+| `src/lib/realtime/merge.ts`                    | Realtime payload merging             |
+| `src/lib/realtime/subscription.svelte.ts`      | Subscription manager with retry      |
+| `src/lib/stores/reactiveTable.svelte.ts`       | Reactive table factory               |
 | `src/routes/(protected)/app/+layout.ts`        | Browser client + realtime setup      |
 | `src/routes/(protected)/app/+layout.server.ts` | Session passed to client             |
 
@@ -207,11 +219,13 @@ Manual linking allows users to connect platforms by directly entering credential
 **Key File:** `src/lib/server/platformLinking/manualLink.ts`
 
 **Utilities:**
+
 - `savePlatformAuth()` — Saves platform authentication data to database
 - `savePlatformUserInfo()` — Saves platform user profile data
 - `isPlatformLinked()` — Checks if platform is already linked
 
 **Use Cases:**
+
 - Platforms without OAuth support
 - Custom API key integrations
 - Fallback when OAuth fails
@@ -236,7 +250,8 @@ Hybrid SSR + Realtime:
 **Key Utilities:**
 
 - `src/lib/realtime/batcher.svelte.ts` — Batches rapid events
-- `src/lib/realtime/subscription.svelte.ts` — Subscription manager
+- `src/lib/realtime/merge.ts` — Merges realtime payloads
+- `src/lib/realtime/subscription.svelte.ts` — Subscription manager with retry
 - `src/lib/stores/reactiveTable.svelte.ts` — Reactive table factory
 
 **Usage:**
@@ -299,6 +314,20 @@ pnpm test:visual:setup  # Creates test user + mock data
 - `TEST_USER_EMAIL` — Email for login
 - `TEST_USER_PASSWORD` — Auto-generated secure password
 - `TEST_USER_ID` — Supabase user UUID
+
+**Cleanup:**
+
+After visual testing, clean up test data:
+
+```bash
+pnpm test:user:cleanup  # Deletes test user, all platform data, and cleans .env
+```
+
+This removes:
+- Test user account from Supabase Auth
+- All `user_auth` entries for the test user
+- All `user_info` entries for the test user
+- `TEST_USER_*` credentials from `.env` file
 
 ---
 
@@ -514,26 +543,48 @@ Test all routes at mobile, tablet, and desktop sizes using the same workflow as 
 ```javascript
 // Example: Test sidebar responsiveness across viewports
 const viewports = [
-  { name: 'mobile', width: 375, height: 812 },
-  { name: 'tablet', width: 768, height: 1024 },
-  { name: 'desktop', width: 1440, height: 900 }
+	{ name: 'mobile', width: 375, height: 812 },
+	{ name: 'tablet', width: 768, height: 1024 },
+	{ name: 'desktop', width: 1440, height: 900 }
 ];
 
 for (const viewport of viewports) {
-  // Resize to viewport
-  // Navigate to route
-  // Validate responsive behavior
-  const sidebar = document.querySelector('[data-sidebar]');
-  const styles = window.getComputedStyle(sidebar);
-  
-  console.assert(
-    viewport.name === 'mobile' ? styles.display === 'none' : styles.display !== 'none',
-    `Sidebar should be ${viewport.name === 'mobile' ? 'hidden' : 'visible'} on ${viewport.name}`
-  );
+	// Resize to viewport
+	// Navigate to route
+	// Validate responsive behavior
+	const sidebar = document.querySelector('[data-sidebar]');
+	const styles = window.getComputedStyle(sidebar);
+
+	console.assert(
+		viewport.name === 'mobile' ? styles.display === 'none' : styles.display !== 'none',
+		`Sidebar should be ${viewport.name === 'mobile' ? 'hidden' : 'visible'} on ${viewport.name}`
+	);
 }
 ```
 
 ---
+
+### Theme Loading
+
+**Inline Script:** Theme loading happens in `src/app.html` head (before `%sveltekit.head%`) to prevent FOUC:
+
+- Sets `data-theme` attribute (`'light'`, `'dark'`, or `'system'`)
+- When `'system'`, also sets `data-system-theme` based on OS preference
+- Uses `system-dark` class for CSS dark mode variant when needed
+
+**CSS Variants:** Tailwind dark mode uses `@custom-variant` with `data-theme` attribute:
+
+```css
+@custom-variant dark (&:where(:root[data-theme=dark], :root[data-theme=dark] *, :root[data-theme=system][data-system-theme=dark], :root[data-theme=system][data-system-theme=dark] *));
+```
+
+**Custom Theme Variants:** Use `theme-light`, `theme-dark`, `theme-system` for conditional rendering:
+
+```svelte
+<span class="hidden theme-light:inline">Light icon</span>
+<span class="hidden theme-dark:inline">Dark icon</span>
+<span class="hidden theme-system:inline">System icon</span>
+```
 
 ### Debugging Styling Issues
 
@@ -546,17 +597,38 @@ const button = document.querySelector('button');
 const styles = window.getComputedStyle(button);
 const rect = button.getBoundingClientRect();
 
-return {
-	display: styles.display,
-	visibility: styles.visibility,
-	opacity: styles.opacity,
-	width: rect.width,
-	height: rect.height,
-	position: styles.position,
-	zIndex: styles.zIndex,
-	transform: styles.transform,
-	classes: button.className
-};
+	return {
+		display: styles.display,
+		visibility: styles.visibility,
+		opacity: styles.opacity,
+		width: rect.width,
+		height: rect.height,
+		position: styles.position,
+		zIndex: styles.zIndex,
+		transform: styles.transform,
+		classes: button.className
+	};
+}
 ```
 
+### Gotchas
 
+- Tailwind v4 config lives in CSS (`@import "tailwindcss"`), not in JS
+- `.cache/` and `supabase/volumes/` are gitignored
+- `PUBLIC_*` env vars from `$env/static/public`, `PRIVATE_*` from `$env/static/private`
+- OAuth `redirectTo` must be in Supabase dashboard allow list
+- Use dynamic `${url.origin}/auth/confirm/supabase` for production
+- Route groups: `(folder)` syntax — parentheses don't affect URL
+- Route params: `src/params/` directory defines param constraints (e.g., `signInOut.ts`)
+- `pnpm format` = prettier only; `pnpm lint` checks both
+- `svelte-kit sync` runs in `prepare` script
+- Server endpoints need `data-sveltekit-reload` on links
+- `createReactiveTable()` store must be started manually (in `$effect`, not module level)
+- Never call Supabase fetch methods during SSR — guard with `browser` or defer to `$effect`
+- When debugging styling issues, use `chrome-devtools_evaluate_script` with `window.getComputedStyle(element)` to inspect actual computed styles
+- **Never cast types needlessly** — ensure data shapes match instead of using `as Type`
+- **Use `resolve()` from `$app/paths`** for all internal navigation href (type-safe routing)
+- **Module script imports**: Place static/runtime imports (types, utilities, stores) in `<script lang="ts" module>`, keep runtime-only imports (assets, CSS) in regular `<script>`
+- **$derived destructuring**: Destructure all derived values from `data` props in a single `$derived()` call with defaults (e.g., `{ a, b = 'default' } = $derived(data)`)
+- **Import ordering**: VSCode handles import sorting on save; Prettier handles formatting only
+- **Empty route files**: Remove unused `+page.svelte`/`+page.ts` stubs; recreate when content is needed

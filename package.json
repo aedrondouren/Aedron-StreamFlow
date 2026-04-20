@@ -43,6 +43,7 @@
 		"db:push": "supabase db push --linked",
 		"db:reset": "supabase db reset --linked",
 		"test:user:setup": "node scripts/setup-test-user.js",
+		"test:user:cleanup": "node scripts/cleanup-test-user.js",
 		"test:spoof:twitch": "node scripts/spoof-platform-data.js twitch",
 		"test:spoof:youtube": "node scripts/spoof-youtube-connected.js",
 		"test:spoof:kick": "node scripts/spoof-platform-data.js kick",
