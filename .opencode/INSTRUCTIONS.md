@@ -78,6 +78,7 @@ When operating in Planning mode:
 - **NEVER** create plans that require destructive operations without explicit user approval
 
 **Destructive operations include:**
+
 - Database resets (`pnpm db:reset`)
 - Test data manipulation (`pnpm test:spoof:*`)
 - File deletions or overwrites
@@ -85,6 +86,7 @@ When operating in Planning mode:
 - Service restarts/kills
 
 **If a task requires destructive operations:**
+
 1. Identify the destructive step in your plan
 2. Explicitly warn the user
 3. Request mode switch to Build mode
@@ -114,12 +116,14 @@ When operating in Build mode:
 This project uses MCP (Model Context Protocol) servers configured in `opencode.json`:
 
 **Svelte MCP (`@sveltejs/opencode`):**
+
 - `list-sections` — Discover Svelte/SvelteKit documentation
 - `get-documentation` — Fetch full docs for specific sections
 - `svelte-autofixer` — Analyze and fix Svelte code (ALWAYS use before sending code)
 - `playground-link` — Generate Svelte Playground links
 
 **Chrome DevTools MCP (`chrome-devtools-mcp`):**
+
 - `chrome-devtools_navigate_page` — Navigate to URLs or go back/forward/reload
 - `chrome-devtools_take_screenshot` — Capture screenshots for visual verification
 - `chrome-devtools_resize_page` — Set viewport dimensions for responsive testing
@@ -133,17 +137,20 @@ This project uses MCP (Model Context Protocol) servers configured in `opencode.j
 OpenCode loads reusable skills from `.opencode/skills/*/SKILL.md`:
 
 **Available Skills:**
+
 - **update-docs** — Quick docs updates from `git diff HEAD` (denied in Planning mode)
 - **deep-update-docs** — Comprehensive docs sync via full codebase analysis (denied in Planning mode)
 - **update-tests** — Update testing infrastructure and LLM testing docs (denied in Planning mode)
 
 **Skill Permissions:**
+
 - **Planning mode:** All edit skills denied (read-only analysis)
 - **Build mode:** All skills allowed
 
 ### Permission System
 
 **Planning Mode Restrictions:**
+
 - `write`: deny
 - `edit`: deny
 - `skill: update-*`: deny

@@ -39,19 +39,23 @@ git diff HEAD
 ### Step 2: Update Documentation Based on Changes
 
 **If `package.json` changed:**
+
 - Check `scripts` object → Update README.md and AGENTS.md command tables
 - Check `dependencies`/`devDependencies` → Update stack sections
 - Check `version` → Update version references if needed
 
 **If new files/directories added:**
+
 - New `src/lib/` utilities → Add to AGENTS.md Key Files table
 - New routes → Update routing strategy sections
 - New config files → Update prerequisites or setup sections
 
 **If files deleted:**
+
 - Remove references from documentation
 
 **If `.gitignore` patterns added:**
+
 - Document new ignored patterns if relevant
 
 ### Step 3: Verify Consistency
@@ -105,6 +109,7 @@ If new screenshots added since last commit:
 **Git diff shows:** `package.json` added `test:spoof:kick` script
 
 **Update:**
+
 1. README.md — Add to Development Commands section
 2. AGENTS.md — Add to Testing section
 
@@ -113,6 +118,7 @@ If new screenshots added since last commit:
 **Git diff shows:** New file `src/lib/platform/newAuth.ts`
 
 **Update:**
+
 1. AGENTS.md — Add to Key Files table
 2. No README change needed (internal utility)
 
@@ -121,6 +127,7 @@ If new screenshots added since last commit:
 **Git diff shows:** New file `.repo/screenshots/new-feature.png`
 
 **Update:**
+
 1. README.md — Add screenshot to gallery with caption
 
 ## Guidelines
@@ -134,6 +141,7 @@ If new screenshots added since last commit:
 ## Limitations
 
 This skill does **NOT**:
+
 - Deep analysis of codebase structure
 - Comprehensive documentation audits
 - Major reorganizations or refactoring

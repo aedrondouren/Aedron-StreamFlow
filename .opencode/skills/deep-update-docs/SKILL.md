@@ -25,6 +25,7 @@ Apply this skill for:
 ### Phase 1: Project Structure Analysis
 
 **1. Analyze package.json:**
+
 ```bash
 # Read complete package.json
 - Extract all scripts (dev, build, test, db, etc.)
@@ -34,6 +35,7 @@ Apply this skill for:
 ```
 
 **2. Map directory structure:**
+
 ```bash
 # Explore src/ recursively
 src/
@@ -53,6 +55,7 @@ src/
 ```
 
 **3. Identify key configuration files:**
+
 - `svelte.config.js` — SvelteKit configuration
 - `vite.config.ts` — Vite plugins and settings
 - `tsconfig.json` — TypeScript configuration
@@ -64,18 +67,21 @@ src/
 **1. Read all key files in parallel:**
 
 **Configuration Files:**
+
 - `package.json` — Scripts, dependencies, metadata
 - `svelte.config.js` — Adapter, compiler options
 - `vite.config.ts` — Plugins, build config
 - `tsconfig.json` — TypeScript strictness, module resolution
 
 **Core Architecture:**
+
 - `src/hooks.server.ts` — Auth middleware, route guards
 - `src/lib/server/auth.ts` — Authentication utilities
 - `src/lib/server/oauthState.ts` — OAuth state management
 - `src/lib/server/platformLinking/manualLink.ts` — Manual platform linking
 
 **Platform Integration:**
+
 - `src/lib/platform/twitchAuth.ts` — Twitch OAuth
 - `src/lib/platform/youtubeAuth.ts` — YouTube OAuth
 - `src/lib/platform/kickAuth.ts` — Kick OAuth
@@ -88,26 +94,32 @@ src/
 - `src/lib/platform/scopes.ts` — OAuth scopes
 
 **Realtime System:**
+
 - `src/lib/realtime/batcher.svelte.ts` — Event batching
 - `src/lib/realtime/merge.ts` — Payload merging
 - `src/lib/realtime/subscription.svelte.ts` — Subscription manager
 
 **State Management:**
+
 - `src/lib/stores/reactiveTable.svelte.ts` — Reactive table factory
 
 **Database:**
+
 - `src/lib/supabase/database.types.ts` — Generated types
 - `src/lib/supabase/validateClaims.ts` — JWT validation
 
 **Validation:**
+
 - `src/lib/validation/auth.ts` — Auth validation schemas
 
 **Routes:**
+
 - Map all `+page.svelte`, `+page.ts`, `+page.server.ts` files
 - Map all `+layout.svelte`, `+layout.ts`, `+layout.server.ts` files
 - Map all `+server.ts` API endpoints
 
 **2. Analyze file contents for:**
+
 - Exported functions and their purposes
 - OAuth flows and platform states
 - Realtime patterns and retry logic
@@ -120,6 +132,7 @@ src/
 **Compare codebase state with documentation:**
 
 **README.md Checklist:**
+
 - [ ] All `package.json` scripts documented?
 - [ ] All dependencies mentioned in stack section?
 - [ ] Project structure diagram matches `src/` layout?
@@ -131,6 +144,7 @@ src/
 - [ ] Setup instructions accurate?
 
 **AGENTS.md Checklist:**
+
 - [ ] All dev commands listed?
 - [ ] Stack section complete (versions, configs)?
 - [ ] All key files in Key Files table?
@@ -149,31 +163,37 @@ src/
 **1. Update README.md:**
 
 **Features Section:**
+
 - List all major features discovered in code
 - Include platform support status
 - Note unique capabilities (realtime, unified chat, etc.)
 
 **Tech Stack:**
+
 - List all major dependencies from `package.json`
 - Include versions if important
 - Note special configurations (Svelte 5 runes, Tailwind v4, etc.)
 
 **Development Commands:**
+
 - Copy ALL scripts from `package.json`
 - Group logically (dev, build, db, test)
 - Add descriptions for each command
 
 **Environment Variables:**
+
 - Extract from code (`$env/static/public`, `$env/static/private`)
 - Create complete table with source and purpose
 - Note which are safe to expose vs server-only
 
 **Project Structure:**
+
 - Create accurate tree diagram from `src/` exploration
 - Include all major directories
 - Add brief descriptions for each
 
 **Architecture:**
+
 - Document routing strategy (prerender, SSR, hybrid)
 - Explain data flow (SSR → Realtime → Actions)
 - Note authentication patterns
@@ -182,27 +202,32 @@ src/
 **2. Update AGENTS.md:**
 
 **Quick Reference:**
+
 - List ALL dev commands with descriptions
 - Include database commands
 - Include test commands
 - Note any special workflows
 
 **Stack:**
+
 - Document exact versions from `package.json`
 - Note special configurations (runes, strict mode, etc.)
 - Include build adapter info
 
 **Environment Variables:**
+
 - Complete table with all vars found in code
 - Organize by source (public/private)
 - Include purpose for each
 
 **MCP Servers:**
+
 - Document all configured MCP servers
 - List available tools for each
 - Note configuration method
 
 **Architecture:**
+
 - Routing strategy table
 - Data flow diagrams
 - Auth flow steps
@@ -210,17 +235,20 @@ src/
 - Realtime pattern explanation
 
 **Key Files:**
+
 - Comprehensive table of all important files
 - Include utilities, helpers, types
 - Group by category (platform, server, realtime, etc.)
 
 **Gotchas:**
+
 - Document all edge cases found in code
 - Include SSR vs browser gotchas
 - Note Tailwind v4 differences
 - List common pitfalls
 
 **Workflows:**
+
 - Document common development patterns
 - Include testing workflows
 - Note visual verification steps
@@ -229,12 +257,14 @@ src/
 ### Phase 5: Verification
 
 **1. Cross-reference documentation:**
+
 - Ensure README and AGENTS.md are consistent
 - Verify all file paths exist
 - Check all command examples work
 - Validate screenshot references
 
 **2. Test commands:**
+
 ```bash
 # Verify documented commands exist
 pnpm dev
@@ -248,6 +278,7 @@ pnpm test:user:setup
 ```
 
 **3. Validate structure:**
+
 ```bash
 # Verify documented files exist
 ls src/lib/platform/
@@ -259,15 +290,18 @@ ls src/lib/realtime/
 ## Tools to Use
 
 ### File Reading
+
 - `read` — Read individual files
 - `bash` — List directories, run git commands
 - `glob` — Find files by pattern
 
 ### Code Analysis
+
 - `grep` — Search for patterns (exports, imports, types)
 - `task` — Delegate analysis to sub-agents for parallel processing
 
 ### Browser Verification
+
 - `chrome-devtools_navigate_page` — Verify routes work
 - `chrome-devtools_take_screenshot` — Capture new screenshots
 - `chrome-devtools_resize_page` — Test responsive design
@@ -280,17 +314,20 @@ Provide a summary of changes made:
 ## Documentation Updates Complete
 
 ### README.md Changes:
+
 - Added X new test commands
 - Updated platform status for Y
 - Added environment variables table
 - Added architecture section Z
 
 ### AGENTS.md Changes:
+
 - Added N utility files to Key Files
 - Updated Gotchas with M items
 - Added workflow section for P
 
 ### Verified:
+
 - All commands tested and working
 - All file paths validated
 - Screenshots referenced correctly
@@ -303,6 +340,7 @@ Provide a summary of changes made:
 **Trigger:** "Do a deep dive into this codebase and update all documentation"
 
 **Process:**
+
 1. Read `package.json` → Extract 20 scripts
 2. Map `src/` → Find 50+ files
 3. Read all key files → Understand architecture
@@ -318,6 +356,7 @@ Provide a summary of changes made:
 **Trigger:** "Just refactored the entire platform integration layer, update docs"
 
 **Process:**
+
 1. Analyze new file structure
 2. Read new utility files
 3. Identify removed files
