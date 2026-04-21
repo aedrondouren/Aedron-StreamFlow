@@ -13,14 +13,19 @@ Thank you for your interest in contributing! This guide covers setup, developmen
 ### Setup
 
 ```bash
-# Fork and clone
+# 1. Fork this repository on GitHub (click "Fork" button in top-right)
+
+# 2. Clone your fork:
 git clone https://github.com/YOUR_USERNAME/Aedron-StreamFlow.git
 cd Aedron-StreamFlow
 
-# Install dependencies
+# 3. Add upstream remote (one-time setup to track main repo):
+git remote add upstream https://github.com/aedrondouren/Aedron-StreamFlow.git
+
+# 4. Install dependencies:
 pnpm install
 
-# Setup environment
+# 5. Setup environment:
 cp .env.example .env
 # Edit .env with your Supabase credentials
 ```
@@ -141,30 +146,65 @@ Run `pnpm format` before committing to auto-fix issues.
 
 ---
 
+## Keeping Your Fork in Sync
+
+Before starting new work, sync your fork with the latest changes from the main repository:
+
+```bash
+# Fetch latest changes from upstream (main repo)
+git fetch upstream
+
+# Checkout main branch
+git checkout main
+
+# Merge upstream changes into your local main
+git merge upstream/main
+
+# Push updated main to your fork
+git push origin main
+```
+
+This ensures your feature branches are based on the latest code.
+
+---
+
 ## Pull Request Process
 
-1. **Create a branch** from `main` (default development branch):
+1. **Sync your fork** (see "Keeping Your Fork in Sync" above)
+
+2. **Create a feature branch**:
 
    ```bash
-   git checkout main
-   git pull origin main
-   git checkout -b feature/your-feature-name
+   git checkout -b feature/descriptive-name
    ```
 
-2. **Make changes** with clear, focused commits
+3. **Make changes** with clear, focused commits
 
-3. **Test your changes**:
+4. **Test your changes**:
 
    ```bash
    pnpm check && pnpm lint && pnpm build
    ```
 
-4. **Push to your fork** and open a PR against `main`
+5. **Push to your fork**:
 
-5. **PR Requirements:**
+   ```bash
+   git push -u origin feature/descriptive-name
+   ```
+
+6. **Open a Pull Request**:
+   - Go to your fork on GitHub
+   - Click "Compare & pull request"
+   - **Base repository:** `aedrondouren/Aedron-StreamFlow`
+   - **Base branch:** `main`
+   - **Head repository:** `YOUR_USERNAME/Aedron-StreamFlow`
+   - **Compare branch:** `feature/descriptive-name`
+   - Fill in the PR description
+
+7. **PR Requirements:**
    - All checks pass
    - Clear description of changes
-   - Reference related issues
+   - Reference related issues (if applicable)
 
 ---
 
